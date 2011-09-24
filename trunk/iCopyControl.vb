@@ -23,7 +23,10 @@ Imports System.Drawing.Imaging
 <Assembly: CLSCompliantAttribute(True)> 
 Class appControl
 
-    Const DB_CONNECTION_STRING = "Server=db4free.net;User Id=icopy;Password=iCopysp;Database=icopy;Connect Timeout=10"
+    Shared WithEvents manager As New DeviceManager
+    Shared _deviceID As String
+    Shared _device As Device
+    Shared _wscanner As WIA.Item
 
     Private Shared LocRM As New System.Resources.ResourceManager("iCopy.WinFormStrings", GetType(mainFrm).Assembly)
     Private Shared GetCulturesThread As New Threading.Thread(AddressOf GetAvailableLanguages)
@@ -38,115 +41,25 @@ Class appControl
 
     Shared Sub Main(ByVal sArgs() As String)
         Application.EnableVisualStyles()
-
-        Try
-            If sArgs.Length = 0 Then 'If there are no arguments, run app normally
-                CommandLine = False
-                'Avoids that two processes run simultaneously
-                If Process.GetProcessesByName("icopy").Length > 1 Then
-                    MsgBox(LocRM.GetString("Msg_AlreadyRunning"), MsgBoxStyle.Information, "iCopy")
-                    Throw New Exception("Exit")
-                End If
-
-                'Searches for languages installed
-                Try            'Should avoid ThreadStateException
-                    If GetCulturesThread.ThreadState = Threading.ThreadState.Unstarted Then
-                        GetCulturesThread.Start()
+            Try
+                If sArgs.Length = 0 Then 'If there are no arguments, run app normally
+                    CommandLine = False
+                    'Avoids that two processes run simultaneously
+                    If Process.GetProcessesByName("icopy").Length > 1 Then
+                        MsgBox(LocRM.GetString("Msg_AlreadyRunning"), MsgBoxStyle.Information, "iCopy")
+                        Throw New Exception("Exit")
                     End If
-                Catch ex As Threading.ThreadStateException
-                    MsgBox(ex.ToString)
-                End Try
 
-                'Initializes new scanning interface
-                appControl.CreateScanner(My.Settings.DeviceID)
-
-                Try
-                    My.Settings.DeviceID = _scanner.DeviceId
-                Catch ex As NullReferenceException
-                    Application.Exit()
-                End Try
-
-                MainForm = New mainFrm()
-                Application.Run(MainForm)
-
-                My.Settings.Save()
-
-            Else    'Handle Command line arguments
-                CommandLine = True 'To inform the program that it is running in command line mode
-
-                If sArgs(0).Substring(0, 2) = "-r" Then
-                    MsgBox("iCopy will now try to register WIA Automation layer.")
-                    RegisterWiaautdll(True)
-                    Application.Exit()
-                    Exit Sub
-                End If
-
-                'Initializes new scanning interface()
-                appControl.CreateScanner(My.Settings.DeviceID)
-
-                'Default scanning values
-                Dim res As Integer = My.Settings.Resolution
-                Dim intent As WiaImageIntent = My.Settings.DefaultIntent
-                Dim copies As Integer = 1
-                Dim brightness As Short = My.Settings.Brightness
-                Dim contrast As Short = My.Settings.Contrast
-                Dim enlargement As Integer = 100
-                Dim preview As Boolean = False
-                Dim doCopy As Boolean = False
-                Dim doScantoFile As Boolean = False
-                Dim path As String = ""
-
-                Select Case sArgs(0).Substring(0, 2)
-                    Case "-d"
-                        Diagnosis()
-                        Application.Exit()
-                        Exit Sub
-                    Case "/c" 'Copy
-                        doCopy = True : doScantoFile = False
-                    Case "/f" 'Scan To File
-                        doCopy = False : doScantoFile = True
-                        If Not (sArgs(0) = "/f" Or sArgs(0) = "/f:") Then
-                            path = sArgs(0).Substring(3)
+                    'Searches for languages installed
+                    Try            'Should avoid ThreadStateException
+                        If GetCulturesThread.ThreadState = Threading.ThreadState.Unstarted Then
+                            GetCulturesThread.Start()
                         End If
-                    Case Else
-                        Dim args(-1) As String
-                        Main(args)
-                        Exit Sub
-                End Select
-
-
-                'Read available command line args
-                For Each arg As String In sArgs
-                    Select Case arg
-                        Case "/r" 'Resolution
-                            res = arg.Substring(3)
-                        Case "/i" 'Intent
-                            intent = arg.Substring(3)
-                        Case "/n" 'Copies
-                            copies = arg.Substring(3)
-                        Case "/s" 'Scale
-                            enlargement = arg.Substring(3)
-                        Case "/p" 'Preview
-                            preview = True
-                        Case "/b" 'Brightness
-                            brightness = arg.Substring(3)
-                        Case "/cn" 'Contrast
-                            contrast = arg.Substring(4)
-                    End Select
-                Next
-
-                'Runs copy process
-                If doCopy Then
-
-                    Try
-                        My.Settings.DeviceID = _scanner.DeviceId
-                    Catch ex As NullReferenceException
-                        Application.Exit()
+                    Catch ex As Threading.ThreadStateException
+                        MsgBox(ex.ToString)
                     End Try
-                    Copy(res, brightness, contrast, intent, copies, preview, enlargement)
-                ElseIf doScantoFile Then
 
-                    'Initializes new scanning interface()
+                    'Initializes new scanning interface
                     appControl.CreateScanner(My.Settings.DeviceID)
 
                     Try
@@ -155,17 +68,114 @@ Class appControl
                         Application.Exit()
                     End Try
 
-                    If path = "" Then 'If path isn't specified, show SaveFile dialog
-                        SaveToFile(res, brightness, contrast, intent, preview)
-                    Else
-                        SaveToFile(res, brightness, contrast, intent, preview, path, 100)
+                    MainForm = New mainFrm()
+                    Application.Run(MainForm)
+
+                    My.Settings.Save()
+
+                Else    'Handle Command line arguments
+                    CommandLine = True 'To inform the program that it is running in command line mode
+
+                    If sArgs(0).Substring(0, 2) = "-r" Then
+                        MsgBox("iCopy will now try to register WIA Automation layer.")
+                        RegisterWiaautdll(True)
+                        Application.Exit()
+                        Exit Sub
+                    End If
+
+                'Initializes new scanning interface()
+                If manager.DeviceInfos.Count = 0 Then
+                    Console.WriteLine("No scanner connected")
+                Else
+                    Dim dialog As New CommonDialog
+                    _device = dialog.ShowSelectDevice(WiaDeviceType.ScannerDeviceType, True, True)
+                    _deviceID = _device.DeviceID
+                    Console.WriteLine("DeviceID = {0}", _deviceID)
+                    _wscanner = _device.Items(1)
+                End If
+
+                    'Default scanning values
+                    Dim res As Integer = My.Settings.Resolution
+                    Dim intent As WiaImageIntent = My.Settings.DefaultIntent
+                    Dim copies As Integer = 1
+                    Dim brightness As Short = My.Settings.Brightness
+                    Dim contrast As Short = My.Settings.Contrast
+                    Dim enlargement As Integer = 100
+                    Dim preview As Boolean = False
+                    Dim doCopy As Boolean = False
+                    Dim doScantoFile As Boolean = False
+                    Dim path As String = ""
+
+                    Select Case sArgs(0).Substring(0, 2)
+                        Case "-d"
+                            Diagnosis()
+                            Application.Exit()
+                            Exit Sub
+                        Case "/c" 'Copy
+                            doCopy = True : doScantoFile = False
+                        Case "/f" 'Scan To File
+                            doCopy = False : doScantoFile = True
+                            If Not (sArgs(0) = "/f" Or sArgs(0) = "/f:") Then
+                                path = sArgs(0).Substring(3)
+                            End If
+                        Case Else
+                            Dim args(-1) As String
+                            Main(args)
+                            Exit Sub
+                    End Select
+
+
+                    'Read available command line args
+                    For Each arg As String In sArgs
+                        Select Case arg
+                            Case "/r" 'Resolution
+                                res = arg.Substring(3)
+                            Case "/i" 'Intent
+                                intent = arg.Substring(3)
+                            Case "/n" 'Copies
+                                copies = arg.Substring(3)
+                            Case "/s" 'Scale
+                                enlargement = arg.Substring(3)
+                            Case "/p" 'Preview
+                                preview = True
+                            Case "/b" 'Brightness
+                                brightness = arg.Substring(3)
+                            Case "/cn" 'Contrast
+                                contrast = arg.Substring(4)
+                        End Select
+                    Next
+
+                    'Runs copy process
+                    If doCopy Then
+
+                        Try
+                            My.Settings.DeviceID = _scanner.DeviceId
+                        Catch ex As NullReferenceException
+                            Application.Exit()
+                        End Try
+                        Copy(res, brightness, contrast, intent, copies, preview, enlargement)
+                    ElseIf doScantoFile Then
+
+                        'Initializes new scanning interface()
+                        appControl.CreateScanner(My.Settings.DeviceID)
+
+                        Try
+                            My.Settings.DeviceID = _scanner.DeviceId
+                        Catch ex As NullReferenceException
+                            Application.Exit()
+                        End Try
+
+                        If path = "" Then 'If path isn't specified, show SaveFile dialog
+                            SaveToFile(res, brightness, contrast, intent, preview)
+                        Else
+                            SaveToFile(res, brightness, contrast, intent, preview, path, 100)
+                        End If
                     End If
                 End If
-            End If
 
-        Catch ex As Exception
-            HandleException(ex) 'Overrides .NET message box to include error reporting
-        End Try
+            Catch ex As Exception
+                HandleException(ex) 'Overrides .NET message box to include error reporting
+            End Try
 
     End Sub
 
@@ -190,23 +200,6 @@ Class appControl
     End Sub
 
     Private Shared Sub ErrorReport(ByVal ex As Exception)
-
-        If Not System.Diagnostics.Debugger.IsAttached Then
-            Dim c As New MySqlConnection(DB_CONNECTION_STRING)
-
-            Try
-                c.Open()
-                Dim strcmd As String = String.Format("INSERT INTO exceptions (icopyID, Name, Message, Stack, Date) VALUES ('{0}', '{1}', '{2}', '{3}', '{4}')", _
-                                                     My.Settings.ID, ex.GetType().ToString, _
-                                                     ex.Message, ex.StackTrace, DateTime.Now)
-                Dim cmd As New MySqlCommand(strcmd, c)
-                cmd.ExecuteNonQuery()
-                c.Close()
-            Catch e As Exception 'If fails to open connection
-
-            End Try
-        End If
-
 
         Dim sendReport As MsgBoxResult = MsgBox(String.Format(appControl.GetLocalizedString("Msg_SendErrorReport"), ex.ToString()), MsgBoxStyle.Critical + MsgBoxStyle.OkCancel, "iCopy")
         If sendReport = MsgBoxResult.Cancel Then
@@ -252,7 +245,7 @@ Class appControl
         Clipboard.SetText(sw.ToString())
         Dim version As System.Version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version
         Dim sVersion As String = String.Format("{0}.{1}{2}", version.Major, version.Minor, version.Build)
-        Process.Start(String.Format("http://sourceforge.net/apps/trac/icopy/newticket?summary={0} at {1}&version={2}&owner={3}&description={4}", ex.GetType().ToString(), ex.TargetSite.Name, sVersion, "pincopallino", "Please paste here"))
+        Process.Start(String.Format("", ex.GetType().ToString(), ex.TargetSite.Name, sVersion, "pincopallino", "Please paste here")) 'TODO: Change with Sourceforge BugTracker
     End Sub
 
     Shared Function GetLocalizedString(ByVal Label As String) As String

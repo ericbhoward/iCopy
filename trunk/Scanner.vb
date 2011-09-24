@@ -20,101 +20,106 @@ Imports System.Xml
 Public Class Scanner
 
     Dim WithEvents manager As New DeviceManager
+    Dim _AvailableResolutions As List(Of Integer)
     Dim _deviceID As String
-    Dim _device As Device
-    Dim _scanner As WIA.Item
     Public Event ScannerDisconnected As EventHandler
 
     Sub New(ByVal deviceID As String)
         If deviceID Is Nothing Then Throw New ArgumentNullException("deviceID", "No deviceID specified")
         If manager.DeviceInfos.Count = 0 Then Throw New ArgumentException("No WIA device connected")
 
+        Dim _device As Device
+        Dim _scanner As WIA.Item
+
         Try
             _device = manager.DeviceInfos.Item(deviceID).Connect
             _deviceID = deviceID
             _scanner = _device.Items(1)
-            manager.RegisterEvent(EventID.wiaEventDeviceDisconnected, _device.DeviceID)
+            Console.WriteLine("Connection established. Available resolutions")
+            _AvailableResolutions = GetAvailableResolutions()
+            For Each res As Integer In _AvailableResolutions
+                Console.WriteLine(res)
+            Next
+            'TODO: manager.RegisterEvent(EventID.wiaEventDeviceDisconnected, _device.DeviceID)
         Catch ex As Exception
             Throw
         End Try
 
     End Sub
 
-    Sub Reconnect()
-        Dim saveResolution As Short
-        Dim saveBrightness As Integer
-        Dim saveContrast As Integer
-        Dim saveIntent As WiaImageIntent
-        Try
-            saveResolution = Resolution
-            saveBrightness = Brightness
-            saveContrast = Contrast
-            saveIntent = Intent
-            _device = manager.DeviceInfos.Item(_deviceID).Connect
-            _scanner = _device.Items(1)
-            manager.RegisterEvent(EventID.wiaEventDeviceDisconnected, _device.DeviceID)
-            Resolution = saveResolution
-            Brightness = saveBrightness
-            Contrast = saveContrast
-            Intent = saveIntent
-        Catch ex As Exception
-            Throw
-        End Try
-    End Sub
+    'Sub Reconnect()
+    '    Dim saveResolution As Short
+    '    Dim saveBrightness As Integer
+    '    Dim saveContrast As Integer
+    '    Dim saveIntent As WiaImageIntent
+    '    Try
+    '        saveResolution = Resolution
+    '        saveBrightness = Brightness
+    '        saveContrast = Contrast
+    '        saveIntent = Intent
+    '        _device = manager.DeviceInfos.Item(_deviceID).Connect
+    '        _scanner = _device.Items(1)
+    '        manager.RegisterEvent(EventID.wiaEventDeviceDisconnected, _device.DeviceID)
+    '        Resolution = saveResolution
+    '        Brightness = saveBrightness
+    '        Contrast = saveContrast
+    '        Intent = saveIntent
+    '    Catch ex As Exception
+    '        Throw
+    '    End Try
+    'End Sub
 
 
 #Region "Properties"
 
-    Property Brightness() As Integer
-        Get
-            Dim prop_name As String = "Contrast"
-            Dim temp As WIA.Property = _scanner.Properties(prop_name)
+    Private Function GetBrightness(ByRef _scanner As WIA.Item) As Integer
+        Dim prop_name As String = "Contrast"
+        Dim temp As WIA.Property = _scanner.Properties(prop_name)
 
-            If temp.SubType = WiaSubType.RangeSubType Then
-                Dim min As Integer = temp.SubTypeMin
-                Dim max As Integer = temp.SubTypeMax
-                Dim stp As Integer = temp.SubTypeStep
-                Dim center As Integer = (max + min) / 2
-                Dim delta As Integer = max - center
-                Return CInt(Math.Round((temp.Value - center) / delta * 100, 0))
-            Else
-                Return temp.Value
-            End If
-        End Get
+        If temp.SubType = WiaSubType.RangeSubType Then
+            Dim min As Integer = temp.SubTypeMin
+            Dim max As Integer = temp.SubTypeMax
+            Dim stp As Integer = temp.SubTypeStep
+            Dim center As Integer = (max + min) / 2
+            Dim delta As Integer = max - center
+            Return CInt(Math.Round((temp.Value - center) / delta * 100, 0))
+        Else
+            Return temp.Value
+        End If
+    End Function
 
-        Set(ByVal value As Integer)
-            Dim prop_name As String = "Contrast"
-            Dim temp As WIA.Property = _scanner.Properties(prop_name)
+    Private Sub SetBrightness(ByVal value As Integer, ByRef _scanner As WIA.Item)
+        Dim prop_name As String = "Contrast"
+        Dim temp As WIA.Property = _scanner.Properties(prop_name)
 
-            If temp.SubType = WiaSubType.RangeSubType Then
-                Dim min As Integer = temp.SubTypeMin
-                Dim max As Integer = temp.SubTypeMax
-                Dim stp As Integer = temp.SubTypeStep
-                Dim center As Integer = (max + min) / 2
-                Dim delta As Integer = max - center
+        If temp.SubType = WiaSubType.RangeSubType Then
+            Dim min As Integer = temp.SubTypeMin
+            Dim max As Integer = temp.SubTypeMax
+            Dim stp As Integer = temp.SubTypeStep
+            Dim center As Integer = (max + min) / 2
+            Dim delta As Integer = max - center
 
-                If value <= 100 And value >= -100 Then
-                    Dim tmpVal As Integer = CInt(Math.Round(value / 100 * delta + center, 0))
-                    Try
-                        temp.Value = tmpVal
-                    Catch ex As Exception
-                        Throw New ArgumentException(prop_name + " value not accepted by the scanner: " + value.ToString() + " -> " + tmpVal.ToString())
-                    End Try
-                Else
-                    Throw New ArgumentOutOfRangeException("value", prop_name + " setting must be between -100 and 100," + value.ToString() + " entered.")
-                End If
-            Else
+            If value <= 100 And value >= -100 Then
+                Dim tmpVal As Integer = CInt(Math.Round(value / 100 * delta + center, 0))
                 Try
-                    temp.Value = value
+                    temp.Value = tmpVal
                 Catch ex As Exception
-                    MsgBox("There was an exception while setting the property " + prop_name + " to " + value.ToString() + ". Please report this information to iCopy bug tracker on Sourceforge:" + vbCrLf + _
-                           "property type: " + temp.Type.ToString() + vbCrLf + _
-                           "property subtype: " + temp.SubType.ToString(), MsgBoxStyle.Critical, "iCopy")
-
+                    Throw New ArgumentException(prop_name + " value not accepted by the scanner: " + value.ToString() + " -> " + tmpVal.ToString())
                 End Try
+            Else
+                Throw New ArgumentOutOfRangeException("value", prop_name + " setting must be between -100 and 100," + value.ToString() + " entered.")
             End If
-        End Set
-    End Property
+        Else
+            Try
+                temp.Value = value
+            Catch ex As Exception
+                MsgBox("There was an exception while setting the property " + prop_name + " to " + value.ToString() + ". Please report this information to iCopy bug tracker on Sourceforge:" + vbCrLf + _
+                       "property type: " + temp.Type.ToString() + vbCrLf + _
+                       "property subtype: " + temp.SubType.ToString(), MsgBoxStyle.Critical, "iCopy")
+
+            End Try
+        End If
+    End Sub
 
     Public Property Contrast() As Integer
         Get
@@ -133,7 +138,7 @@ Public Class Scanner
             End If
         End Get
 
-       Set(ByVal value As Integer)
+        Set(ByVal value As Integer)
             Dim prop_name As String = "Contrast"
             Dim temp As WIA.Property = _scanner.Properties(prop_name)
 
@@ -316,29 +321,33 @@ Public Class Scanner
         End Get
     End Property
 
-    ReadOnly Property AvailableResolutions() As ArrayList
+    Public Function GetAvailableResolutions() As List(Of Integer)
+        Dim _AvailableResolutions As New List(Of Integer)
+
+        Dim res As WIA.Property = _scanner.Properties("Horizontal Resolution")
+        If res.SubType = WiaSubType.RangeSubType Then
+            Dim stp As Integer = 100
+            Dim min As Integer = 100
+            Dim max As Integer = 2000
+            If res.SubTypeMin <= 75 Then AvailableResolutions.Add(75) 'Add ultra low resolution
+            If res.SubTypeMin > min Then min = res.SubTypeMin
+            If res.SubTypeStep > stp Then stp = res.SubTypeStep
+            If res.SubTypeMax < max Then max = res.SubTypeMax
+            For i As Integer = min To max Step stp
+                AvailableResolutions.Add(i)
+            Next
+
+        ElseIf res.SubType = WiaSubType.ListSubType Then
+            For i As Integer = 1 To _scanner.Properties("Horizontal Resolution").SubTypeValues.Count
+                AvailableResolutions.Add(CInt(_scanner.Properties("Horizontal Resolution").SubTypeValues(i)))
+            Next i
+        End If
+        Return _AvailableResolutions
+    End Function
+
+    ReadOnly Property AvailableResolutions() As List(Of Integer)
         Get
-            AvailableResolutions = New ArrayList()
-
-            Dim res As WIA.Property = _scanner.Properties("Horizontal Resolution")
-            If res.SubType = WiaSubType.RangeSubType Then
-                Dim stp As Integer = 100
-                Dim min As Integer = 100
-                Dim max As Integer = 2000
-                If res.SubTypeMin <= 75 Then AvailableResolutions.Add(75) 'Add ultra low resolution
-                If res.SubTypeMin > min Then min = res.SubTypeMin
-                If res.SubTypeStep > stp Then stp = res.SubTypeStep
-                If res.SubTypeMax < max Then max = res.SubTypeMax
-                For i As Integer = min To max Step stp
-                    AvailableResolutions.Add(i)
-                Next
-
-            ElseIf res.SubType = WiaSubType.ListSubType Then
-                For i As Integer = 1 To _scanner.Properties("Horizontal Resolution").SubTypeValues.Count
-                    AvailableResolutions.Add(CInt(_scanner.Properties("Horizontal Resolution").SubTypeValues(i)))
-                Next i
-            End If
-
+            Return _AvailableResolutions
         End Get
     End Property
 
@@ -357,16 +366,14 @@ Public Class Scanner
 
     End Function
 
-    Function Scan(ByVal preview As Boolean, Optional ByVal quality As Integer = 100) As IO.MemoryStream
+    Function Scan(ByVal options As ScanOptions) As IO.MemoryStream
         Dim dialog As New WIA.CommonDialog
         Dim tmpImg As ImageFile
 
         Me.HorizontalExtent = Me.MaxHorizontalExtent
         Me.VerticalExtent = Me.MaxVerticalExtent
 
-        Reconnect() 'This should avoid the famous "second scan" issue. THANKS D. Forester!!!
-
-        If preview Then
+        If options.Preview Then
             'With preview
             Try
                 tmpImg = dialog.ShowAcquireImage(WiaDeviceType.ScannerDeviceType, Me.Intent, WiaImageBias.MaximizeQuality, , False, True, True)
@@ -377,6 +384,19 @@ Public Class Scanner
             End Try
         Else
             'Without preview
+
+            Dim _device As Device
+
+            Try
+                _device = manager.DeviceInfos.Item(DeviceId).Connect
+                _deviceID = DeviceId
+
+                'TODO: Set all the scanner properties
+
+            Catch ex As Exception
+                Throw
+            End Try
+
             Try
                 tmpImg = dialog.ShowTransfer(_device.Items(1), , True)
 
@@ -385,12 +405,11 @@ Public Class Scanner
 
             Catch ex As Exception
                 MessageBox.Show(ex.Message)
-                ' Show the stack trace, which is a list of methods that are currently executing.
                 MessageBox.Show("Stack Trace: " & vbCrLf & ex.StackTrace)
             End Try
         End If
 
-        tmpImg = Compress(quality, tmpImg)
+        tmpImg = Compress(options.Quality, tmpImg)
         'Converts WIA.ImageFile into Image
         'Don't dispose this stream!
         Dim stream As IO.MemoryStream
@@ -471,10 +490,6 @@ Public Class Scanner
 
     End Sub
 
-    Sub DeviceDisconnected(ByVal eventId As String, ByVal deviceId As String, ByVal itemId As String) Handles manager.OnEvent
-        RaiseEvent ScannerDisconnected(Me, New EventArgs)
-    End Sub
-
 End Class
 
 Class ScanOptions
@@ -501,7 +516,7 @@ Class ScanOptions
     End Property
 
     Private _Resolution As Short
-    Public Property Resolution() As Short
+    Public Property Resolution() As Integer
         Get
             Return _Resolution
         End Get
@@ -527,6 +542,16 @@ Class ScanOptions
         End Get
         Set(ByVal value As Integer)
             _Quality = value
+        End Set
+    End Property
+
+    Private _Preview As Boolean
+    Public Property Preview() As Boolean
+        Get
+            Return _Preview
+        End Get
+        Set(ByVal value As Boolean)
+            _Preview = value
         End Set
     End Property
 
