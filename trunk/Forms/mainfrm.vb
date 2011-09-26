@@ -1,5 +1,5 @@
 ﻿'iCopy - Simple Photocopier
-'Copyright (C) 2007-2010 Matteo Rossi
+'Copyright (C) 2007-2011 Matteo Rossi
 
 'This program is free software: you can redistribute it and/or modify
 'it under the terms of the GNU General Public License as published by
@@ -152,18 +152,8 @@ Class mainFrm
     Private Sub btnCopy_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnCopy.Click
         Me.Enabled = False
         'Starts copy process
-        Dim res, nCopies, enlargement As Short
-        Dim brightness, contrast As Integer
-        Try
-            res = Convert.ToInt16(frmImageSettings.cboResolution.Text, Globalization.CultureInfo.InvariantCulture)
-        Catch ex As FormatException
-            If My.Settings.Resolution <> 0 Or (Not Nothing) Then res = My.Settings.Resolution
-        End Try
-        brightness = frmImageSettings.tbBrightness.Value
-        contrast = frmImageSettings.tbContrast.Value
-        nCopies = Decimal.ToInt16(nudNCopie.Value)
-        enlargement = Convert.ToInt16(frmImageSettings.tbenlargement.Value)
-        appControl.Copy(res, brightness, contrast, intent, nCopies, chkPreview.Checked, enlargement)
+        appControl.Copy(getScanSettings())
+
         Me.Enabled = True
     End Sub
 
@@ -245,14 +235,28 @@ Class mainFrm
         AboutBox.Show()
     End Sub
 
+    Private Function getScanSettings() As ScanSettings
+        Dim opts As New ScanSettings
+        Try
+            opts.Resolution = Convert.ToInt32(frmImageSettings.cboResolution.Text, Globalization.CultureInfo.InvariantCulture)
+        Catch ex As FormatException
+            If My.Settings.Resolution <> 0 Or (Not Nothing) Then opts.Resolution = My.Settings.Resolution
+        End Try
+
+        opts.Brightness = frmImageSettings.tbBrightness.Value
+        opts.Contrast = frmImageSettings.tbContrast.Value
+        opts.Intent = intent
+        opts.Preview = chkPreview.Checked
+        opts.Quality = frmImageSettings.tbCompression.Value
+        opts.Copies = nudNCopie.Value
+        opts.Scaling = frmImageSettings.tbScaling.Value
+        Return opts
+    End Function
+
     Private Sub ScanToFile_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ScanToFile.Click
         Dim res As Short
-        Try
-            res = Convert.ToInt16(frmImageSettings.cboResolution.Text, Globalization.CultureInfo.InvariantCulture)
-        Catch ex As FormatException
-            If My.Settings.Resolution <> 0 Or (Not Nothing) Then res = My.Settings.Resolution
-        End Try
-        appControl.SaveToFile(res, frmImageSettings.tbBrightness.Value, frmImageSettings.tbContrast.Value, intent, chkPreview.Checked, frmImageSettings.tbCompression.Value)
+
+        appControl.SaveToFile(getScanSettings())
     End Sub
 
     Private Sub ScanMultiplePages_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ScanMultiplePages.Click
@@ -264,7 +268,7 @@ Class mainFrm
         Catch ex As FormatException
             If My.Settings.Resolution <> 0 Or (Not Nothing) Then res = My.Settings.Resolution
         End Try
-        appControl.CopyMultiplePages(res, frmImageSettings.tbBrightness.Value, frmImageSettings.tbContrast.Value, intent, nudNCopie.Value, chkPreview.Checked, frmImageSettings.tbenlargement.Value)
+        appControl.CopyMultiplePages(getScanSettings())
         Me.Enabled = True
     End Sub
 
