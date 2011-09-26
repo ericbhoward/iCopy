@@ -94,17 +94,20 @@ Class appControl
                     _wscanner = _device.Items(1)
                 End If
 
-                    'Default scanning values
-                    Dim res As Integer = My.Settings.Resolution
-                    Dim intent As WiaImageIntent = My.Settings.DefaultIntent
-                    Dim copies As Integer = 1
-                    Dim brightness As Short = My.Settings.Brightness
-                    Dim contrast As Short = My.Settings.Contrast
-                    Dim enlargement As Integer = 100
-                    Dim preview As Boolean = False
-                    Dim doCopy As Boolean = False
-                    Dim doScantoFile As Boolean = False
-                    Dim path As String = ""
+                'TODO: Serialize ScanOptions so that we can have a ScanOptions object in settings
+                Dim options As New ScanOptions
+                options.Resolution = My.Settings.Resolution
+                options.Intent = My.Settings.DefaultIntent
+                options.Copies = 1
+                options.Brightness = My.Settings.Brightness
+                options.Contrast = My.Settings.Contrast
+                options.Scaling = 100
+                options.Preview = False
+                options.Quality = 100
+
+                Dim doCopy As Boolean = False
+                Dim doScantoFile As Boolean = False
+                Dim path As String = ""
 
                     Select Case sArgs(0).Substring(0, 2)
                         Case "-d"
@@ -129,19 +132,19 @@ Class appControl
                     For Each arg As String In sArgs
                         Select Case arg
                             Case "/r" 'Resolution
-                                res = arg.Substring(3)
+                            options.Resolution = arg.Substring(3)
                             Case "/i" 'Intent
-                                intent = arg.Substring(3)
+                            options.Intent = arg.Substring(3)
                             Case "/n" 'Copies
-                                copies = arg.Substring(3)
+                            options.Copies = arg.Substring(3)
                             Case "/s" 'Scale
-                                enlargement = arg.Substring(3)
+                            options.Scaling = arg.Substring(3)
                             Case "/p" 'Preview
-                                preview = True
+                            options.Preview = True
                             Case "/b" 'Brightness
-                                brightness = arg.Substring(3)
+                            options.Brightness = arg.Substring(3)
                             Case "/cn" 'Contrast
-                                contrast = arg.Substring(4)
+                            options.Contrast = arg.Substring(4)
                         End Select
                     Next
 
@@ -153,7 +156,7 @@ Class appControl
                         Catch ex As NullReferenceException
                             Application.Exit()
                         End Try
-                        Copy(res, brightness, contrast, intent, copies, preview, enlargement)
+                    Copy(options)
                     ElseIf doScantoFile Then
 
                         'Initializes new scanning interface()
@@ -166,9 +169,9 @@ Class appControl
                         End Try
 
                         If path = "" Then 'If path isn't specified, show SaveFile dialog
-                            SaveToFile(res, brightness, contrast, intent, preview)
+                        SaveToFile(options)
                         Else
-                            SaveToFile(res, brightness, contrast, intent, preview, path, 100)
+                        SaveToFile(options, path)
                         End If
                     End If
                 End If
@@ -466,29 +469,23 @@ retry:
         End If
     End Sub
 
-    Shared Sub SaveToFile(ByVal Resolution As Short, _
-                          ByVal brightness As Short, ByVal contrast As Short, _
-                          ByVal intent As WiaImageIntent, _
-                          ByVal preview As Boolean, Optional ByVal compression As Integer = 100)
+    Shared Sub SaveToFile(ByVal options As ScanOptions)
         Dim dialog As New SaveFileDialog()
 
         dialog.AddExtension = True
         dialog.DefaultExt = "jpg"
         dialog.Filter = "JPEG image|*.jpg|Windows Bitmap|*.bmp|Compuserve GIF|*.gif|Portable Network Graphics (PNG)|*.png"
 
-        If Not dialog.ShowDialog() = Windows.Forms.DialogResult.Cancel Then SaveToFile(Resolution, brightness, contrast, intent, preview, dialog.FileName, compression)
+        If Not dialog.ShowDialog() = Windows.Forms.DialogResult.Cancel Then SaveToFile(options, dialog.FileName)
 
     End Sub
 
-    Shared Sub SaveToFile(ByVal Resolution As Short, _
-                          ByVal brightness As Short, ByVal contrast As Short, _
-                          ByVal intent As WiaImageIntent, _
-                          ByVal preview As Boolean, ByVal path As String, ByVal compression As Integer)
+    Shared Sub SaveToFile(ByVal options As ScanOptions, ByVal path As String)
 
         Dim img As Image
         'Calls scan routine
         Try
-            img = _scanner.ScanImg(preview, compression)
+            img = _scanner.ScanImg(options)
 
             'Determines the extension of the file
             Dim ext As String = Right(path, 3)
@@ -532,22 +529,13 @@ retry:
 
     End Function
 
-    Shared Function GetAvailableResolutions() As ArrayList
+    Shared Function GetAvailableResolutions() As List(Of Integer)
         Return _scanner.AvailableResolutions
     End Function
 
-    Shared Sub CopyMultiplePages(ByVal Resolution As Short, ByVal brightness As Integer, _
-                                 ByVal contrast As Integer, ByVal intent As WiaImageIntent, _
-                                 Optional ByVal copies As Short = 1, _
-                                 Optional ByVal preview As Boolean = False, _
-                                 Optional ByVal scale As Short = 100)
+    Shared Sub CopyMultiplePages(ByVal options As ScanOptions, Optional ByVal copies As Short = 1)
 
         'Sets acquisition properties
-        _scanner.Resolution = Resolution
-        _scanner.Brightness = brightness
-        _scanner.Contrast = contrast
-        _scanner.Intent = intent
-
 
         Dim morePages As DialogResult = DialogResult.Yes
 
@@ -559,13 +547,12 @@ retry:
 
         End If
 
-
         Do Until morePages = DialogResult.No Or morePages = DialogResult.Cancel
 
             'Calls scan routine
             Try
                 'Add the image to the print buffer
-                _printer.AddImage(_scanner.Scan(preview), scale)
+                _printer.AddImage(_scanner.Scan(options), options.Scaling)
 
                 morePages = dlg.ShowDialog()
 
@@ -594,25 +581,17 @@ retry:
         End If
     End Sub
 
-    Shared Sub Copy(ByVal Resolution As Short, ByVal brightness As Integer, _
-                                 ByVal contrast As Integer, ByVal intent As WiaImageIntent, _
-                                 Optional ByVal copies As Short = 1, _
-                                 Optional ByVal preview As Boolean = False, _
-                                 Optional ByVal scale As Short = 100)
+    Shared Sub Copy(ByVal options As ScanOptions)
         'Sets acquisition properties
-        _scanner.Resolution = Resolution
-        _scanner.Brightness = brightness
-        _scanner.Contrast = contrast
-        _scanner.Intent = intent
 
         'Calls scan routine
         Try
             'Add the image to the printer buffer
-            _printer.AddImage(_scanner.Scan(preview), scale)
+            _printer.AddImage(_scanner.Scan(options), options.Scaling)
 
             'Prints images
             Try
-                _printer.Print(copies)
+                _printer.Print(options.Copies)
             Catch ex As ArgumentException
 
             End Try

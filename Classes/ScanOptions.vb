@@ -5,6 +5,28 @@ Public Class ScanOptions
     Private _Brightness As Integer
     Private _Contrast As Integer
 
+    Public Sub New()
+        _Brightness = 0
+        _Contrast = 0
+        _Quality = 100
+        _Preview = False
+        _Copies = 1
+        _Intent = WIA.WiaImageIntent.ColorIntent
+        _Resolution = 100
+        _Scaling = 100
+    End Sub
+
+    Public Sub New(ByVal Res As Integer)
+        _Brightness = 0
+        _Contrast = 0
+        _Quality = 100
+        _Preview = False
+        _Copies = 1
+        _Intent = WIA.WiaImageIntent.ColorIntent
+        _Resolution = Res
+        _Scaling = 100
+    End Sub
+
     Public Property Brightness() As Integer
         Get
             Return _Brightness
@@ -60,6 +82,26 @@ Public Class ScanOptions
         End Get
         Set(ByVal value As Boolean)
             _Preview = value
+        End Set
+    End Property
+
+    Private _Scaling As Integer
+    Public Property Scaling() As Integer
+        Get
+            Return _Scaling
+        End Get
+        Set(ByVal value As Integer)
+            _Scaling = value
+        End Set
+    End Property
+
+    Private _Copies As Integer
+    Public Property Copies() As Integer
+        Get
+            Return _Copies
+        End Get
+        Set(ByVal value As Integer)
+            _Copies = value
         End Set
     End Property
 
