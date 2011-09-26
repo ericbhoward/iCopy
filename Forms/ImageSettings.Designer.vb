@@ -22,7 +22,8 @@ Partial Class frmImageSettings
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.tbenlargement = New System.Windows.Forms.TrackBar()
+        Me.components = New System.ComponentModel.Container()
+        Me.tbScaling = New System.Windows.Forms.TrackBar()
         Me.Label10 = New System.Windows.Forms.Label()
         Me.Label9 = New System.Windows.Forms.Label()
         Me.tbContrast = New System.Windows.Forms.TrackBar()
@@ -31,29 +32,33 @@ Partial Class frmImageSettings
         Me.txtContrast = New System.Windows.Forms.TextBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.txtBrightness = New System.Windows.Forms.TextBox()
-        Me.txtenlargement = New System.Windows.Forms.TextBox()
+        Me.txtScaling = New System.Windows.Forms.TextBox()
         Me.lblPerc = New System.Windows.Forms.Label()
-        Me.ToolTip1 = New System.Windows.Forms.ToolTip()
+        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.cboResolution = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.lblCompressionLabel = New System.Windows.Forms.Label()
         Me.tbCompression = New System.Windows.Forms.TrackBar()
         Me.lblCompression = New System.Windows.Forms.Label()
         Me.btnDefault = New System.Windows.Forms.Button()
+        CType(Me.tbScaling, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.tbContrast, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.tbBrightness, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.tbCompression, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
-        'tbenlargement
+        'tbScaling
         '
-        Me.tbenlargement.LargeChange = 50
-        Me.tbenlargement.Location = New System.Drawing.Point(86, 76)
-        Me.tbenlargement.Maximum = 200
-        Me.tbenlargement.Minimum = 1
-        Me.tbenlargement.Name = "tbenlargement"
-        Me.tbenlargement.Size = New System.Drawing.Size(101, 45)
-        Me.tbenlargement.SmallChange = 10
-        Me.tbenlargement.TabIndex = 39
-        Me.tbenlargement.TickFrequency = 50
-        Me.tbenlargement.Value = 100
+        Me.tbScaling.LargeChange = 50
+        Me.tbScaling.Location = New System.Drawing.Point(86, 76)
+        Me.tbScaling.Maximum = 200
+        Me.tbScaling.Minimum = 1
+        Me.tbScaling.Name = "tbScaling"
+        Me.tbScaling.Size = New System.Drawing.Size(101, 45)
+        Me.tbScaling.SmallChange = 10
+        Me.tbScaling.TabIndex = 39
+        Me.tbScaling.TickFrequency = 50
+        Me.tbScaling.Value = 100
         '
         'Label10
         '
@@ -61,7 +66,7 @@ Partial Class frmImageSettings
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(80, 13)
         Me.Label10.TabIndex = 38
-        Me.Label10.Text = "Enlargement"
+        Me.Label10.Text = "Scaling"
         Me.Label10.TextAlign = System.Drawing.ContentAlignment.TopRight
         '
         'Label9
@@ -129,13 +134,13 @@ Partial Class frmImageSettings
         Me.txtBrightness.Size = New System.Drawing.Size(37, 20)
         Me.txtBrightness.TabIndex = 31
         '
-        'txtenlargement
+        'txtScaling
         '
-        Me.txtenlargement.Location = New System.Drawing.Point(193, 78)
-        Me.txtenlargement.MaxLength = 3
-        Me.txtenlargement.Name = "txtenlargement"
-        Me.txtenlargement.Size = New System.Drawing.Size(28, 20)
-        Me.txtenlargement.TabIndex = 41
+        Me.txtScaling.Location = New System.Drawing.Point(193, 78)
+        Me.txtScaling.MaxLength = 3
+        Me.txtScaling.Name = "txtScaling"
+        Me.txtScaling.Size = New System.Drawing.Size(28, 20)
+        Me.txtScaling.TabIndex = 41
         '
         'lblPerc
         '
@@ -208,7 +213,7 @@ Partial Class frmImageSettings
         Me.Controls.Add(Me.btnDefault)
         Me.Controls.Add(Me.lblCompression)
         Me.Controls.Add(Me.cboResolution)
-        Me.Controls.Add(Me.tbenlargement)
+        Me.Controls.Add(Me.tbScaling)
         Me.Controls.Add(Me.tbCompression)
         Me.Controls.Add(Me.lblCompressionLabel)
         Me.Controls.Add(Me.Label1)
@@ -220,7 +225,7 @@ Partial Class frmImageSettings
         Me.Controls.Add(Me.tbContrast)
         Me.Controls.Add(Me.tbBrightness)
         Me.Controls.Add(Me.lblPerc)
-        Me.Controls.Add(Me.txtenlargement)
+        Me.Controls.Add(Me.txtScaling)
         Me.Controls.Add(Me.Label10)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
         Me.KeyPreview = True
@@ -229,11 +234,15 @@ Partial Class frmImageSettings
         Me.ShowInTaskbar = False
         Me.StartPosition = System.Windows.Forms.FormStartPosition.Manual
         Me.Text = "Image Settings"
+        CType(Me.tbScaling, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.tbContrast, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.tbBrightness, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.tbCompression, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
     End Sub
-    Friend WithEvents tbenlargement As System.Windows.Forms.TrackBar
+    Friend WithEvents tbScaling As System.Windows.Forms.TrackBar
     Friend WithEvents Label10 As System.Windows.Forms.Label
     Friend WithEvents Label9 As System.Windows.Forms.Label
     Friend WithEvents tbContrast As System.Windows.Forms.TrackBar
@@ -242,7 +251,7 @@ Partial Class frmImageSettings
     Friend WithEvents txtContrast As System.Windows.Forms.TextBox
     Friend WithEvents Label3 As System.Windows.Forms.Label
     Friend WithEvents txtBrightness As System.Windows.Forms.TextBox
-    Friend WithEvents txtenlargement As System.Windows.Forms.TextBox
+    Friend WithEvents txtScaling As System.Windows.Forms.TextBox
     Friend WithEvents lblPerc As System.Windows.Forms.Label
     Friend WithEvents ToolTip1 As System.Windows.Forms.ToolTip
     Friend WithEvents cboResolution As System.Windows.Forms.ComboBox
