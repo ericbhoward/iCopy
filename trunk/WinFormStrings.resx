@@ -162,8 +162,8 @@ copy the folder xx-XX to iCopy folder</comment>
     <comment>Image Settings</comment>
   </data>
   <data name="frmImageSettings_Label10" xml:space="preserve">
-    <value>Enlargement</value>
-    <comment>Enlargement</comment>
+    <value>Scaling</value>
+    <comment>Scaling</comment>
   </data>
   <data name="frmImageSettings_Label2" xml:space="preserve">
     <value>Brightness</value>
@@ -201,7 +201,7 @@ copy the folder xx-XX to iCopy folder</comment>
     <value>Set contrast value.</value>
     <comment>Set contrast value.</comment>
   </data>
-  <data name="frmImageSettings_tbenlargementToolTip" xml:space="preserve">
+  <data name="frmImageSettings_tbScalingToolTip" xml:space="preserve">
     <value>Scale the image to the selected percentage</value>
     <comment>Scale the image to the selected percentage</comment>
   </data>
@@ -213,9 +213,9 @@ copy the folder xx-XX to iCopy folder</comment>
     <value>Set contrast value.  Enter a value from -100 (darker) to 100 (brighter)</value>
     <comment>Set contrast value.  Enter a value from -100 (darker) to 100 (brighter)</comment>
   </data>
-  <data name="frmImageSettings_txtenlargementToolTip" xml:space="preserve">
-    <value>Enter the enlargement percentage. Value must be between 1 and 200</value>
-    <comment>Enter the enlargement percentage. Value must be between 1 and 200</comment>
+  <data name="frmImageSettings_txtScalingToolTip" xml:space="preserve">
+    <value>Enter the scaling percentage. Value must be between 1 and 200</value>
+    <comment>Enter the scaling percentage. Value must be between 1 and 200</comment>
   </data>
   <data name="mainFrm_btnCopyToolTip" xml:space="preserve">
     <value>Start copy process (CTRL+C)</value>
@@ -231,9 +231,9 @@ copy the folder xx-XX to iCopy folder</comment>
   </data>
   <data name="mainFrm_btnImageSettingsToolTip" xml:space="preserve">
     <value>Shows/Hides advanced image settings, which include
-Brightness, Contrast, Quality and enlargement (CTRL+I)</value>
+Brightness, Contrast, Quality and Scaling (CTRL+I)</value>
     <comment>Shows/Hides advanced image settings, which include
-Brightness, Contrast, Quality and enlargement (CTRL+I)</comment>
+Brightness, Contrast, Quality and Scaling (CTRL+I)</comment>
   </data>
   <data name="mainFrm_btnPrintSetup" xml:space="preserve">
     <value>&amp;Printer options...</value>

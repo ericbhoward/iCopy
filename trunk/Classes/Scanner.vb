@@ -1,5 +1,5 @@
 ﻿'iCopy - Simple Photocopier
-'Copyright (C) 2007-2010 Matteo Rossi
+'Copyright (C) 2007-2011 Matteo Rossi
 
 'This program is free software: you can redistribute it and/or modify
 'it under the terms of the GNU General Public License as published by
@@ -274,17 +274,17 @@ Public Class Scanner
             Dim stp As Integer = 100
             Dim min As Integer = 100
             Dim max As Integer = 2000
-            If res.SubTypeMin <= 75 Then AvailableResolutions.Add(75) 'Add ultra low resolution
+            If res.SubTypeMin <= 75 Then _AvailableResolutions.Add(75) 'Add ultra low resolution
             If res.SubTypeMin > min Then min = res.SubTypeMin
             If res.SubTypeStep > stp Then stp = res.SubTypeStep
             If res.SubTypeMax < max Then max = res.SubTypeMax
             For i As Integer = min To max Step stp
-                AvailableResolutions.Add(i)
+                _AvailableResolutions.Add(i)
             Next
 
         ElseIf res.SubType = WiaSubType.ListSubType Then
             For i As Integer = 1 To _scanner.Properties("Horizontal Resolution").SubTypeValues.Count
-                AvailableResolutions.Add(CInt(_scanner.Properties("Horizontal Resolution").SubTypeValues(i)))
+                _AvailableResolutions.Add(CInt(_scanner.Properties("Horizontal Resolution").SubTypeValues(i)))
             Next i
         End If
         Return _AvailableResolutions
@@ -310,7 +310,7 @@ Public Class Scanner
 
     End Function
 
-    Function Scan(ByVal options As ScanOptions) As IO.MemoryStream
+    Function Scan(ByVal options As ScanSettings) As IO.MemoryStream
         Dim dialog As New WIA.CommonDialog
         Dim tmpImg As ImageFile
         If options.Preview Then
@@ -369,7 +369,7 @@ Public Class Scanner
         Return stream
     End Function
 
-    Function ScanImg(ByVal options As ScanOptions) As Image
+    Function ScanImg(ByVal options As ScanSettings) As Image
         Dim Img As Image = Image.FromStream(Scan(options))
         Return Img
     End Function

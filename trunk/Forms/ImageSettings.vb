@@ -1,5 +1,5 @@
 ﻿'iCopy - Simple Photocopier
-'Copyright (C) 2007-2010 Matteo Rossi
+'Copyright (C) 2007-2011 Matteo Rossi
 
 'This program is free software: you can redistribute it and/or modify
 'it under the terms of the GNU General Public License as published by
@@ -58,11 +58,9 @@ Class frmImageSettings
 
         If My.Settings.Resolution <> 0 Then
             cboResolution.Text = My.Settings.Resolution
-            appControl.Scanner.Resolution = My.Settings.Resolution
         Else
             cboResolution.Text = "100"
             My.Settings.Resolution = 100
-            appControl.Scanner.Resolution = My.Settings.Resolution
         End If
 
         'Loads settings
@@ -70,13 +68,13 @@ Class frmImageSettings
         tbContrast.Value = My.Settings.Contrast
         txtBrightness.Text = My.Settings.Brightness
         txtContrast.Text = My.Settings.Contrast
-        tbenlargement.Value = 100
-        txtenlargement.Text = "100"
+        tbScaling.Value = 100
+        txtScaling.Text = "100"
         tbCompression.Value = My.Settings.Compression
         lblCompression.Text = tbCompression.Value
     End Sub
 
-    Private Sub valid_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtBrightness.KeyPress, txtContrast.KeyPress, txtenlargement.KeyPress
+    Private Sub valid_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtBrightness.KeyPress, txtContrast.KeyPress, txtScaling.KeyPress
 
         'Permits only numerical input to the textbox
         'Apllied to both txtBrightness and txtContrast
@@ -129,12 +127,12 @@ Class frmImageSettings
         My.Settings.Brightness = tbBrightness.Value
     End Sub
 
-    Private Sub tbenlargement_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles tbenlargement.Scroll
-        txtenlargement.Text = tbenlargement.Value
+    Private Sub tbenlargement_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles tbScaling.Scroll
+        txtScaling.Text = tbScaling.Value
     End Sub
 
-    Private Sub txtenlargement_LostFocus(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtenlargement.LostFocus
-        CheckValue(txtenlargement, tbenlargement, txtenlargement.Text)
+    Private Sub txtenlargement_LostFocus(ByVal sender As Object, ByVal e As System.EventArgs) Handles txtScaling.LostFocus
+        CheckValue(txtScaling, tbScaling, txtScaling.Text)
         tbBrightness.Value = CInt(txtBrightness.Text)
     End Sub
 
@@ -151,6 +149,6 @@ Class frmImageSettings
         tbBrightness.Value = 0 : tbContrast.Value = 0
         tbCompression.Value = 100
         cboResolution.Text = 100
-        tbenlargement.Value = 100
+        tbScaling.Value = 100
     End Sub
 End Class

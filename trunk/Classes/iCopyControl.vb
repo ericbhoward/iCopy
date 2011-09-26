@@ -1,5 +1,5 @@
 ﻿'iCopy - Simple Photocopier
-'Copyright (C) 2007-2010 Matteo Rossi
+'Copyright (C) 2007-2011 Matteo Rossi
 
 'This program is free software: you can redistribute it and/or modify
 'it under the terms of the GNU General Public License as published by
@@ -41,7 +41,9 @@ Class appControl
 
     Shared Sub Main(ByVal sArgs() As String)
         Application.EnableVisualStyles()
+#If Not Debug Then
             Try
+#End If
                 If sArgs.Length = 0 Then 'If there are no arguments, run app normally
                     CommandLine = False
                     'Avoids that two processes run simultaneously
@@ -95,7 +97,7 @@ Class appControl
                 End If
 
                 'TODO: Serialize ScanOptions so that we can have a ScanOptions object in settings
-                Dim options As New ScanOptions
+                Dim options As New ScanSettings
                 options.Resolution = My.Settings.Resolution
                 options.Intent = My.Settings.DefaultIntent
                 options.Copies = 1
@@ -109,77 +111,80 @@ Class appControl
                 Dim doScantoFile As Boolean = False
                 Dim path As String = ""
 
-                    Select Case sArgs(0).Substring(0, 2)
-                        Case "-d"
-                            Diagnosis()
-                            Application.Exit()
-                            Exit Sub
-                        Case "/c" 'Copy
-                            doCopy = True : doScantoFile = False
-                        Case "/f" 'Scan To File
-                            doCopy = False : doScantoFile = True
-                            If Not (sArgs(0) = "/f" Or sArgs(0) = "/f:") Then
-                                path = sArgs(0).Substring(3)
-                            End If
-                        Case Else
-                            Dim args(-1) As String
-                            Main(args)
-                            Exit Sub
-                    End Select
-
-
-                    'Read available command line args
-                    For Each arg As String In sArgs
-                        Select Case arg
-                            Case "/r" 'Resolution
-                            options.Resolution = arg.Substring(3)
-                            Case "/i" 'Intent
-                            options.Intent = arg.Substring(3)
-                            Case "/n" 'Copies
-                            options.Copies = arg.Substring(3)
-                            Case "/s" 'Scale
-                            options.Scaling = arg.Substring(3)
-                            Case "/p" 'Preview
-                            options.Preview = True
-                            Case "/b" 'Brightness
-                            options.Brightness = arg.Substring(3)
-                            Case "/cn" 'Contrast
-                            options.Contrast = arg.Substring(4)
-                        End Select
-                    Next
-
-                    'Runs copy process
-                    If doCopy Then
-
-                        Try
-                            My.Settings.DeviceID = _scanner.DeviceId
-                        Catch ex As NullReferenceException
-                            Application.Exit()
-                        End Try
-                    Copy(options)
-                    ElseIf doScantoFile Then
-
-                        'Initializes new scanning interface()
-                        appControl.CreateScanner(My.Settings.DeviceID)
-
-                        Try
-                            My.Settings.DeviceID = _scanner.DeviceId
-                        Catch ex As NullReferenceException
-                            Application.Exit()
-                        End Try
-
-                        If path = "" Then 'If path isn't specified, show SaveFile dialog
-                        SaveToFile(options)
-                        Else
-                        SaveToFile(options, path)
+                Select Case sArgs(0).Substring(0, 2)
+                    Case "-d"
+                        Diagnosis()
+                        Application.Exit()
+                        Exit Sub
+                    Case "/c" 'Copy
+                        doCopy = True : doScantoFile = False
+                    Case "/f" 'Scan To File
+                        doCopy = False : doScantoFile = True
+                        If Not (sArgs(0) = "/f" Or sArgs(0) = "/f:") Then
+                            path = sArgs(0).Substring(3)
                         End If
+                    Case Else
+                        Dim args(-1) As String
+                        Main(args)
+                        Exit Sub
+                End Select
+
+
+                'Read available command line args
+                For Each arg As String In sArgs
+                    Select Case arg
+                        Case "/r" 'Resolution
+                            options.Resolution = arg.Substring(3)
+                        Case "/i" 'Intent
+                            options.Intent = arg.Substring(3)
+                        Case "/n" 'Copies
+                            options.Copies = arg.Substring(3)
+                        Case "/s" 'Scale
+                            options.Scaling = arg.Substring(3)
+                        Case "/p" 'Preview
+                            options.Preview = True
+                        Case "/b" 'Brightness
+                            options.Brightness = arg.Substring(3)
+                        Case "/cn" 'Contrast
+                            options.Contrast = arg.Substring(4)
+                    End Select
+                Next
+
+                'Runs copy process
+                If doCopy Then
+
+                    Try
+                        My.Settings.DeviceID = _scanner.DeviceId
+                    Catch ex As NullReferenceException
+                        Application.Exit()
+                    End Try
+                    Copy(options)
+                ElseIf doScantoFile Then
+
+                    'Initializes new scanning interface()
+                    appControl.CreateScanner(My.Settings.DeviceID)
+
+                    Try
+                        My.Settings.DeviceID = _scanner.DeviceId
+                    Catch ex As NullReferenceException
+                        Application.Exit()
+                    End Try
+
+                    If path = "" Then 'If path isn't specified, show SaveFile dialog
+                        SaveToFile(options)
+                    Else
+                        SaveToFile(options, path)
                     End If
                 End If
+            End If
 
-            Catch ex As Exception
-                HandleException(ex) 'Overrides .NET message box to include error reporting
-            End Try
+#If Not Debug Then
+        Catch ex As Exception
 
+            HandleException(ex) 'Overrides .NET message box to include error reporting
+
+        End Try
+#End If
     End Sub
 
     Private Shared Sub HandleException(ByVal ex As Exception)
@@ -469,7 +474,7 @@ retry:
         End If
     End Sub
 
-    Shared Sub SaveToFile(ByVal options As ScanOptions)
+    Shared Sub SaveToFile(ByVal options As ScanSettings)
         Dim dialog As New SaveFileDialog()
 
         dialog.AddExtension = True
@@ -480,7 +485,7 @@ retry:
 
     End Sub
 
-    Shared Sub SaveToFile(ByVal options As ScanOptions, ByVal path As String)
+    Shared Sub SaveToFile(ByVal options As ScanSettings, ByVal path As String)
 
         Dim img As Image
         'Calls scan routine
@@ -533,7 +538,7 @@ retry:
         Return _scanner.AvailableResolutions
     End Function
 
-    Shared Sub CopyMultiplePages(ByVal options As ScanOptions, Optional ByVal copies As Short = 1)
+    Shared Sub CopyMultiplePages(ByVal options As ScanSettings)
 
         'Sets acquisition properties
 
@@ -571,7 +576,7 @@ retry:
         If Not morePages = DialogResult.Cancel Then
             'Prints images
             Try
-                _printer.Print(copies)
+                _printer.Print(options.Copies)
             Catch ex As ArgumentException 'If no images were sent to the printer
 
             End Try
@@ -581,7 +586,7 @@ retry:
         End If
     End Sub
 
-    Shared Sub Copy(ByVal options As ScanOptions)
+    Shared Sub Copy(ByVal options As ScanSettings)
         'Sets acquisition properties
 
         'Calls scan routine

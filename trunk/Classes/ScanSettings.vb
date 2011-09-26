@@ -1,6 +1,6 @@
 ﻿Imports WIA
 
-Public Class ScanOptions
+Public Class ScanSettings
 
     Private _Brightness As Integer
     Private _Contrast As Integer
