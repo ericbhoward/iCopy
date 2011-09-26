@@ -130,41 +130,41 @@
     <Import Include="System.Windows.Forms" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AboutBox1.Designer.vb">
+    <Compile Include="Forms\AboutBox1.Designer.vb">
       <DependentUpon>AboutBox1.vb</DependentUpon>
     </Compile>
-    <Compile Include="AboutBox1.vb">
+    <Compile Include="Forms\AboutBox1.vb">
       <SubType>Form</SubType>
     </Compile>
-    <None Include="DLLRegistration.vb" />
+    <None Include="Classes\DLLRegistration.vb" />
     <Compile Include="Language Files\WinFormStrings.it-IT.Designer.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>WinFormStrings.it-IT.resx</DependentUpon>
     </Compile>
-    <Compile Include="MorePagesDialog.Designer.vb">
+    <Compile Include="Forms\MorePagesDialog.Designer.vb">
       <DependentUpon>MorePagesDialog.vb</DependentUpon>
     </Compile>
-    <Compile Include="MorePagesDialog.vb">
+    <Compile Include="Forms\MorePagesDialog.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="iCopyControl.vb" />
-    <Compile Include="dlgOptions.Designer.vb">
+    <Compile Include="Classes\iCopyControl.vb" />
+    <Compile Include="Forms\dlgOptions.Designer.vb">
       <DependentUpon>dlgOptions.vb</DependentUpon>
     </Compile>
-    <Compile Include="dlgOptions.vb">
+    <Compile Include="Forms\dlgOptions.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ImageSettings.Designer.vb">
+    <Compile Include="Forms\ImageSettings.Designer.vb">
       <DependentUpon>ImageSettings.vb</DependentUpon>
     </Compile>
-    <Compile Include="ImageSettings.vb">
+    <Compile Include="Forms\ImageSettings.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="mainfrm.vb">
+    <Compile Include="Forms\mainfrm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="mainfrm.Designer.vb">
+    <Compile Include="Forms\mainfrm.Designer.vb">
       <DependentUpon>mainfrm.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
@@ -187,18 +187,18 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <Compile Include="PortableSettingsProvider.vb" />
-    <Compile Include="Printer.vb" />
-    <Compile Include="Scanner.vb" />
-    <Compile Include="Settings.vb" />
-    <Compile Include="SplashScreen1.Designer.vb">
+    <Compile Include="Classes\PortableSettingsProvider.vb" />
+    <Compile Include="Classes\Printer.vb" />
+    <Compile Include="Classes\Scanner.vb" />
+    <Compile Include="Classes\Settings.vb" />
+    <Compile Include="Forms\SplashScreen1.Designer.vb">
       <DependentUpon>SplashScreen1.vb</DependentUpon>
     </Compile>
-    <Compile Include="SplashScreen1.vb">
+    <Compile Include="Forms\SplashScreen1.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="vistaTaskDialogs.vb" />
-    <Compile Include="WIAConstants.vb" />
+    <Compile Include="Classes\vistaTaskDialogs.vb" />
+    <Compile Include="Classes\WIAConstants.vb" />
     <Compile Include="WinFormStrings.Designer.vb">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -206,7 +206,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="AboutBox1.resx">
+    <EmbeddedResource Include="Forms\AboutBox1.resx">
       <SubType>Designer</SubType>
       <DependentUpon>AboutBox1.vb</DependentUpon>
     </EmbeddedResource>
@@ -230,7 +230,7 @@
     <EmbeddedResource Include="Language Files\WinFormStrings.sk-SK.resx" />
     <EmbeddedResource Include="Language Files\WinFormStrings.tr-TR.resx" />
     <EmbeddedResource Include="Language Files\WinFormStrings.zh-TW.resx" />
-    <EmbeddedResource Include="MorePagesDialog.resx">
+    <EmbeddedResource Include="Forms\MorePagesDialog.resx">
       <SubType>Designer</SubType>
       <DependentUpon>MorePagesDialog.vb</DependentUpon>
     </EmbeddedResource>
@@ -240,19 +240,19 @@
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="dlgOptions.resx">
+    <EmbeddedResource Include="Forms\dlgOptions.resx">
       <SubType>Designer</SubType>
       <DependentUpon>dlgOptions.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ImageSettings.resx">
+    <EmbeddedResource Include="Forms\ImageSettings.resx">
       <SubType>Designer</SubType>
       <DependentUpon>ImageSettings.vb</DependentUpon>
     </EmbeddedResource>
-    <None Include="mainfrm.it-IT.resx">
+    <None Include="Forms\mainfrm.it-IT.resx">
       <DependentUpon>mainfrm.vb</DependentUpon>
       <SubType>Designer</SubType>
     </None>
-    <EmbeddedResource Include="mainfrm.resx">
+    <EmbeddedResource Include="Forms\mainfrm.resx">
       <DependentUpon>mainfrm.vb</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
@@ -265,7 +265,7 @@
     <EmbeddedResource Include="Language Files\WinFormStrings.ja-JP.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="SplashScreen1.resx">
+    <EmbeddedResource Include="Forms\SplashScreen1.resx">
       <DependentUpon>SplashScreen1.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WinFormStrings.resx">
