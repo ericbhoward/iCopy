@@ -157,15 +157,19 @@ Class mainFrm
         Me.Enabled = True
     End Sub
 
-    Private Sub SelScanner_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ScannerStatusLabel.Click
+    Private Sub SelScanner_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ScannerStatusLabel.Click, btnSelScanner.Click
         Try 'Tries changing the scanner
             Dim newscannerID As String = appControl.changescanner()
-            If Not newscannerID Is Nothing Then
-                If My.Settings.DeviceID <> newscannerID Then
-                    My.Settings.DeviceID = newscannerID 'if a deviceId is returned, store it
-                End If
+            If newscannerID Is Nothing Then Exit Sub
+
+            If My.Settings.DeviceID <> newscannerID Then
+                My.Settings.DeviceID = newscannerID 'if a deviceId is returned, store it
             End If
+
             ScannerStatusLabel.Text = appControl.ScannerDescription
+            If frmImageSettings.Visible Then btnImageSettings.PerformClick()
+            frmImageSettings.Dispose()
+            frmImageSettings = New frmImageSettings()
         Catch ex As NullReferenceException
             If ex.Message = "Exit" Then
                 'Don't change the scanner
