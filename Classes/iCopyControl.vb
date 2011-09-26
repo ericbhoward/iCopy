@@ -485,11 +485,6 @@ retry:
                           ByVal intent As WiaImageIntent, _
                           ByVal preview As Boolean, ByVal path As String, ByVal compression As Integer)
 
-        _scanner.Resolution = Resolution
-        _scanner.Brightness = brightness
-        _scanner.Contrast = contrast
-        _scanner.Intent = intent
-
         Dim img As Image
         'Calls scan routine
         Try
