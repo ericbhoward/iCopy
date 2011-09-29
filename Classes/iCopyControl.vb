@@ -112,10 +112,11 @@ Class appControl
                 Dim path As String = ""
 
                 Select Case sArgs(0).Substring(0, 2)
-                    Case "-d"
-                        Diagnosis()
-                        Application.Exit()
-                        Exit Sub
+                Case "-d"
+                    appControl.CreateScanner(_deviceID)
+                    Diagnosis()
+                    Application.Exit()
+                    Exit Sub
                     Case "/c" 'Copy
                         doCopy = True : doScantoFile = False
                     Case "/f" 'Scan To File
@@ -180,9 +181,7 @@ Class appControl
 
 #If Not Debug Then
         Catch ex As Exception
-
-            HandleException(ex) 'Overrides .NET message box to include error reporting
-
+            If ex.Message <> "Exit" Then HandleException(ex) 'Overrides .NET message box to include error reporting
         End Try
 #End If
     End Sub
@@ -202,7 +201,7 @@ Class appControl
             End If
         Else
             'If the exception is unhandled, prepare error report and send info
-            ' If Not System.Diagnostics.Debugger.IsAttached Then SendInfo() 'Send info on iCopy
+            'If Not System.Diagnostics.Debugger.IsAttached Then SendInfo() 'Send info on iCopy
             ErrorReport(ex) 'Prepare error report
         End If
     End Sub
@@ -486,7 +485,7 @@ retry:
     End Sub
 
     Shared Sub SaveToFile(ByVal options As ScanSettings, ByVal path As String)
-
+        changescanner(_scanner.DeviceId)
         Dim img As Image
         'Calls scan routine
         Try
@@ -541,7 +540,6 @@ retry:
     Shared Sub CopyMultiplePages(ByVal options As ScanSettings)
 
         'Sets acquisition properties
-
         Dim morePages As DialogResult = DialogResult.Yes
 
         Dim dlg As New dlgScanMorePages
@@ -551,9 +549,9 @@ retry:
             dlg.Location = New Point(MainForm.Left + (MainForm.Width - dlg.Width) / 2, MainForm.Top + (MainForm.Height - dlg.Height) / 2)
 
         End If
-
+retry:
         Do Until morePages = DialogResult.No Or morePages = DialogResult.Cancel
-
+            changescanner(_scanner.DeviceId)
             'Calls scan routine
             Try
                 'Add the image to the print buffer
@@ -582,34 +580,38 @@ retry:
             End Try
 
         Else 'If the process is canceled by closing the dialog
-            _printer.ClearBuffer()
+            Dim res As MsgBoxResult = MsgBox("Are you sure you want to cancel the operation? Click Yes if you are sure to proceed.", MsgBoxStyle.Question + MsgBoxStyle.YesNo, "iCopy")
+            If res = MsgBoxResult.Yes Then
+                _printer.ClearBuffer()
+            Else
+                GoTo retry
+            End If
         End If
     End Sub
 
     Shared Sub Copy(ByVal options As ScanSettings)
         'Sets acquisition properties
 
+        changescanner(_scanner.DeviceId)
         'Calls scan routine
         Try
             'Add the image to the printer buffer
             _printer.AddImage(_scanner.Scan(options), options.Scaling)
 
-            'Prints images
-            Try
-                _printer.Print(options.Copies)
-            Catch ex As ArgumentException
-
-            End Try
-
         Catch ex As System.Runtime.InteropServices.COMException
             If ex.ErrorCode = -2145320860 Then       'If acquisition is cancelled
-
+                Exit Sub
             ElseIf ex.ErrorCode = Convert.ToInt32("0x80004005", 16) Then
                 MsgBox("An error occured while processing the acquired image. Please try again with a lower resolution." & vbCrLf & "If the problem persists please report it (http://icopy.sourceforge.net/reportabug.html).", MsgBoxStyle.Critical, "iCopy")
+                Exit Sub
             Else
                 Throw
             End If
         End Try
+
+        'Prints images
+        _printer.Print(options.Copies)
+
     End Sub
 
     Shared Sub scannerDisconnected(ByVal sender As Object, ByVal e As EventArgs) Handles _scanner.ScannerDisconnected
