@@ -42,35 +42,11 @@ Public Class Scanner
             For Each res As Integer In _AvailableResolutions
                 Console.WriteLine(res)
             Next
-            'TODO: manager.RegisterEvent(EventID.wiaEventDeviceDisconnected, _device.DeviceID)
         Catch ex As Exception
             Throw
         End Try
 
     End Sub
-
-    'Sub Reconnect()
-    '    Dim saveResolution As Short
-    '    Dim saveBrightness As Integer
-    '    Dim saveContrast As Integer
-    '    Dim saveIntent As WiaImageIntent
-    '    Try
-    '        saveResolution = Resolution
-    '        saveBrightness = Brightness
-    '        saveContrast = Contrast
-    '        saveIntent = Intent
-    '        _device = manager.DeviceInfos.Item(_deviceID).Connect
-    '        _scanner = _device.Items(1)
-    '        manager.RegisterEvent(EventID.wiaEventDeviceDisconnected, _device.DeviceID)
-    '        Resolution = saveResolution
-    '        Brightness = saveBrightness
-    '        Contrast = saveContrast
-    '        Intent = saveIntent
-    '    Catch ex As Exception
-    '        Throw
-    '    End Try
-    'End Sub
-
 
 #Region "Properties"
 
