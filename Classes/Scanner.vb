@@ -200,40 +200,52 @@ Public Class Scanner
         End Try
     End Sub
 
-    'TODO: Find more direct way of this
-    Public Sub SetMaxExtent(ByRef _scanner)
-        Dim max As Boolean = False
-        Dim hext As Integer = 1000
-        Dim n As Integer = 1000
-        Do Until max
-            Try
-                _scanner.Properties("Horizontal Extent").Value = hext
-            Catch ex As ArgumentException
-                If n <> 1 Then
-                    hext -= n
-                    n /= 10
-                Else
-                    max = True
-                End If
-            End Try
-            hext += n
-        Loop
+    Public Sub SetMaxExtent(ByRef _scanner As WIA.Item)
+        With _scanner.Properties("Horizontal Extent")
+            If .SubType = WiaSubType.RangeSubType Then
+                .Value = .SubTypeMax
+            Else                'TODO: Remove those things
+                Dim max As Boolean = False
+                Dim hext As Integer = 1000
+                Dim n As Integer = 1000
+                Do Until max
+                    Try
+                        .Value = hext
+                    Catch ex As ArgumentException
+                        If n <> 1 Then
+                            hext -= n
+                            n /= 10
+                        Else
+                            max = True
+                        End If
+                    End Try
+                    hext += n
+                Loop
+            End If
+        End With
 
-        Dim vext As Integer = 1000
-        n = 1000
-        Do Until max
-            Try
-                _scanner.Properties("Vertical Extent").Value = hext
-            Catch ex As ArgumentException
-                If n <> 1 Then
-                    hext -= n
-                    n /= 10
-                Else
-                    max = True
-                End If
-            End Try
-            hext += n
-        Loop
+        With _scanner.Properties("Vertical Extent")
+            If .SubType = WiaSubType.RangeSubType Then
+                .Value = .SubTypeMax
+            Else
+                Dim max As Boolean = False
+                Dim vext As Integer = 1000
+                Dim n As Integer = 1000
+                Do Until max
+                    Try
+                        .Value = vext
+                    Catch ex As ArgumentException
+                        If n <> 1 Then
+                            vext -= n
+                            n /= 10
+                        Else
+                            max = True
+                        End If
+                    End Try
+                    vext += n
+                Loop
+            End If
+        End With
     End Sub
 
     ReadOnly Property Description() As String
