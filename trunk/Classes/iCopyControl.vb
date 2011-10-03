@@ -19,6 +19,7 @@ Imports System.ComponentModel
 Imports System.Globalization
 Imports MySql.Data.MySqlClient
 Imports System.Drawing.Imaging
+Imports System.IO
 
 <Assembly: CLSCompliantAttribute(True)> 
 Class appControl
@@ -27,7 +28,7 @@ Class appControl
     Shared _deviceID As String
     Shared _device As Device
     Shared _wscanner As WIA.Item
-
+    Shared console_fs As FileStream
     Private Shared LocRM As New System.Resources.ResourceManager("iCopy.WinFormStrings", GetType(mainFrm).Assembly)
     Private Shared GetCulturesThread As New Threading.Thread(AddressOf GetAvailableLanguages)
 
@@ -41,149 +42,178 @@ Class appControl
 
     Shared Sub Main(ByVal sArgs() As String)
         Application.EnableVisualStyles()
+        Dim tmp As TextWriter 'Temporary output stream for the console
+        Dim sw As StreamWriter
+        If console_fs Is Nothing Then
+            console_fs = New FileStream("iCopy.log", FileMode.Create)
+            sw = New StreamWriter(console_fs)
+            sw.AutoFlush = True
+            tmp = Console.Out
+            Console.SetOut(sw)
+        End If
+
 #If Not Debug Then
             Try
 #End If
-                If sArgs.Length = 0 Then 'If there are no arguments, run app normally
-                    CommandLine = False
-                    'Avoids that two processes run simultaneously
-                    If Process.GetProcessesByName("icopy").Length > 1 Then
-                        MsgBox(LocRM.GetString("Msg_AlreadyRunning"), MsgBoxStyle.Information, "iCopy")
-                        Throw New Exception("Exit")
-                    End If
+        If sArgs.Length = 0 Then 'If there are no arguments, run app normally
+            CommandLine = False
+            'Avoids that two processes run simultaneously
+            If Process.GetProcessesByName("icopy").Length > 1 Then
+                MsgBox(LocRM.GetString("Msg_AlreadyRunning"), MsgBoxStyle.Information, "iCopy")
+                Throw New Exception("Exit")
+            End If
 
-                    'Searches for languages installed
-                    Try            'Should avoid ThreadStateException
-                        If GetCulturesThread.ThreadState = Threading.ThreadState.Unstarted Then
-                            GetCulturesThread.Start()
-                        End If
-                    Catch ex As Threading.ThreadStateException
-                        MsgBox(ex.ToString)
-                    End Try
-
-                    'Initializes new scanning interface
-                    appControl.CreateScanner(My.Settings.DeviceID)
-
-                    Try
-                        My.Settings.DeviceID = _scanner.DeviceId
-                    Catch ex As NullReferenceException
-                        Application.Exit()
-                    End Try
-
-                    MainForm = New mainFrm()
-                    Application.Run(MainForm)
-
-                    My.Settings.Save()
-
-                Else    'Handle Command line arguments
-                    CommandLine = True 'To inform the program that it is running in command line mode
-
-                    If sArgs(0).Substring(0, 2) = "-r" Then
-                        MsgBox("iCopy will now try to register WIA Automation layer.")
-                        RegisterWiaautdll(True)
-                        Application.Exit()
-                        Exit Sub
-                    End If
-
-                'Initializes new scanning interface()
-                If manager.DeviceInfos.Count = 0 Then
-                    Console.WriteLine("No scanner connected")
-                Else
-                    Dim dialog As New CommonDialog
-                    _device = dialog.ShowSelectDevice(WiaDeviceType.ScannerDeviceType, True, True)
-                    _deviceID = _device.DeviceID
-                    Console.WriteLine("DeviceID = {0}", _deviceID)
-                    _wscanner = _device.Items(1)
+            'Searches for languages installed
+            Try            'Should avoid ThreadStateException
+                If GetCulturesThread.ThreadState = Threading.ThreadState.Unstarted Then
+                    GetCulturesThread.Start()
                 End If
+            Catch ex As Threading.ThreadStateException
+                MsgBox(ex.ToString)
+            End Try
 
-                'TODO: Serialize ScanOptions so that we can have a ScanOptions object in settings
-                Dim options As New ScanSettings
-                options.Resolution = My.Settings.Resolution
-                options.Intent = My.Settings.DefaultIntent
-                options.Copies = 1
-                options.Brightness = My.Settings.Brightness
-                options.Contrast = My.Settings.Contrast
-                options.Scaling = 100
-                options.Preview = False
-                options.Quality = 100
+            'Initializes new scanning interface
+            appControl.CreateScanner(My.Settings.DeviceID)
 
-                Dim doCopy As Boolean = False
-                Dim doScantoFile As Boolean = False
-                Dim path As String = ""
+            Try
+                My.Settings.DeviceID = _scanner.DeviceId
+            Catch ex As NullReferenceException
+                Application.Exit()
+            End Try
 
-                Select Case sArgs(0).Substring(0, 2)
+            MainForm = New mainFrm()
+            Application.Run(MainForm)
+
+            My.Settings.Save()
+
+        Else    'Handle Command line arguments
+            CommandLine = True 'To inform the program that it is running in command line mode
+
+            If sArgs(0).Substring(0, 2) = "-r" Then
+                RegisterWiaautdll(True)
+                GoTo exit_app
+            End If
+            Dim argstring As String = ""
+            For Each arg As String In sArgs
+                argstring += arg + " "
+            Next
+            Console.WriteLine("Command Line parameters: {0}", argstring)
+
+            'Initializes new scanning interface()
+            If manager.DeviceInfos.Count = 0 Then
+                Console.WriteLine("No scanner connected")
+            Else
+                Dim dialog As New CommonDialog
+                Try
+                    _device = dialog.ShowSelectDevice(WiaDeviceType.ScannerDeviceType, True, True)
+                Catch ex As Exception
+                    GoTo exit_app
+                End Try
+                _deviceID = _device.DeviceID
+                Console.WriteLine("DeviceID = {0}", _deviceID)
+                _wscanner = _device.Items(1)
+            End If
+
+            'TODO: Serialize ScanOptions so that we can have a ScanOptions object in settings
+            Dim options As New ScanSettings
+            options.Resolution = My.Settings.Resolution
+            options.Intent = My.Settings.DefaultIntent
+            options.Copies = 1
+            options.Brightness = My.Settings.Brightness
+            options.Contrast = My.Settings.Contrast
+            options.Scaling = 100
+            options.Preview = False
+            options.Quality = 100
+
+            Dim doCopy As Boolean = False
+            Dim doScantoFile As Boolean = False
+            Dim path As String = ""
+
+            Select Case sArgs(0).Substring(0, 2)
                 Case "-d"
                     appControl.CreateScanner(_deviceID)
                     Diagnosis()
-                    Application.Exit()
-                    Exit Sub
-                    Case "/c" 'Copy
-                        doCopy = True : doScantoFile = False
-                    Case "/f" 'Scan To File
-                        doCopy = False : doScantoFile = True
-                        If Not (sArgs(0) = "/f" Or sArgs(0) = "/f:") Then
-                            path = sArgs(0).Substring(3)
-                        End If
-                    Case Else
-                        Dim args(-1) As String
-                        Main(args)
-                        Exit Sub
-                End Select
-
-
-                'Read available command line args
-                For Each arg As String In sArgs
-                    Select Case arg
-                        Case "/r" 'Resolution
-                            options.Resolution = arg.Substring(3)
-                        Case "/i" 'Intent
-                            options.Intent = arg.Substring(3)
-                        Case "/n" 'Copies
-                            options.Copies = arg.Substring(3)
-                        Case "/s" 'Scale
-                            options.Scaling = arg.Substring(3)
-                        Case "/p" 'Preview
-                            options.Preview = True
-                        Case "/b" 'Brightness
-                            options.Brightness = arg.Substring(3)
-                        Case "/cn" 'Contrast
-                            options.Contrast = arg.Substring(4)
-                    End Select
-                Next
-
-                'Runs copy process
-                If doCopy Then
-
-                    Try
-                        My.Settings.DeviceID = _scanner.DeviceId
-                    Catch ex As NullReferenceException
-                        Application.Exit()
-                    End Try
-                    Copy(options)
-                ElseIf doScantoFile Then
-
-                    'Initializes new scanning interface()
-                    appControl.CreateScanner(My.Settings.DeviceID)
-
-                    Try
-                        My.Settings.DeviceID = _scanner.DeviceId
-                    Catch ex As NullReferenceException
-                        Application.Exit()
-                    End Try
-
-                    If path = "" Then 'If path isn't specified, show SaveFile dialog
-                        SaveToFile(options)
-                    Else
-                        SaveToFile(options, path)
+                    GoTo exit_app
+                Case "/c" 'Copy
+                    doCopy = True : doScantoFile = False
+                Case "/f" 'Scan To File
+                    doCopy = False : doScantoFile = True
+                    If Not (sArgs(0) = "/f" Or sArgs(0) = "/f:") Then
+                        path = sArgs(0).Substring(3)
                     End If
+                Case Else
+                    Select Case sArgs(0).Substring(0, 3)
+                        Case "-wr"
+                            manager.RegisterPersistentEvent(Application.ExecutablePath + " /StiDevice:%1 /StiEvent:%2", "Prova iCopy", "Facciamo sta prova", Application.ExecutablePath + ",0", WIA.EventID.wiaEventScanImage2)
+                        Case "-ur"
+                            manager.UnregisterPersistentEvent(Application.ExecutablePath, "Prova iCopy", "Facciamo sta prova", Application.ExecutablePath & ",0", WIA.EventID.wiaEventScanImage2)
+                        Case Else
+                            Dim args(-1) As String
+                            Main(args)
+                            GoTo exit_app
+                    End Select
+            End Select
+
+
+            'Read available command line args
+            For Each arg As String In sArgs
+                Select Case arg
+                    Case "/r" 'Resolution
+                        options.Resolution = arg.Substring(3)
+                    Case "/i" 'Intent
+                        options.Intent = arg.Substring(3)
+                    Case "/n" 'Copies
+                        options.Copies = arg.Substring(3)
+                    Case "/s" 'Scale
+                        options.Scaling = arg.Substring(3)
+                    Case "/p" 'Preview
+                        options.Preview = True
+                    Case "/b" 'Brightness
+                        options.Brightness = arg.Substring(3)
+                    Case "/cn" 'Contrast
+                        options.Contrast = arg.Substring(4)
+                End Select
+            Next
+
+            'Runs copy process
+            If doCopy Then
+
+                Try
+                    My.Settings.DeviceID = _scanner.DeviceId
+                Catch ex As NullReferenceException
+                    Application.Exit()
+                End Try
+                Copy(options)
+            ElseIf doScantoFile Then
+
+                'Initializes new scanning interface()
+                appControl.CreateScanner(My.Settings.DeviceID)
+
+                Try
+                    My.Settings.DeviceID = _scanner.DeviceId
+                Catch ex As NullReferenceException
+                    Application.Exit()
+                End Try
+
+                If path = "" Then 'If path isn't specified, show SaveFile dialog
+                    SaveToFile(options)
+                Else
+                    SaveToFile(options, path)
                 End If
             End If
+        End If
 
 #If Not Debug Then
         Catch ex As Exception
             If ex.Message <> "Exit" Then HandleException(ex) 'Overrides .NET message box to include error reporting
         End Try
 #End If
+exit_app:
+        If Not tmp Is Nothing Then
+            Console.SetOut(tmp)
+            sw.Close()
+        End If
+        Application.Exit()
     End Sub
 
     Private Shared Sub HandleException(ByVal ex As Exception)
@@ -299,6 +329,8 @@ Class appControl
     End Sub
 
     Private Shared Sub RegisterWiaautdll(ByVal suppressMessage As Boolean)
+
+        MsgBox("iCopy will now try to register WIA Automation layer.")
 
         'Check if iCopy is run as administrator
         Dim isElevated As Boolean
