@@ -1,4 +1,12 @@
-﻿== 1.49 ==
+﻿== 1.5 ?==
+- ADD: Direct PDF creation
+- ADD: ADF???
+- IMPROVED: Command line parameters
+- FIX: Fixed a regression in version 1.49 that resulted in an error during the acquisition
+- FIX: Some scanners acquired only a quarter of the page
+- FIX: Problems when scanning a second page
+
+== 1.49 ==
 - FIX: iCopy crashes (or throws exception) when doing a second scan on certain configurations - THANKS to D. Forester for this fix
 - FIX: Possible iCopy closing on startup without notifications
 - FIX: Some small code improvements
