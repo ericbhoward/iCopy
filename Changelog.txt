@@ -2,9 +2,11 @@
 - ADD: Direct PDF creation
 - ADD: ADF???
 - IMPROVED: Command line parameters
+- IMPROVED: Logging for troubleshooting
+- FIX: Scanner handling has been revised, now it's more robust. Should avoid problems when scanning a second page
 - FIX: Fixed a regression in version 1.49 that resulted in an error during the acquisition
-- FIX: Some scanners acquired only a quarter of the page
-- FIX: Problems when scanning a second page
+- FIX: Some scanners (eg. CanoScan 4400F) acquire only a quarter of the page (bad handling of WIA_IPS_XEXTENT & WIA_IPS_YEXTENT)
+- FIX: Some scanners (eg. CanoScan 4400F) not supporting WIA_IPS_CUR_INTENT property (which should be required) acquire only in black and white mode
 
 == 1.49 ==
 - FIX: iCopy crashes (or throws exception) when doing a second scan on certain configurations - THANKS to D. Forester for this fix

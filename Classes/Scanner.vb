@@ -16,6 +16,7 @@
 
 Imports WIA
 Imports System.Xml
+Imports System.Runtime.InteropServices
 
 Public Class Scanner
 
@@ -47,8 +48,6 @@ Public Class Scanner
         End Try
 
     End Sub
-
-#Region "Properties"
 
     Private Function GetBrightness(ByRef _scanner As WIA.Item) As Integer
         Dim prop_name As String = "Brightness"
@@ -167,14 +166,42 @@ Public Class Scanner
 
     End Sub
 
-    Public Sub SetIntent(ByVal value As WiaImageIntent, ByRef _scanner As WIA.Item)
-        If value = 1 Then
-            _scanner.Properties("Current Intent").Value = value
+    Public Sub SetIntent(ByVal value As WiaImageIntent, ByRef _scanner As WIA.Item) 'TODO: Set channels per pixel if intent is not supported
+        If value = WiaImageIntent.ColorIntent Then
+            Try
+                _scanner.Properties("Current Intent").Value = value
+                Console.WriteLine("Intent set to {0}", value)
+            Catch e As COMException
+                If e.ErrorCode = WIA_ERRORS.WIA_ERROR_PROPERTY_DONT_EXIST Then
+                    Try
+                        _scanner.Properties("Channels per pixel").Value = 3 '3 canali (RGB)
+                        Console.WriteLine("E: Couldn't set intent. Set channels per pixel instead")
+                    Catch ex As COMException
+                        Console.WriteLine("E: Couldn't set intent. Report error")
+                        Throw ex
+                    End Try
+                Else : Throw e
+                End If
+            End Try
+
             If My.Settings.BitsPerPixel <> 0 Then
                 SetBitDepth(My.Settings.BitsPerPixel, _scanner)
             End If
-        ElseIf value = 2 Or value = 4 Then
-            _scanner.Properties("Current Intent").Value = value
+        ElseIf value = WiaImageIntent.GrayscaleIntent Or value = WiaImageIntent.TextIntent Then
+            Try
+                _scanner.Properties("Current Intent").Value = value
+            Catch e As COMException
+                If e.ErrorCode = WIA_ERRORS.WIA_ERROR_PROPERTY_DONT_EXIST Then
+                    Try
+                        _scanner.Properties("Channels per pixel").Value = 3 '3 canali (RGB)
+                        Console.WriteLine("E: Couldn't set intent. Set channels per pixel instead")
+                    Catch ex As COMException
+                        Console.WriteLine("E: Couldn't set intent. Report error")
+                        Throw ex
+                    End Try
+                Else : Throw e
+                End If
+            End Try
         Else
             _scanner.Properties("Current Intent").Value = WiaImageIntent.UnspecifiedIntent
         End If
@@ -284,8 +311,6 @@ Public Class Scanner
         End Get
     End Property
 
-#End Region
-
     Private Shared Function Compress(ByVal quality As Integer, ByVal tmpImg As ImageFile) As ImageFile
         Dim ip As New ImageProcess()
         ip.Filters.Add(ip.FilterInfos("Convert").FilterID)
@@ -319,7 +344,6 @@ Public Class Scanner
                 _device = manager.DeviceInfos.Item(DeviceId).Connect
                 _deviceID = DeviceId
                 _scanner = _device.Items(1)
-                'TODO: Set all the scanner properties
 
             Catch ex As Exception
                 Throw
