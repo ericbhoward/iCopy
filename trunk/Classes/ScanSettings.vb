@@ -25,7 +25,20 @@ Public Class ScanSettings
         _Intent = WIA.WiaImageIntent.ColorIntent
         _Resolution = Res
         _Scaling = 100
+        _BitDepth = 0
     End Sub
+
+
+    Private _BitDepth As Integer
+    Public Property BitDepth() As Integer
+        Get
+            Return _BitDepth
+        End Get
+        Set(ByVal value As Integer)
+            _BitDepth = value
+        End Set
+    End Property
+
 
     Public Property Brightness() As Integer
         Get

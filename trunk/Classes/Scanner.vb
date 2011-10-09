@@ -80,7 +80,9 @@ Public Class Scanner
                 Dim tmpVal As Integer = CInt(Math.Round(value / 100 * delta + center, 0))
                 Try
                     temp.Value = tmpVal
+                    Console.WriteLine("Brightness set to {0} -> {1}", value.ToString(), _scanner.Properties(prop_name).Value.ToString())
                 Catch ex As Exception
+                    Console.WriteLine("Brighness value not accepted by the scanner: ", tmpVal.ToString())
                     Throw New ArgumentException(prop_name + " value not accepted by the scanner: " + value.ToString() + " -> " + tmpVal.ToString())
                 End Try
             Else
@@ -129,7 +131,9 @@ Public Class Scanner
                 Dim tmpVal As Integer = CInt(Math.Round(value / 100 * delta + center, 0))
                 Try
                     temp.Value = tmpVal
+                    Console.WriteLine("Contrast set to {0} -> {1}", value.ToString(), _scanner.Properties(prop_name).Value.ToString())
                 Catch ex As Exception
+                    Console.WriteLine("Contrast value not accepted by the scanner: ", tmpVal.ToString())
                     Throw New ArgumentException(prop_name + " value not accepted by the scanner: " + value.ToString() + " -> " + tmpVal.ToString())
                 End Try
             Else
@@ -157,7 +161,9 @@ Public Class Scanner
         If value <= 32 And value Mod 8 = 0 Then 'La profondità è multipla di 8 e minore o uguale a 32 bit
             Try
                 _scanner.Properties("Bits Per Pixel").Value = value
-            Catch ex As Exception
+                Console.WriteLine("Bits per Pixel set to {0}", value)
+            Catch ex As COMException
+                Console.WriteLine("Couldn't set Bits per Pixel set to {0}. ERROR {1}", ex.Message)
                 'Could throw an ACCESS_DENIED exception
             End Try
         Else
@@ -174,7 +180,7 @@ Public Class Scanner
             Catch e As COMException
                 If e.ErrorCode = WIA_ERRORS.WIA_ERROR_PROPERTY_DONT_EXIST Then
                     Try
-                        _scanner.Properties("Channels per pixel").Value = 3 '3 canali (RGB)
+                        _scanner.Properties("Channels per pixel").Value = 3 '3 channels (RGB)
                         Console.WriteLine("E: Couldn't set intent. Set channels per pixel instead")
                     Catch ex As COMException
                         Console.WriteLine("E: Couldn't set intent. Report error")
@@ -193,7 +199,7 @@ Public Class Scanner
             Catch e As COMException
                 If e.ErrorCode = WIA_ERRORS.WIA_ERROR_PROPERTY_DONT_EXIST Then
                     Try
-                        _scanner.Properties("Channels per pixel").Value = 3 '3 canali (RGB)
+                        _scanner.Properties("Channels per pixel").Value = 1 '1 channel (Grayscale)
                         Console.WriteLine("E: Couldn't set intent. Set channels per pixel instead")
                     Catch ex As COMException
                         Console.WriteLine("E: Couldn't set intent. Report error")
@@ -212,11 +218,13 @@ Public Class Scanner
         Try
             _scanner.Properties("Horizontal Resolution").Value = value
             _scanner.Properties("Vertical Resolution").Value = value
+            Console.WriteLine("Resolution set to {0}", value)
         Catch ex As ArgumentException
             If AvailableResolutions.Count > 0 Then
                 For i As Integer = 0 To AvailableResolutions.Count - 1
                     If AvailableResolutions(i) = value Then
                         AvailableResolutions.RemoveAt(i)
+                        Console.WriteLine("Couldn't set resolution. Removing it from available values")
                         SetResolution(AvailableResolutions(i - 1), _scanner)
                         Return
                     End If
@@ -231,6 +239,7 @@ Public Class Scanner
         With _scanner.Properties("Horizontal Extent")
             If .SubType = WiaSubType.RangeSubType Then
                 .Value = .SubTypeMax
+                Console.WriteLine("Set Horizontal Extent to its maximum value: {0}", .Value)
             Else                'TODO: Remove those things
                 Dim max As Boolean = False
                 Dim hext As Integer = 1000
@@ -254,6 +263,7 @@ Public Class Scanner
         With _scanner.Properties("Vertical Extent")
             If .SubType = WiaSubType.RangeSubType Then
                 .Value = .SubTypeMax
+                Console.WriteLine("Set Vertical Extent to its maximum value: {0}", .Value)
             Else
                 Dim max As Boolean = False
                 Dim vext As Integer = 1000
@@ -331,9 +341,7 @@ Public Class Scanner
             Try
                 tmpImg = dialog.ShowAcquireImage(WiaDeviceType.ScannerDeviceType, options.Intent, WiaImageBias.MaximizeQuality, , False, True, True)
             Catch ex As ArgumentException
-                MessageBox.Show(ex.Message)
-                ' Show the stack trace, which is a list of methods that are currently executing.
-                MessageBox.Show("Stack Trace: " & vbCrLf & ex.StackTrace)
+                Throw
             End Try
         Else
             'Without preview
@@ -346,6 +354,7 @@ Public Class Scanner
                 _scanner = _device.Items(1)
 
             Catch ex As Exception
+                Console.WriteLine("Couldn't connect to the scanner. ERROR {0}", ex.Message)
                 Throw
             End Try
 
@@ -354,7 +363,7 @@ Public Class Scanner
                 SetBrightess(options.Brightness, _scanner)
                 SetContrast(options.Contrast, _scanner)
                 SetIntent(options.Intent, _scanner)
-                'TODO: SetBitDepth
+                SetBitDepth(options.BitDepth, _scanner)
                 SetResolution(options.Resolution, _scanner)
                 SetMaxExtent(_scanner)
             Catch ex As Exception
