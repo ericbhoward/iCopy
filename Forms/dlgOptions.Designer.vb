@@ -22,12 +22,13 @@ Partial Class dlgOptions
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Me.btnOk = New System.Windows.Forms.Button()
         Me.btnCancel = New System.Windows.Forms.Button()
         Me.lblLanguage = New System.Windows.Forms.Label()
         Me.cboLanguage = New System.Windows.Forms.ComboBox()
         Me.chkRememberWindowPos = New System.Windows.Forms.CheckBox()
-        Me.ToolTip1 = New System.Windows.Forms.ToolTip()
+        Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.lblBitDepth = New System.Windows.Forms.Label()
         Me.cboBitDepth = New System.Windows.Forms.ComboBox()
         Me.SuspendLayout()
