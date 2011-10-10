@@ -20,6 +20,7 @@ Imports System.Globalization
 Imports MySql.Data.MySqlClient
 Imports System.Drawing.Imaging
 Imports System.IO
+Imports System.Text.RegularExpressions
 
 <Assembly: CLSCompliantAttribute(True)> 
 Class appControl
@@ -42,6 +43,7 @@ Class appControl
 
     Shared Sub Main(ByVal sArgs() As String)
         Application.EnableVisualStyles()
+#If Not Debug Then
         Dim tmp As TextWriter 'Temporary output stream for the console
         Dim sw As StreamWriter
         If console_fs Is Nothing Then
@@ -51,6 +53,7 @@ Class appControl
             tmp = Console.Out
             Console.SetOut(sw)
         End If
+#End If
 
 #If Not Debug Then
             Try
@@ -89,130 +92,139 @@ Class appControl
         Else    'Handle Command line arguments
             CommandLine = True 'To inform the program that it is running in command line mode
 
-            If sArgs(0).Substring(0, 2) = "-r" Then
-                RegisterWiaautdll(True)
-                GoTo exit_app
-            End If
+            'Prints the argument list for debugging purpose
             Dim argstring As String = ""
             For Each arg As String In sArgs
                 argstring += arg + " "
             Next
             Console.WriteLine("Command Line parameters: {0}", argstring)
 
-            'Initializes new scanning interface()
-            If manager.DeviceInfos.Count = 0 Then
-                Console.WriteLine("No scanner connected")
-            Else
-                Dim dialog As New CommonDialog
-                Try
-                    _device = dialog.ShowSelectDevice(WiaDeviceType.ScannerDeviceType, True, True)
-                Catch ex As Exception
-                    GoTo exit_app
-                End Try
-                _deviceID = _device.DeviceID
-                Console.WriteLine("DeviceID = {0}", _deviceID)
-                _wscanner = _device.Items(1)
-            End If
+            Dim settings As New ScanSettings
 
             'TODO: Serialize ScanOptions so that we can have a ScanOptions object in settings
-            Dim options As New ScanSettings
-            options.Resolution = My.Settings.Resolution
-            options.Intent = My.Settings.DefaultIntent
-            options.Copies = 1
-            options.Brightness = My.Settings.Brightness
-            options.Contrast = My.Settings.Contrast
-            options.Scaling = 100
-            options.Preview = False
-            options.Quality = 100
+            settings.Resolution = My.Settings.Resolution
+            settings.Intent = My.Settings.DefaultIntent
+            settings.Copies = 1
+            settings.Brightness = My.Settings.Brightness
+            settings.Contrast = My.Settings.Contrast
+            settings.Scaling = 100
+            settings.Preview = False
+            settings.Quality = 100
 
-            Dim doCopy As Boolean = False
-            Dim doScantoFile As Boolean = False
-            Dim path As String = ""
-
-            Select Case sArgs(0).Substring(0, 2)
-                Case "-d"
-                    appControl.CreateScanner(_deviceID)
-                    Diagnosis()
-                    GoTo exit_app
-                Case "/c" 'Copy
-                    doCopy = True : doScantoFile = False
-                Case "/f" 'Scan To File
-                    doCopy = False : doScantoFile = True
-                    If Not (sArgs(0) = "/f" Or sArgs(0) = "/f:") Then
-                        path = sArgs(0).Substring(3)
-                    End If
-                Case Else
-                    Select Case sArgs(0).Substring(0, 3)
-                        Case "-wr"
-                            manager.RegisterPersistentEvent(Application.ExecutablePath + " /StiDevice:%1 /StiEvent:%2", "Prova iCopy", "Facciamo sta prova", Application.ExecutablePath + ",0", WIA.EventID.wiaEventScanImage2)
-                        Case "-ur"
-                            manager.UnregisterPersistentEvent(Application.ExecutablePath, "Prova iCopy", "Facciamo sta prova", Application.ExecutablePath & ",0", WIA.EventID.wiaEventScanImage2)
-                        Case Else
-                            Dim args(-1) As String
-                            Main(args)
-                            GoTo exit_app
+            'Command line arguments parsing
+            'STEP 1 Parameters with an argument
+            Dim i As Integer
+            For i = 0 To sArgs.GetUpperBound(0)
+                Try
+                    Select Case sArgs(i)
+                        Case "/brightness", "/b"
+                            settings.Brightness = CType(sArgs(i + 1), Integer)
+                        Case "/contrast", "/c"
+                            settings.Contrast = CType(sArgs(i + 1), Integer)
+                        Case "/resolution", "/r"
+                            settings.Resolution = CType(sArgs(i + 1), Integer)
+                        Case "/copies", "/nc"
+                            settings.Copies = CType(sArgs(i + 1), Integer)
+                        Case "/scaling", "/s"
+                            settings.Scaling = CType(sArgs(i + 1), Integer)
+                        Case "/printer"
+                            Try
+                                _printer.Name = sArgs(i + 1)
+                            Catch ex As ArgumentException
+                                MsgBox("The provided printer name is not valid. Using default printer.")
+                            End Try
+                        Case "/path"
+                            settings.Path = sArgs(i + 1)
                     End Select
-            End Select
+                Catch ex As InvalidCastException
+                    MsgBox("Command line parsing failed. See README for correct sintax")
+                    GoTo exit_app
+                End Try
+                If sArgs(i).StartsWith("/StiDevice:") Then
+                    _deviceID = sArgs(i).Substring(sArgs(i).IndexOf(":") + 1)
+                End If
+                If sArgs(i).StartsWith("/StiEvent:") Then
+                    'TODO: Implement
+                End If
+            Next
 
-
-            'Read available command line args
-            For Each arg As String In sArgs
-                Select Case arg
-                    Case "/r" 'Resolution
-                        options.Resolution = arg.Substring(3)
-                    Case "/i" 'Intent
-                        options.Intent = arg.Substring(3)
-                    Case "/n" 'Copies
-                        options.Copies = arg.Substring(3)
-                    Case "/s" 'Scale
-                        options.Scaling = arg.Substring(3)
-                    Case "/p" 'Preview
-                        options.Preview = True
-                    Case "/b" 'Brightness
-                        options.Brightness = arg.Substring(3)
-                    Case "/cn" 'Contrast
-                        options.Contrast = arg.Substring(4)
+            'STEP 2 Parameters without an argument
+            For i = 0 To sArgs.GetUpperBound(0)
+                Select Case sArgs(i)
+                    Case "/color", "/i"
+                        settings.Intent = WiaImageIntent.ColorIntent
+                    Case "/grayscale", "/gray"
+                        settings.Intent = WiaImageIntent.GrayscaleIntent
+                    Case "/text", "/bw"
+                        settings.Intent = WiaImageIntent.TextIntent
+                    Case "/preview", "/p"
+                        settings.Preview = True
                 End Select
             Next
 
-            'Runs copy process
-            If doCopy Then
-
-                Try
-                    My.Settings.DeviceID = _scanner.DeviceId
-                Catch ex As NullReferenceException
-                    Application.Exit()
-                End Try
-                Copy(options)
-            ElseIf doScantoFile Then
-
-                'Initializes new scanning interface()
-                appControl.CreateScanner(My.Settings.DeviceID)
-
-                Try
-                    My.Settings.DeviceID = _scanner.DeviceId
-                Catch ex As NullReferenceException
-                    Application.Exit()
-                End Try
-
-                If path = "" Then 'If path isn't specified, show SaveFile dialog
-                    SaveToFile(options)
-                Else
-                    SaveToFile(options, path)
-                End If
+            If _deviceID = "" Then
+                _deviceID = changescanner(My.Settings.DeviceID)
+            Else
+                _deviceID = changescanner(_deviceID)
             End If
-        End If
 
+            _device = manager.DeviceInfos.Item(_deviceID).Connect()
+            Console.WriteLine("DeviceID = {0}", _deviceID)
+            _wscanner = _device.Items(1)
+
+            'STEP 3 Action parameters
+            For i = 0 To sArgs.GetUpperBound(0)
+                Select Case sArgs(i).ToLower()
+                    Case "/wiareg", "/wr"
+                        RegisterWiaautdll(True)
+                        GoTo exit_app
+                    Case "/debug", "/d"
+                        appControl.CreateScanner(_deviceID)
+                        Diagnosis()
+                        GoTo exit_app
+                    Case "/copy"
+                        Copy(settings)
+                        GoTo exit_app
+                    Case "/file", "/tofile", "/Scantofile"
+                        Try
+                            SaveToFile(settings)
+                        Catch ex As ArgumentException
+                            MsgBox(ex.Message, vbExclamation, "iCopy")
+                        End Try
+                        GoTo exit_app
+                    Case "/copymultiplepages", "/multiplepages"
+                        CopyMultiplePages(settings)
+                        GoTo exit_app
+                    Case "/register", "/reg"
+                        Try
+                            manager.RegisterPersistentEvent(Application.ExecutablePath + " /StiDevice:%1 /StiEvent:%2 /copy", "iCopy", "Directly print using iCopy", Application.ExecutablePath + ",0", WIA.EventID.wiaEventScanImage)
+                        Catch ex As UnauthorizedAccessException
+                            MsgBox("iCopy must be executed with administrative privileges in order to complete the operation.", vbInformation, "iCopy")
+                        End Try
+                    Case "/unregister", "/unreg"
+                        Try
+                            manager.UnregisterPersistentEvent(Application.ExecutablePath + " /StiDevice:%1 /StiEvent:%2 /copy", "iCopy", "Directly print using iCopy", Application.ExecutablePath & ",0", WIA.EventID.wiaEventScanImage)
+                        Catch ex As UnauthorizedAccessException
+                            MsgBox("iCopy must be executed with administrative privileges in order to complete the operation.", vbInformation, "iCopy")
+                        Catch ex As ArgumentException 'Thrown if the event is not found. Either wrong sintax or has already been removed
+                            MsgBox("Couldn't find the correct entry in the registry. Maybe it has already been removed?")
+                        End Try
+                End Select
+            Next
+        End If
 #If Not Debug Then
         Catch ex As Exception
             If ex.Message <> "Exit" Then HandleException(ex) 'Overrides .NET message box to include error reporting
         End Try
 #End If
+
 exit_app:
+#If Not Debug Then
         If Not tmp Is Nothing Then
             Console.SetOut(tmp)
             sw.Close()
         End If
+#End If
         Application.Exit()
     End Sub
 
@@ -226,7 +238,7 @@ exit_app:
             Dim cex As Runtime.InteropServices.COMException = TryCast(ex, Runtime.InteropServices.COMException)
             If cex.ErrorCode = WIA_ERRORS.WIA_ERROR_NOT_REGISTERED Then 'WIA COM error
                 RegisterWiaautdll(False)
-            ElseIf cex.ErrorCode = WIA_ERRORS.WIA_ERROR_UNKNOWN_ERROR Then
+            ElseIf cex.ErrorCode = WIA_ERRORS.WIA_ERROR_UNKNOWN_ERROR Or cex.ErrorCode = WIA_ERRORS.WIA_ERROR_NO_SCANNER_CONNECTED Then
                 MsgBox("There is a problem with your scanner connection. Please try to reconnect your scanner and restart iCopy. If this doesn't solve the problem, please report it on iCopy website", MsgBoxStyle.Critical, "iCopy")
             End If
         Else
@@ -506,36 +518,49 @@ retry:
     End Sub
 
     Shared Sub SaveToFile(ByVal options As ScanSettings)
-        Dim dialog As New SaveFileDialog()
+        If options.Path = "" Then
+            Dim dialog As New SaveFileDialog()
 
-        dialog.AddExtension = True
-        dialog.DefaultExt = "jpg"
-        dialog.Filter = "JPEG image|*.jpg|Windows Bitmap|*.bmp|Compuserve GIF|*.gif|Portable Network Graphics (PNG)|*.png"
+            dialog.AddExtension = True
+            dialog.DefaultExt = "jpg"
+            dialog.Filter = "JPEG image|*.jpg|Windows Bitmap|*.bmp|Compuserve GIF|*.gif|Portable Network Graphics (PNG)|*.png"
 
-        If Not dialog.ShowDialog() = Windows.Forms.DialogResult.Cancel Then SaveToFile(options, dialog.FileName)
+            If Not dialog.ShowDialog() = Windows.Forms.DialogResult.Cancel Then options.Path = dialog.FileName
+        End If
 
-    End Sub
+        'Check if the provided path is valid (AUTHORIZATION, SYNTAX, ecc)
+        Try
+            Dim a As FileStream = IO.File.Create(options.Path)
+            a.Close()
+        Catch ex As Exception
+            Throw New ArgumentException("Invalid file path")
+        End Try
+        IO.File.Delete(options.Path)
 
-    Shared Sub SaveToFile(ByVal options As ScanSettings, ByVal path As String)
+        Dim format As Imaging.ImageFormat
+        'Determines the extension of the file
+        Dim ext As String = Right(options.Path, 3)
+
+        Select Case ext
+            Case "jpg"
+                format = ImageFormat.Jpeg
+            Case "bmp"
+                format = ImageFormat.Bmp
+            Case "gif"
+                format = ImageFormat.Gif
+            Case "png"
+                format = ImageFormat.Png
+            Case Else
+                Throw New ArgumentException("File extension isn't a valid extension")
+        End Select
+
         changescanner(_scanner.DeviceId)
         Dim img As Image
         'Calls scan routine
         Try
             img = _scanner.ScanImg(options)
 
-            'Determines the extension of the file
-            Dim ext As String = Right(path, 3)
-
-            Select Case ext
-                Case "jpg"
-                    img.Save(path, Imaging.ImageFormat.Jpeg)
-                Case "bmp"
-                    img.Save(path, Imaging.ImageFormat.Bmp)
-                Case "gif"
-                    img.Save(path, Imaging.ImageFormat.Gif)
-                Case "png"
-                    img.Save(path, Imaging.ImageFormat.Png)
-            End Select
+            img.Save(options.Path, format)
 
             img.Dispose()
 
