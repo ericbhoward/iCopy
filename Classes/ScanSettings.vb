@@ -14,6 +14,8 @@ Public Class ScanSettings
         _Intent = WIA.WiaImageIntent.ColorIntent
         _Resolution = 100
         _Scaling = 100
+        _BitDepth = 0
+        _Path = ""
     End Sub
 
     Public Sub New(ByVal Res As Integer)
@@ -26,6 +28,7 @@ Public Class ScanSettings
         _Resolution = Res
         _Scaling = 100
         _BitDepth = 0
+        _Path = ""
     End Sub
 
 
@@ -38,7 +41,6 @@ Public Class ScanSettings
             _BitDepth = value
         End Set
     End Property
-
 
     Public Property Brightness() As Integer
         Get
@@ -115,6 +117,16 @@ Public Class ScanSettings
         End Get
         Set(ByVal value As Integer)
             _Copies = value
+        End Set
+    End Property
+
+    Private _Path As String
+    Public Property Path() As String
+        Get
+            Return _Path
+        End Get
+        Set(ByVal value As String)
+            _Path = value
         End Set
     End Property
 

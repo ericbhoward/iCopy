@@ -37,12 +37,13 @@ Friend Class Printer
             Name = pd.PrinterSettings.PrinterName
         End Get
 
-        Set(ByVal PrinterName As String)
-            If PrinterName = "" Then
+        Set(ByVal value As String)
+            If value = "" Then
                 Dim tmpPd As New PrintDocument
-                PrinterName = tmpPd.PrinterSettings.PrinterName
+                value = tmpPd.PrinterSettings.PrinterName
             End If
-            pd.PrinterSettings.PrinterName = PrinterName
+            pd.PrinterSettings.PrinterName = value
+            If Not pd.PrinterSettings.IsValid Then Throw New ArgumentException("Printer name is not valid")
         End Set
     End Property
 
