@@ -43,6 +43,7 @@ Class appControl
 
     Shared Sub Main(ByVal sArgs() As String)
         Application.EnableVisualStyles()
+
 #If Not Debug Then
         Dim tmp As TextWriter 'Temporary output stream for the console
         Dim sw As StreamWriter
@@ -119,7 +120,7 @@ Class appControl
                     Select Case sArgs(i)
                         Case "/brightness", "/b"
                             settings.Brightness = CType(sArgs(i + 1), Integer)
-                        Case "/contrast", "/c"
+                        Case "/contrast", "/cnt"
                             settings.Contrast = CType(sArgs(i + 1), Integer)
                         Case "/resolution", "/r"
                             settings.Resolution = CType(sArgs(i + 1), Integer)
@@ -140,18 +141,10 @@ Class appControl
                     MsgBox("Command line parsing failed. See README for correct sintax")
                     GoTo exit_app
                 End Try
-                If sArgs(i).StartsWith("/StiDevice:") Then
-                    _deviceID = sArgs(i).Substring(sArgs(i).IndexOf(":") + 1)
-                End If
-                If sArgs(i).StartsWith("/StiEvent:") Then
-                    'TODO: Implement
-                End If
-            Next
 
-            'STEP 2 Parameters without an argument
-            For i = 0 To sArgs.GetUpperBound(0)
+                'STEP 2 Parameters without an argument
                 Select Case sArgs(i)
-                    Case "/color", "/i"
+                    Case "/color", "/colour", "/col"
                         settings.Intent = WiaImageIntent.ColorIntent
                     Case "/grayscale", "/gray"
                         settings.Intent = WiaImageIntent.GrayscaleIntent
@@ -160,6 +153,13 @@ Class appControl
                     Case "/preview", "/p"
                         settings.Preview = True
                 End Select
+
+                If sArgs(i).StartsWith("/StiDevice:") Then
+                    _deviceID = sArgs(i).Substring(sArgs(i).IndexOf(":") + 1)
+                End If
+                If sArgs(i).StartsWith("/StiEvent:") Then
+                    'TODO: Implement
+                End If
             Next
 
             If _deviceID = "" Then
@@ -175,6 +175,11 @@ Class appControl
             'STEP 3 Action parameters
             For i = 0 To sArgs.GetUpperBound(0)
                 Select Case sArgs(i).ToLower()
+                    Case "/?"
+#If Not Debug Then
+                            Console.SetOut(tmp)
+#End If
+                        Console.Write(LocRM.GetString("Console_Help"))
                     Case "/wiareg", "/wr"
                         RegisterWiaautdll(True)
                         GoTo exit_app
@@ -182,10 +187,10 @@ Class appControl
                         appControl.CreateScanner(_deviceID)
                         Diagnosis()
                         GoTo exit_app
-                    Case "/copy"
+                    Case "/copy", "/c"
                         Copy(settings)
                         GoTo exit_app
-                    Case "/file", "/tofile", "/Scantofile"
+                    Case "/file", "/tofile", "/Scantofile", "/f"
                         Try
                             SaveToFile(settings)
                         Catch ex As ArgumentException
