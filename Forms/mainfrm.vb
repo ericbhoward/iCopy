@@ -254,6 +254,7 @@ Class mainFrm
         opts.Quality = frmImageSettings.tbCompression.Value
         opts.Copies = nudNCopie.Value
         opts.Scaling = frmImageSettings.tbScaling.Value
+        opts.BitDepth = My.Settings.BitsPerPixel
         Return opts
     End Function
 
