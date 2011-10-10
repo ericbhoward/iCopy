@@ -162,9 +162,11 @@ Public Class Scanner
             Try
                 _scanner.Properties("Bits Per Pixel").Value = value
                 Console.WriteLine("Bits per Pixel set to {0}", value)
+            Catch ex As UnauthorizedAccessException
+                'Do nothing, the scanner doesn't allow to change the property
             Catch ex As COMException
                 Console.WriteLine("Couldn't set Bits per Pixel set to {0}. ERROR {1}", ex.Message)
-                'Could throw an ACCESS_DENIED exception
+                Throw ex
             End Try
         Else
             Throw New ArgumentException("Bit depth must be multiple of 8 and less or equal to 32")
@@ -215,24 +217,9 @@ Public Class Scanner
 
     Public Sub SetResolution(ByVal value As Integer, ByRef _scanner As WIA.Item)
         If value = 0 Then value = _scanner.Properties("Horizontal Resolution").SubTypeDefault 'In case resolution value hasn't been set
-        Try
-            _scanner.Properties("Horizontal Resolution").Value = value
-            _scanner.Properties("Vertical Resolution").Value = value
-            Console.WriteLine("Resolution set to {0}", value)
-        Catch ex As ArgumentException
-            If AvailableResolutions.Count > 0 Then
-                For i As Integer = 0 To AvailableResolutions.Count - 1
-                    If AvailableResolutions(i) = value Then
-                        AvailableResolutions.RemoveAt(i)
-                        Console.WriteLine("Couldn't set resolution. Removing it from available values")
-                        SetResolution(AvailableResolutions(i - 1), _scanner)
-                        Return
-                    End If
-                Next
-            Else
-                Throw ex
-            End If
-        End Try
+        _scanner.Properties("Horizontal Resolution").Value = value
+        _scanner.Properties("Vertical Resolution").Value = value
+        Console.WriteLine("Resolution set to {0}", value)
     End Sub
 
     Public Sub SetMaxExtent(ByRef _scanner As WIA.Item)
@@ -363,12 +350,23 @@ Public Class Scanner
                 SetBrightess(options.Brightness, _scanner)
                 SetContrast(options.Contrast, _scanner)
                 SetIntent(options.Intent, _scanner)
-                SetBitDepth(options.BitDepth, _scanner)
-                SetResolution(options.Resolution, _scanner)
-                SetMaxExtent(_scanner)
             Catch ex As Exception
+                Throw ex
+            End Try
+
+            Try
+                SetResolution(options.Resolution, _scanner)
+            Catch ex As Exception
+                Console.WriteLine("Couldn't set resolution to {0}.", options.Resolution)
+            End Try
+            SetMaxExtent(_scanner)
+
+            Try
+                SetBitDepth(options.BitDepth, _scanner)
+            Catch ex As COMException
 
             End Try
+
             'Begin the transfer. The file is saved to a WIA image file that is then put on a memory stream.
             Try
                 tmpImg = dialog.ShowTransfer(_device.Items(1), , True)
