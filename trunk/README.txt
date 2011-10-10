@@ -6,10 +6,10 @@ As it's small and no installation is required, iCopy is also suitable for USB pe
 
 1) Features
 2) Requirements
-2) Command line parameters
-3) Known bugs & solutions
-4) Support
-5) Please help!
+3) Command line parameters
+4) Known bugs & solutions
+5) Support
+6) Please help!
 
 1) Features
 ---------------------------
@@ -41,32 +41,47 @@ A list of the known compatible scanners can be found at http://icopy.sourceforge
 --------------------------
 iCopy can be run as a Windows application, but it has also some command line parameters to copy directly to the printer or to a file
 
-No parameters: standard mode with windows (also if neither /c or /f parameters are passed)
+No parameters: standard mode with windows
 
-> icopy.exe [/c or /f] [params]
-	
-	>icopy.exe /c [/r:resolution] [/n:number of copies] [i:intent] [s:enlargement] [/b:brightness] [/cn:contrast] [/p]
-	
-	>icopy.exe /f:path [/r:resolution] [i:intent] [s:enlargement] [/b:brightness] [/cn:contrast] [/p]
+> icopy.exe [/copy /file /multiplePages ..] [params]
 
+[params] are the parameters to be used. If a parameter is not specified, iCopy uses the value stored in settings
 
+/copy /c				Directly copy from scanner to printer, using settings provided or default settings
+/file /ScanToFile /f	Scan to a file. If file path is not provided a dialog will let you choose where to save the acquired image
+/multiplePages			Scan a multipage document.
+/copymultiplepages
 
-/c					Directly copy from scanner to printer, using settings provided or else saved settings
-/f:path				Scan to the provided file path (if omitted, a dialog will appear to ask where to save the file)
+/resolution -or- /r	[value]		Specify a valid scanning resolution in DPI (eg /resolution 100, /r 500)
+/color -or- /col				Color acquisition
+/grayscale -or- /gray			Grayscale acquisition
+/text -or- /bw					Black and white (text) acquisition
+/copies -or- /nc [value]		The number of copies to be printed (default one copy)
+/scaling -or- /s				The scaling percentage (eg /s 150) default value: 100
+/brightness	-or- /b [value]		Value from -100 to 100 for brightness
+/contrast -or -	/cnt [value]	Value from -100 to 100 for constrast
+/preview -or- /p				Enables preview mode
+/path "path"					Specify the path for file acquisition. Paths containing spaces must be put between inverted commas 
+								(eg. /path "C:\my folder\file.jpg"). Valid file estensions are .jpg, .bmp, .gif, .png
+/printer "printer name"			Specify the name of the printer between inverted commas. If not provided, the system default printer is used
+				
+NOTE: Parameters are not case sensitive
+				
+Examples:
+> icopy.exe /copy /r 200 /text
+	Copy with 200 DPI resolution in text mode, with default brightness and contrast
+> icopy.exe /file /brightness 0 /contrast 10 /path "C:\my folder\file.jpg"
+	Saves to file "C:\my folder\file.jpg" with brighness 0 and contrast 10
+> icopy.exe /copy /printer "Adobe PDF"
+	Prints the file to PDF using Adobe Acrobat (if installed)
 
-/r:resolution		Specify a valid scanning resolution in DPI (eg 100, 500)
-/n:n of copies		Specify the number of copies to be printed (default one copy)
-/i:intent			The way the page will be acquired: 1: color, 2: grayscale, 4:text
-/s:enlargement		The enlargement percentage (eg /s:150) default value: 100
-/b:brightness		Value from -100 to 100 for brightness
-/cn:contrast		Value from -100 to 100 for constrast
-/p					Enables preview mode
+ADVANCED PARAMETERS
+/wiareg /wr			Registers WIA components. Use if WIA errors are thrown during execution
+/debug /d			Creates an XML file containing scanner information. Should be included in any bug report
+/register /reg		Registers iCopy to the scanner buttons.
+/unregister /unreg	Unregisters iCopy from the scanner button applications.
 
-> icopy.exe -diag	Analyses the scanner informations and saves an XML report to be attached to iCopy bug tracker in case of problems
-> icopy.exe -r		Registers components needed for proper execution. Needs administrator privileges			
-
-
-3) Known bugs & solutions 
+4) Known bugs & solutions 
 -------------------------
 * Wiaaut.dll not registered error.
 	iCopy asks if you want to register WIA Automation Layer. If it fails in doing so, you can register it manually:
@@ -83,7 +98,7 @@ No parameters: standard mode with windows (also if neither /c or /f parameters a
 	If you think that your scanner is WIA compatible but it isn't recognized by iCopy, try to run icopy with the -diag parameter and post the log to iCopy bug tracker.
 	A list of the known compatible scanners can be found at http://icopy.sourceforge.net/?page_id=174
 
-4) Support
+5) Support
 -------------------------
 Please read iCopy F.A.Q.:
 http://icopy.sourceforge.net/?page_id=10
@@ -95,7 +110,7 @@ http://sourceforge.net/apps/trac/icopy/newticket
 NOTE: 	Please leave a valid email address in order to be contacted for more details or fixes to your problem. Anonymous reports will be discarded.
 		Your email address will be safe and not visible to other users.
 
-5) Please Help!
+6) Please Help!
 ------------------------
 iCopy is free software, so it is supported only by your generous donations and by advertisements on the website.
 If you like iCopy, please help me to make it a better software! You can:
