@@ -1,8 +1,8 @@
 ﻿== 1.5 ?==
 - ADD: Direct PDF creation
 - ADD: ADF???
-- IMPROVED: Command line parameters
-- IMPROVED: Logging for troubleshooting
+- ADD: Logging for troubleshooting purposes. iCopy will save a .log file either in its folder or in %AppData%\Local\iCopy
+- IMPROVED: Revised command line parameters. See README.txt for information or type iCopy.exe /help
 - FIX: Scanner handling has been revised, now it's more robust. Should avoid problems when scanning a second page
 - FIX: Fixed a regression in version 1.49 that resulted in an error during the acquisition
 - FIX: Some scanners (eg. CanoScan 4400F) acquire only a quarter of the page (bad handling of WIA_IPS_XEXTENT & WIA_IPS_YEXTENT)

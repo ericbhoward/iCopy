@@ -100,17 +100,18 @@ Class appControl
             Next
             Console.WriteLine("Command Line parameters: {0}", argstring)
 
-            Dim settings As New ScanSettings
+            Dim settings As ScanSettings = My.Settings.LastScanSettings
 
             'TODO: Serialize ScanOptions so that we can have a ScanOptions object in settings
-            settings.Resolution = My.Settings.Resolution
-            settings.Intent = My.Settings.DefaultIntent
-            settings.Copies = 1
-            settings.Brightness = My.Settings.Brightness
-            settings.Contrast = My.Settings.Contrast
-            settings.Scaling = 100
-            settings.Preview = False
-            settings.Quality = 100
+            'settings.Resolution = My.Settings.Resolution
+            'settings.Intent = My.Settings.DefaultIntent
+            'settings.Copies = 1
+            'settings.Brightness = My.Settings.Brightness
+            'settings.Contrast = My.Settings.Contrast
+            'settings.Scaling = 100
+            'settings.Preview = False
+            'settings.Quality = 100
+
 
             'Command line arguments parsing
             'STEP 1 Parameters with an argument
@@ -530,7 +531,10 @@ retry:
             dialog.DefaultExt = "jpg"
             dialog.Filter = "JPEG image|*.jpg|Windows Bitmap|*.bmp|Compuserve GIF|*.gif|Portable Network Graphics (PNG)|*.png"
 
-            If Not dialog.ShowDialog() = Windows.Forms.DialogResult.Cancel Then options.Path = dialog.FileName
+            If Not dialog.ShowDialog() = Windows.Forms.DialogResult.Cancel Then
+                options.Path = dialog.FileName
+            Else : Exit Sub
+            End If
         End If
 
         'Check if the provided path is valid (AUTHORIZATION, SYNTAX, ecc)

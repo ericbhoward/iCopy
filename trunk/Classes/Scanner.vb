@@ -37,12 +37,9 @@ Public Class Scanner
             _device = manager.DeviceInfos.Item(deviceID).Connect
             _deviceID = deviceID
             _scanner = _device.Items(1)
-            Console.WriteLine("Connection established. Available resolutions")
             _description = _device.Properties.Item("Description").Value
+            Console.WriteLine("Connection established with {0}. DeviceID: {1}", _description, _deviceID)
             _AvailableResolutions = GetAvailableResolutions(_scanner)
-            For Each res As Integer In _AvailableResolutions
-                Console.WriteLine(res)
-            Next
         Catch ex As Exception
             Throw
         End Try
@@ -192,8 +189,8 @@ Public Class Scanner
                 End If
             End Try
 
-            If My.Settings.BitsPerPixel <> 0 Then
-                SetBitDepth(My.Settings.BitsPerPixel, _scanner)
+            If My.Settings.LastScanSettings.BitDepth <> 0 Then
+                SetBitDepth(My.Settings.LastScanSettings.BitDepth, _scanner)
             End If
         ElseIf value = WiaImageIntent.GrayscaleIntent Or value = WiaImageIntent.TextIntent Then
             Try
