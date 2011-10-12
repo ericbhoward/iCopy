@@ -25,9 +25,48 @@ Class mainFrm
 
     Dim intent As WiaImageIntent = My.Settings.LastScanSettings.Intent
 
+    Private VersionCheckThread As New Threading.Thread(AddressOf VersionCheck)
+    Dim weburl As String
     Dim LocalizedRootStr As String
 
+    Sub VersionCheck()
+        Dim diff As Long = DateDiff(DateInterval.WeekOfYear, My.Settings.LastVersionCheck, Today)
+        If True Then '(My.Settings.LastVersionCheck = Nothing) Or diff > 2 Then
+            Dim reader As Xml.XmlTextReader
+            Dim newVersion As Version
+            Try
+                reader = New Xml.XmlTextReader(My.Resources.VersionCheckURL)
+            Catch ex As Exception 'File is not available, or internet access missing. Just die without any output
+                Exit Sub
+            End Try
+            reader.MoveToContent()
+            If reader.NodeType = Xml.XmlNodeType.Element And reader.Name = Application.ProductName Then
+                Dim elementName As String
+                While reader.Read()
+                    If reader.NodeType = Xml.XmlNodeType.Element Then
+                        elementName = reader.Name
+                    ElseIf reader.NodeType = Xml.XmlNodeType.Text And reader.HasValue Then
+                        Select Case elementName
+                            Case "version"
+                                newVersion = New Version(reader.Value)
+                            Case "url"
+                                webURL = reader.Value
+                        End Select
+                    End If
+                End While
+            End If
+            Dim curVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version
+            If curVersion.CompareTo(newVersion) < 0 Then
+                VersionStatusLabel.Visible = True
+            End If
+            My.Settings.LastVersionCheck = Today
+        End If
+    End Sub
+
     Sub LoadSettings()
+        If My.Settings.CheckForUpdates Then
+            VersionCheckThread.Start() 'Version check
+        End If
         'Sets culture depending on Culture setting
         AboutBox = New AboutBox1()
         frmImageSettings = New frmImageSettings()
@@ -283,4 +322,7 @@ Class mainFrm
         My.Settings.PrinterSize = cboPaperSize.Text 'Stores value in settings
     End Sub
 
+    Private Sub VersionStatusLabel_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles VersionStatusLabel.Click
+        Process.Start(weburl)
+    End Sub
 End Class

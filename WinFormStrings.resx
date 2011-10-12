@@ -595,4 +595,12 @@ ADVANCED PARAMETERS
 /register /reg		Registers iCopy to the scanner buttons.
 /unregister /unreg	Unregisters iCopy from the scanner button applications.</value>
   </data>
+  <data name="mainFrm_VersionStatusLabel" xml:space="preserve">
+    <value>New version available!</value>
+    <comment>New version available!</comment>
+  </data>
+  <data name="mainFrm_VersionStatusLabelToolTipText" xml:space="preserve">
+    <value>Click here to go to iCopy website and download the latest version</value>
+    <comment>Click here to go to iCopy website and download the latest version</comment>
+  </data>
 </root>

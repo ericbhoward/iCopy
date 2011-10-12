@@ -14,7 +14,7 @@ Imports System.Runtime.InteropServices
 <Assembly: AssemblyDescription("Combine your scanner and printer into a powerful photocopier.")> 
 <Assembly: AssemblyCompany("Matteo Rossi")> 
 <Assembly: AssemblyProduct("iCopy")> 
-<Assembly: AssemblyCopyright("© 2007-2010 Matteo Rossi")> 
+<Assembly: AssemblyCopyright("© 2007-2011 Matteo Rossi")> 
 <Assembly: AssemblyTrademark("")> 
 
 <Assembly: ComVisible(False)> 
@@ -33,7 +33,7 @@ Imports System.Runtime.InteropServices
 ' by using the '*' as shown below:
 ' <Assembly: AssemblyVersion("1.0.*")> 
 
-<Assembly: AssemblyVersion("1.5.0.12")> 
-<Assembly: AssemblyFileVersion("1.5.0.12")> 
+<Assembly: AssemblyVersion("1.5.0.36")> 
+<Assembly: AssemblyFileVersion("1.5.0.36")> 
 
 <Assembly: NeutralResourcesLanguageAttribute("en-US")> 

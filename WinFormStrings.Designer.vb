@@ -796,6 +796,24 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized string similar to New version available!.
+        '''</summary>
+        Friend Shared ReadOnly Property mainFrm_VersionStatusLabel() As String
+            Get
+                Return ResourceManager.GetString("mainFrm_VersionStatusLabel", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to Click here to go to iCopy website and download the latest version.
+        '''</summary>
+        Friend Shared ReadOnly Property mainFrm_VersionStatusLabelToolTipText() As String
+            Get
+                Return ResourceManager.GetString("mainFrm_VersionStatusLabelToolTipText", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized string similar to iCopy is already running. You can&apos;t run more than one instance of iCopy..
         '''</summary>
         Friend Shared ReadOnly Property Msg_AlreadyRunning() As String
