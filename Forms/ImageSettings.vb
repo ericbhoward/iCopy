@@ -56,21 +56,21 @@ Class frmImageSettings
             cboResolution.Items.Add(res)
         Next
 
-        If My.Settings.Resolution <> 0 Then
-            cboResolution.Text = My.Settings.Resolution
+        If My.Settings.LastScanSettings.Resolution <> 0 Then 'TODO: Remove?
+            cboResolution.Text = My.Settings.LastScanSettings.Resolution
         Else
             cboResolution.Text = "100"
-            My.Settings.Resolution = 100
+            My.Settings.LastScanSettings.Resolution = 100
         End If
 
         'Loads settings
-        tbBrightness.Value = My.Settings.Brightness
-        tbContrast.Value = My.Settings.Contrast
-        txtBrightness.Text = My.Settings.Brightness
-        txtContrast.Text = My.Settings.Contrast
+        tbBrightness.Value = My.Settings.LastScanSettings.Brightness
+        tbContrast.Value = My.Settings.LastScanSettings.Contrast
+        txtBrightness.Text = My.Settings.LastScanSettings.Brightness
+        txtContrast.Text = My.Settings.LastScanSettings.Contrast
         tbScaling.Value = 100
         txtScaling.Text = "100"
-        tbCompression.Value = My.Settings.Compression
+        tbCompression.Value = My.Settings.LastScanSettings.Quality
         lblCompression.Text = tbCompression.Value
     End Sub
 
@@ -114,7 +114,6 @@ Class frmImageSettings
 
     Private Sub tbContrast_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles tbContrast.ValueChanged
         txtContrast.Text = tbContrast.Value
-        My.Settings.Contrast = tbContrast.Value
     End Sub
 
     Private Sub txtBrightness_LostFocus(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles txtBrightness.LostFocus
@@ -124,7 +123,6 @@ Class frmImageSettings
 
     Private Sub tbBrightness_ValueChanged(ByVal sender As Object, ByVal e As System.EventArgs) Handles tbBrightness.ValueChanged
         txtBrightness.Text = tbBrightness.Value
-        My.Settings.Brightness = tbBrightness.Value
     End Sub
 
     Private Sub tbenlargement_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles tbScaling.Scroll
@@ -136,13 +134,8 @@ Class frmImageSettings
         tbBrightness.Value = CInt(txtBrightness.Text)
     End Sub
 
-    Private Sub cboResolution_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cboResolution.SelectedIndexChanged
-        My.Settings.Resolution = cboResolution.Text
-    End Sub
-
     Private Sub tbCompression_Scroll(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles tbCompression.ValueChanged
         lblCompression.Text = tbCompression.Value
-        My.Settings.Compression = tbCompression.Value
     End Sub
 
     Private Sub btnDefault_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnDefault.Click

@@ -23,7 +23,7 @@ Class mainFrm
     Public Shared frmOptions As dlgOptions
     Dim splash As SplashScreen
 
-    Dim intent As WiaImageIntent = My.Settings.DefaultIntent
+    Dim intent As WiaImageIntent = My.Settings.LastScanSettings.Intent
 
     Dim LocalizedRootStr As String
 
@@ -79,10 +79,10 @@ Class mainFrm
         PrinterStatusLabel.Text = appControl.Printer.Name
 
         'Loads saved intent setting
-        If My.Settings.DefaultIntent = 4 Or My.Settings.DefaultIntent = 0 Then
+        If My.Settings.LastScanSettings.Intent = 4 Or My.Settings.LastScanSettings.Intent = 0 Then
             cboScanMode.SelectedIndex = 2
         Else
-            cboScanMode.SelectedIndex = My.Settings.DefaultIntent - 1
+            cboScanMode.SelectedIndex = My.Settings.LastScanSettings.Intent - 1
         End If
 
         'Populates paper sizes combo box
@@ -152,8 +152,8 @@ Class mainFrm
     Private Sub btnCopy_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnCopy.Click
         Me.Enabled = False
         'Starts copy process
-        appControl.Copy(getScanSettings())
-
+        Dim settings As ScanSettings = getScanSettings()
+        appControl.Copy(settings)
         Me.Enabled = True
     End Sub
 
@@ -198,7 +198,6 @@ Class mainFrm
                 intent = WiaImageIntent.TextIntent
                 cboPrintMode.SelectedIndex = 1
         End Select
-        My.Settings.DefaultIntent = intent
     End Sub
 
     Private Sub cboPrintMode_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cboPrintMode.SelectedIndexChanged
@@ -243,8 +242,8 @@ Class mainFrm
         Dim opts As New ScanSettings
         Try
             opts.Resolution = Convert.ToInt32(frmImageSettings.cboResolution.Text, Globalization.CultureInfo.InvariantCulture)
-        Catch ex As FormatException
-            If My.Settings.Resolution <> 0 Or (Not Nothing) Then opts.Resolution = My.Settings.Resolution
+        Catch ex As FormatException 'Fixes a bug
+            If My.Settings.LastScanSettings.Resolution <> 0 Or (Not Nothing) Then opts.Resolution = My.Settings.LastScanSettings.Resolution
         End Try
 
         opts.Brightness = frmImageSettings.tbBrightness.Value
@@ -254,7 +253,9 @@ Class mainFrm
         opts.Quality = frmImageSettings.tbCompression.Value
         opts.Copies = nudNCopie.Value
         opts.Scaling = frmImageSettings.tbScaling.Value
-        opts.BitDepth = My.Settings.BitsPerPixel
+        opts.BitDepth = My.Settings.LastScanSettings.BitDepth
+
+        My.Settings.LastScanSettings = opts
         Return opts
     End Function
 
@@ -271,7 +272,7 @@ Class mainFrm
         Try
             res = Convert.ToInt16(frmImageSettings.cboResolution.Text, Globalization.CultureInfo.InvariantCulture)
         Catch ex As FormatException
-            If My.Settings.Resolution <> 0 Or (Not Nothing) Then res = My.Settings.Resolution
+            If My.Settings.LastScanSettings.Resolution <> 0 Or (Not Nothing) Then res = My.Settings.LastScanSettings.Resolution
         End Try
         appControl.CopyMultiplePages(getScanSettings())
         Me.Enabled = True

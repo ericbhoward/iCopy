@@ -39,9 +39,9 @@ Public Class dlgOptions
 
         My.Settings.StoreLocation = chkRememberWindowPos.Checked
         If cboBitDepth.Text = "Auto" Then
-            My.Settings.BitsPerPixel = 0
+            My.Settings.LastScanSettings.BitDepth = 0
         Else
-            My.Settings.BitsPerPixel = cboBitDepth.Text
+            My.Settings.LastScanSettings.BitDepth = cboBitDepth.Text
         End If
     End Sub
 
@@ -80,10 +80,10 @@ retry:
         End Try
 
         'Load bit depth settings
-        If My.Settings.BitsPerPixel = 0 Then
+        If My.Settings.LastScanSettings.BitDepth = 0 Then
             cboBitDepth.SelectedIndex = 0
         Else
-            cboBitDepth.Text = My.Settings.BitsPerPixel
+            cboBitDepth.Text = My.Settings.LastScanSettings.BitDepth
         End If
 
         'Loads other settings

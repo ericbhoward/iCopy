@@ -5,18 +5,6 @@
     <Setting Name="DeviceID" Provider="iCopy.PortableSettingsProvider" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="DefaultIntent" Provider="iCopy.PortableSettingsProvider" Roaming="true" Type="WIA.WiaImageIntent" Scope="User">
-      <Value Profile="(Default)">ColorIntent</Value>
-    </Setting>
-    <Setting Name="Brightness" Provider="iCopy.PortableSettingsProvider" Roaming="true" Type="System.Int16" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="Contrast" Provider="iCopy.PortableSettingsProvider" Roaming="true" Type="System.Int16" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="Resolution" Provider="iCopy.PortableSettingsProvider" Type="System.Int16" Scope="User">
-      <Value Profile="(Default)">100</Value>
-    </Setting>
     <Setting Name="PrintColor" Provider="iCopy.PortableSettingsProvider" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
@@ -41,32 +29,11 @@
     <Setting Name="PrinterSize" Provider="iCopy.PortableSettingsProvider" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)">A4</Value>
     </Setting>
-    <Setting Name="ID" Provider="iCopy.PortableSettingsProvider" Roaming="true" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="SendInfo" Provider="iCopy.PortableSettingsProvider" Roaming="true" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="ncopies" Provider="iCopy.PortableSettingsProvider" Roaming="true" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="npreview" Provider="iCopy.PortableSettingsProvider" Roaming="true" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="nmultiple" Provider="iCopy.PortableSettingsProvider" Roaming="true" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="nfile" Provider="iCopy.PortableSettingsProvider" Roaming="true" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
     <Setting Name="CustomCulture" Provider="iCopy.PortableSettingsProvider" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="Compression" Provider="iCopy.PortableSettingsProvider" Roaming="true" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">10</Value>
-    </Setting>
-    <Setting Name="BitsPerPixel" Provider="iCopy.PortableSettingsProvider" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
+    <Setting Name="LastScanSettings" Provider="iCopy.PortableSettingsProvider" Type="iCopy.ScanSettings" Scope="User">
+      <Value Profile="(Default)" />
     </Setting>
   </Settings>
 </SettingsFile>
