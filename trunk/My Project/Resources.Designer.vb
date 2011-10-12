@@ -115,5 +115,14 @@ Namespace My.Resources
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to http://icopy.sourceforge.net/lastversion.xml.
+        '''</summary>
+        Friend ReadOnly Property VersionCheckURL() As String
+            Get
+                Return ResourceManager.GetString("VersionCheckURL", resourceCulture)
+            End Get
+        End Property
     End Module
 End Namespace

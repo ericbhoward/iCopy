@@ -39,10 +39,16 @@ Class appControl
     Private Shared WithEvents _printer As New Printer
     Private Shared CommandLine As Boolean
 
+
     Public Shared MainForm As mainFrm
 
     Shared Sub Main(ByVal sArgs() As String)
         Application.EnableVisualStyles()
+
+        If My.Settings.LastScanSettings Is Nothing Then
+            My.Settings.LastScanSettings = New ScanSettings()
+        End If
+
 
 #If Not Debug Then
         Dim tmp As TextWriter 'Temporary output stream for the console
@@ -101,17 +107,6 @@ Class appControl
             Console.WriteLine("Command Line parameters: {0}", argstring)
 
             Dim settings As ScanSettings = My.Settings.LastScanSettings
-
-            'TODO: Serialize ScanOptions so that we can have a ScanOptions object in settings
-            'settings.Resolution = My.Settings.Resolution
-            'settings.Intent = My.Settings.DefaultIntent
-            'settings.Copies = 1
-            'settings.Brightness = My.Settings.Brightness
-            'settings.Contrast = My.Settings.Contrast
-            'settings.Scaling = 100
-            'settings.Preview = False
-            'settings.Quality = 100
-
 
             'Command line arguments parsing
             'STEP 1 Parameters with an argument

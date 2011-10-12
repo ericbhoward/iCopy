@@ -35,6 +35,7 @@ Partial Class mainFrm
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
         Me.ScannerStatusLabel = New System.Windows.Forms.ToolStripStatusLabel()
         Me.PrinterStatusLabel = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.VersionStatusLabel = New System.Windows.Forms.ToolStripStatusLabel()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.chkPreview = New System.Windows.Forms.CheckBox()
         Me.btnScanModes = New System.Windows.Forms.Button()
@@ -63,7 +64,7 @@ Partial Class mainFrm
         '
         'btnSelScanner
         '
-        Me.btnSelScanner.Location = New System.Drawing.Point(364, 12)
+        Me.btnSelScanner.Location = New System.Drawing.Point(364, 13)
         Me.btnSelScanner.Name = "btnSelScanner"
         Me.btnSelScanner.Size = New System.Drawing.Size(137, 23)
         Me.btnSelScanner.TabIndex = 7
@@ -108,7 +109,7 @@ Partial Class mainFrm
         '
         'btnPrintSetup
         '
-        Me.btnPrintSetup.Location = New System.Drawing.Point(364, 41)
+        Me.btnPrintSetup.Location = New System.Drawing.Point(364, 44)
         Me.btnPrintSetup.Name = "btnPrintSetup"
         Me.btnPrintSetup.Size = New System.Drawing.Size(137, 23)
         Me.btnPrintSetup.TabIndex = 6
@@ -138,7 +139,7 @@ Partial Class mainFrm
         '
         'StatusStrip1
         '
-        Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ScannerStatusLabel, Me.PrinterStatusLabel})
+        Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ScannerStatusLabel, Me.PrinterStatusLabel, Me.VersionStatusLabel})
         Me.StatusStrip1.Location = New System.Drawing.Point(0, 188)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Size = New System.Drawing.Size(513, 22)
@@ -159,6 +160,16 @@ Partial Class mainFrm
         Me.PrinterStatusLabel.Name = "PrinterStatusLabel"
         Me.PrinterStatusLabel.Size = New System.Drawing.Size(137, 17)
         Me.PrinterStatusLabel.Text = "ToolStripStatusLabel2"
+        '
+        'VersionStatusLabel
+        '
+        Me.VersionStatusLabel.IsLink = True
+        Me.VersionStatusLabel.Name = "VersionStatusLabel"
+        Me.VersionStatusLabel.Size = New System.Drawing.Size(193, 17)
+        Me.VersionStatusLabel.Spring = True
+        Me.VersionStatusLabel.Text = "New Version Available!"
+        Me.VersionStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.VersionStatusLabel.Visible = False
         '
         'chkPreview
         '
@@ -201,7 +212,7 @@ Partial Class mainFrm
         '
         'btnImageSettings
         '
-        Me.btnImageSettings.Location = New System.Drawing.Point(367, 83)
+        Me.btnImageSettings.Location = New System.Drawing.Point(367, 98)
         Me.btnImageSettings.Name = "btnImageSettings"
         Me.btnImageSettings.Size = New System.Drawing.Size(134, 42)
         Me.btnImageSettings.TabIndex = 5
@@ -272,10 +283,10 @@ Partial Class mainFrm
         Me.Controls.Add(Me.Label7)
         Me.Controls.Add(Me.StatusStrip1)
         Me.Controls.Add(Me.btnCopy)
-        Me.Controls.Add(Me.btnImageSettings)
         Me.Controls.Add(Me.nudNCopie)
-        Me.Controls.Add(Me.btnSelScanner)
         Me.Controls.Add(Me.chkPreview)
+        Me.Controls.Add(Me.btnImageSettings)
+        Me.Controls.Add(Me.btnSelScanner)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.llblAbout)
         Me.Controls.Add(Me.btnPrintSetup)
@@ -318,4 +329,5 @@ Partial Class mainFrm
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents ScannerStatusLabel As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents PrinterStatusLabel As System.Windows.Forms.ToolStripStatusLabel
+    Friend WithEvents VersionStatusLabel As System.Windows.Forms.ToolStripStatusLabel
 End Class

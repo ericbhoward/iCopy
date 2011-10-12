@@ -92,7 +92,6 @@ Public Class Scanner
                 MsgBox("There was an exception while setting the property " + prop_name + " to " + value.ToString() + ". Please report this information to iCopy bug tracker on Sourceforge:" + vbCrLf + _
                        "property type: " + temp.Type.ToString() + vbCrLf + _
                        "property subtype: " + temp.SubType.ToString(), MsgBoxStyle.Critical, "iCopy")
-
             End Try
         End If
     End Sub

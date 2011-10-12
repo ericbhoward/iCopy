@@ -200,6 +200,30 @@ Namespace My
                 Me("LastScanSettings") = value
             End Set
         End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("2011-01-01")>  _
+        Public Property LastVersionCheck() As Date
+            Get
+                Return CType(Me("LastVersionCheck"),Date)
+            End Get
+            Set
+                Me("LastVersionCheck") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("True")>  _
+        Public Property CheckForUpdates() As Boolean
+            Get
+                Return CType(Me("CheckForUpdates"),Boolean)
+            End Get
+            Set
+                Me("CheckForUpdates") = value
+            End Set
+        End Property
     End Class
 End Namespace
 
