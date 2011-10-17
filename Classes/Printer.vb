@@ -30,6 +30,7 @@ Friend Class Printer
     Public Sub New()
         'Initializes PrintDocument
         pd = New PrintDocument
+        pd.DocumentName = "iCopy"
     End Sub
 
     Public Property Name() As String
@@ -83,6 +84,14 @@ Friend Class Printer
         _images.Add(Image.FromStream(stream))
         stream.Close()
         stream.Dispose()
+        _scaleperc = scaleperc
+    End Sub
+
+    'TODO: Experimental
+    Sub AddImages(ByVal images As List(Of Image), Optional ByVal scaleperc As Short = 100)
+        For Each img As Image In images
+            _images.Add(img)
+        Next
         _scaleperc = scaleperc
     End Sub
 

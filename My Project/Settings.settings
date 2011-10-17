@@ -35,10 +35,10 @@
     <Setting Name="LastScanSettings" Provider="iCopy.PortableSettingsProvider" Type="iCopy.ScanSettings" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="LastVersionCheck" Type="System.DateTime" Scope="User">
+    <Setting Name="LastVersionCheck" Provider="iCopy.PortableSettingsProvider" Type="System.DateTime" Scope="User">
       <Value Profile="(Default)">2011-01-01</Value>
     </Setting>
-    <Setting Name="CheckForUpdates" Type="System.Boolean" Scope="User">
+    <Setting Name="CheckForUpdates" Provider="iCopy.PortableSettingsProvider" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>

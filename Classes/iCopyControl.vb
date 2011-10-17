@@ -17,7 +17,6 @@
 Imports WIA
 Imports System.ComponentModel
 Imports System.Globalization
-Imports MySql.Data.MySqlClient
 Imports System.Drawing.Imaging
 Imports System.IO
 Imports System.Text.RegularExpressions
@@ -39,7 +38,6 @@ Class appControl
     Private Shared WithEvents _printer As New Printer
     Private Shared CommandLine As Boolean
 
-
     Public Shared MainForm As mainFrm
 
     Shared Sub Main(ByVal sArgs() As String)
@@ -49,18 +47,28 @@ Class appControl
             My.Settings.LastScanSettings = New ScanSettings()
         End If
 
-
-#If Not Debug Then
         Dim tmp As TextWriter 'Temporary output stream for the console
         Dim sw As StreamWriter
         If console_fs Is Nothing Then
-            console_fs = New FileStream("iCopy.log", FileMode.Create)
+            Try
+                console_fs = New FileStream("iCopy.log", FileMode.Create)
+            Catch ex As UnauthorizedAccessException
+                Dim path As String = Application.LocalUserAppDataPath
+
+                path = path.Replace(Application.CompanyName + "\", "")
+                path = path.Replace(Application.ProductVersion, "")
+                Try
+                    IO.Directory.CreateDirectory(path)
+                    console_fs = New FileStream(path + "iCopy.log", FileMode.Create)
+                Catch e As Exception
+
+                End Try
+            End Try
             sw = New StreamWriter(console_fs)
             sw.AutoFlush = True
             tmp = Console.Out
             Console.SetOut(sw)
         End If
-#End If
 
 #If Not Debug Then
             Try
@@ -172,17 +180,13 @@ Class appControl
             For i = 0 To sArgs.GetUpperBound(0)
                 Select Case sArgs(i).ToLower()
                     Case "/?"
-#If Not Debug Then
-                            Console.SetOut(tmp)
-#End If
+                        Console.SetOut(tmp)
                         Console.Write(LocRM.GetString("Console_Help"))
                     Case "/wiareg", "/wr"
                         RegisterWiaautdll(True)
                         GoTo exit_app
-                    Case "/debug", "/d"
-                        appControl.CreateScanner(_deviceID)
-                        Diagnosis()
-                        GoTo exit_app
+                    Case "/adf"
+                        CopyADF(settings)
                     Case "/copy", "/c"
                         Copy(settings)
                         GoTo exit_app
@@ -220,12 +224,10 @@ Class appControl
 #End If
 
 exit_app:
-#If Not Debug Then
         If Not tmp Is Nothing Then
             Console.SetOut(tmp)
             sw.Close()
         End If
-#End If
         Application.Exit()
     End Sub
 
@@ -331,14 +333,15 @@ exit_app:
             root.AppendChild(nodeDevProp)
             nodeDevProp.InnerText = "Impossible to read scanner properties: " & e.Message
         End Try
+        doc.Save(Console.Out)
 
-        Dim fileDial As New SaveFileDialog()
-        fileDial.AddExtension = True
-        fileDial.Filter = "File XML (*.xml)|*.xml"
-        fileDial.FileName = "iCopyDiagnosis.xml"
-        If fileDial.ShowDialog() = DialogResult.OK Then
-            doc.Save(fileDial.FileName)
-        End If
+        'Dim fileDial As New SaveFileDialog()
+        'fileDial.AddExtension = True
+        'fileDial.Filter = "File XML (*.xml)|*.xml"
+        'fileDial.FileName = "iCopyDiagnosis.xml"
+        'If fileDial.ShowDialog() = DialogResult.OK Then
+        '    doc.Save(fileDial.FileName)
+        'End If
     End Sub
 
     Private Shared Sub RegisterWiaautdll(ByVal suppressMessage As Boolean)
@@ -435,9 +438,11 @@ exit_app:
                 'Shows WIA scanner selection dialog
                 Dim dialog As New CommonDialog
                 _scanner = New Scanner(dialog.ShowSelectDevice(WiaDeviceType.ScannerDeviceType, True, True).DeviceID)
+                Diagnosis()
                 Return _scanner.DeviceId
             Else
                 _scanner = New Scanner(deviceID)
+                Diagnosis()
                 Return _scanner.DeviceId
             End If
 
@@ -658,6 +663,32 @@ retry:
         Try
             'Add the image to the printer buffer
             _printer.AddImage(_scanner.Scan(options), options.Scaling)
+
+        Catch ex As System.Runtime.InteropServices.COMException
+            If ex.ErrorCode = -2145320860 Then       'If acquisition is cancelled
+                Exit Sub
+            ElseIf ex.ErrorCode = Convert.ToInt32("0x80004005", 16) Then
+                MsgBox("An error occured while processing the acquired image. Please try again with a lower resolution." & vbCrLf & "If the problem persists please report it (http://icopy.sourceforge.net/reportabug.html).", MsgBoxStyle.Critical, "iCopy")
+                Exit Sub
+            Else
+                Throw
+            End If
+        End Try
+
+        'Prints images
+        _printer.Print(options.Copies)
+
+    End Sub
+
+    Shared Sub CopyADF(ByVal options As ScanSettings)
+        'Sets acquisition properties
+
+        changescanner(_scanner.DeviceId)
+        'Calls scan routine
+        Try
+            'Add the image to the printer buffer
+            Dim imageList As List(Of Image) = _scanner.ScanADF(options)
+            If imageList.Count > 0 Then _printer.AddImages(imageList, options.Scaling)
 
         Catch ex As System.Runtime.InteropServices.COMException
             If ex.ErrorCode = -2145320860 Then       'If acquisition is cancelled

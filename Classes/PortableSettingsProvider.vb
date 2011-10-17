@@ -64,7 +64,7 @@ Public Class PortableSettingsProvider
         Return Security.SecurityManager.IsGranted(oFp)
     End Function
 
-    Function GetUserAppDataPath() As String
+    Public Function GetUserAppDataPath() As String
         Dim path As String = Application.LocalUserAppDataPath
 
         path = path.Replace(Application.CompanyName + "\", "")
