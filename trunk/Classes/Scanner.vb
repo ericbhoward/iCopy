@@ -21,6 +21,7 @@ Imports System.Runtime.InteropServices
 Public Class Scanner
 
     Dim WithEvents manager As New DeviceManager
+    Dim _scanner As WIA.Item
     Dim _AvailableResolutions As List(Of Integer)
     Dim _description As String = ""
     Dim _deviceID As String = ""
@@ -31,7 +32,6 @@ Public Class Scanner
         If manager.DeviceInfos.Count = 0 Then Throw New ArgumentException("No WIA device connected")
 
         Dim _device As Device
-        Dim _scanner As WIA.Item
 
         Try
             _device = manager.DeviceInfos.Item(deviceID).Connect
@@ -39,14 +39,16 @@ Public Class Scanner
             _scanner = _device.Items(1)
             _description = _device.Properties.Item("Description").Value
             Console.WriteLine("Connection established with {0}. DeviceID: {1}", _description, _deviceID)
-            _AvailableResolutions = GetAvailableResolutions(_scanner)
+            _AvailableResolutions = GetAvailableResolutions()
         Catch ex As Exception
             Throw
+        Finally
+            _scanner = Nothing
         End Try
 
     End Sub
 
-    Private Function GetBrightness(ByRef _scanner As WIA.Item) As Integer
+    Private Function GetBrightness() As Integer
         Dim prop_name As String = "Brightness"
         Dim temp As WIA.Property = _scanner.Properties(prop_name)
 
@@ -62,7 +64,7 @@ Public Class Scanner
         End If
     End Function
 
-    Private Sub SetBrightess(ByVal value As Integer, ByRef _scanner As WIA.Item)
+    Private Sub SetBrightess(ByVal value As Integer)
         Dim prop_name As String = "Brightness"
         Dim temp As WIA.Property = _scanner.Properties(prop_name)
 
@@ -96,7 +98,7 @@ Public Class Scanner
         End If
     End Sub
 
-    Public Function GetContrast(ByRef _scanner As WIA.Item) As Integer
+    Public Function GetContrast() As Integer
         Dim prop_name As String = "Contrast"
         Dim temp As WIA.Property = _scanner.Properties(prop_name)
 
@@ -112,7 +114,7 @@ Public Class Scanner
         End If
     End Function
 
-    Public Sub SetContrast(ByVal value As Integer, ByRef _scanner As WIA.Item)
+    Public Sub SetContrast(ByVal value As Integer)
         Dim prop_name As String = "Contrast"
         Dim temp As WIA.Property = _scanner.Properties(prop_name)
 
@@ -153,7 +155,7 @@ Public Class Scanner
         End Get
     End Property
 
-    Public Sub SetBitDepth(ByVal value As Short, ByRef _scanner As WIA.Item)
+    Public Sub SetBitDepth(ByVal value As Short)
         If value <= 32 And value Mod 8 = 0 Then 'La profondità è multipla di 8 e minore o uguale a 32 bit
             Try
                 _scanner.Properties("Bits Per Pixel").Value = value
@@ -170,7 +172,7 @@ Public Class Scanner
 
     End Sub
 
-    Public Sub SetIntent(ByVal value As WiaImageIntent, ByRef _scanner As WIA.Item) 'TODO: Set channels per pixel if intent is not supported
+    Public Sub SetIntent(ByVal value As WiaImageIntent) 'TODO: Set channels per pixel if intent is not supported
         If value = WiaImageIntent.ColorIntent Then
             Try
                 _scanner.Properties("Current Intent").Value = value
@@ -189,7 +191,7 @@ Public Class Scanner
             End Try
 
             If My.Settings.LastScanSettings.BitDepth <> 0 Then
-                SetBitDepth(My.Settings.LastScanSettings.BitDepth, _scanner)
+                SetBitDepth(My.Settings.LastScanSettings.BitDepth)
             End If
         ElseIf value = WiaImageIntent.GrayscaleIntent Or value = WiaImageIntent.TextIntent Then
             Try
@@ -211,14 +213,14 @@ Public Class Scanner
         End If
     End Sub
 
-    Public Sub SetResolution(ByVal value As Integer, ByRef _scanner As WIA.Item)
+    Public Sub SetResolution(ByVal value As Integer)
         If value = 0 Then value = _scanner.Properties("Horizontal Resolution").SubTypeDefault 'In case resolution value hasn't been set
         _scanner.Properties("Horizontal Resolution").Value = value
         _scanner.Properties("Vertical Resolution").Value = value
         Console.WriteLine("Resolution set to {0}", value)
     End Sub
 
-    Public Sub SetMaxExtent(ByRef _scanner As WIA.Item)
+    Public Sub SetMaxExtent()
         With _scanner.Properties("Horizontal Extent")
             If .SubType = WiaSubType.RangeSubType Then
                 .Value = .SubTypeMax
@@ -274,7 +276,7 @@ Public Class Scanner
         End Get
     End Property
 
-    Public Function GetAvailableResolutions(ByRef _scanner As WIA.Item) As List(Of Integer)
+    Public Function GetAvailableResolutions() As List(Of Integer)
         Dim _AvailableResolutions As New List(Of Integer)
 
         Dim res As WIA.Property = _scanner.Properties("Horizontal Resolution")
@@ -313,7 +315,109 @@ Public Class Scanner
         Dim newimg As ImageFile = ip.Apply(tmpImg)
         tmpImg = Nothing
         Return newimg
+    End Function
 
+
+    'First try. iCopy saves images to a temp location, then 
+    Function ScanADF(ByVal options As ScanSettings) As List(Of Image)
+        Console.WriteLine("Starting ADF acquisition")
+        Dim imageList As New List(Of Image)()
+        Dim dialog As New WIA.CommonDialog
+        Dim _device As Device
+        Dim hasMorePages As Boolean = True
+
+        Dim img As WIA.ImageFile = Nothing
+
+        Dim x As Integer = 0
+        Dim numPages As Integer = 0
+
+        While hasMorePages
+        Try 'Make connection to the scanner
+            _device = manager.DeviceInfos.Item(DeviceId).Connect
+            _deviceID = DeviceId
+            _scanner = _device.Items(1)
+
+        Catch ex As Exception
+            Console.WriteLine("Couldn't connect to the scanner. ERROR {0}", ex.Message)
+            Throw
+        End Try
+
+        'Set all properties
+        Try
+                SetBrightess(options.Brightness)
+                SetContrast(options.Contrast)
+                SetIntent(options.Intent)
+        Catch ex As Exception
+            Throw ex
+        End Try
+
+            Try
+                SetResolution(options.Resolution)
+            Catch ex As Exception
+                Console.WriteLine("Couldn't set resolution to {0}.", options.Resolution)
+            End Try
+            SetMaxExtent() 'After setting resolution, maximize the extent
+
+        Try
+                SetBitDepth(options.BitDepth)
+        Catch ex As COMException
+
+        End Try
+
+            Try
+                Console.WriteLine("Image count {0}. Acquiring next image", numPages)
+                img = DirectCast(dialog.ShowTransfer(_scanner, WIA.FormatID.wiaFormatTIFF, False), ImageFile)
+
+                'process image:
+                'one would do image processing here
+                '
+                'Save to file
+                Dim stream As IO.MemoryStream
+                stream = New IO.MemoryStream(CType(img.FileData.BinaryData, Byte()))
+                Console.WriteLine("Saving image to memory stream")
+                Dim tmpImage As Image = Image.FromStream(stream)
+                imageList.Add(tmpImage)
+                numPages += 1
+                img = Nothing
+            Catch ex As COMException
+                Console.WriteLine("Acquisition threw the exception {0}", ex.ErrorCode)
+                Throw
+            Catch ex As Exception
+                Throw 'TODO: Error handling
+            Finally
+                _scanner = Nothing
+                'determine if there are any more pages waiting
+                Console.WriteLine("Checking if there are more pages...")
+                Dim documentHandlingSelect As WIA.Property = Nothing
+                Dim documentHandlingStatus As WIA.Property = Nothing
+                For Each prop As WIA.Property In _device.Properties
+                    If prop.PropertyID = WIA_PROPERTIES.WIA_DPS_DOCUMENT_HANDLING_SELECT Then
+                        documentHandlingSelect = prop
+                    End If
+                    If prop.PropertyID = WIA_PROPERTIES.WIA_DPS_DOCUMENT_HANDLING_STATUS Then
+                        documentHandlingStatus = prop
+                    End If
+                Next
+
+                hasMorePages = False
+                'assume there are no more pages
+                If documentHandlingSelect IsNot Nothing Then
+                    'may not exist on flatbed scanner but required for feeder
+                    'check for document feeder
+                    Console.WriteLine("WIA_DPS_DOCUMENT_HANDLING_SELECT: {0}", Convert.ToUInt32(documentHandlingSelect.Value))
+                    Console.WriteLine("WIA_DPS_DOCUMENT_HANDLING_STATUS: {0}", Convert.ToUInt32(documentHandlingStatus.Value))
+                    If (Convert.ToUInt32(documentHandlingSelect.Value) And WIA_DPS_DOCUMENT_HANDLING_SELECT.FEEDER) <> 0 Then
+
+                        hasMorePages = ((Convert.ToUInt32(documentHandlingStatus.Value) And WIA_DPS_DOCUMENT_HANDLING_STATUS.FEED_READY) <> 0)
+                    End If
+                Else
+                    Console.WriteLine("Scanner doesn't support WIA_DPS_DOCUMENT_HANDLING_SELECT")
+                End If
+                x += 1
+            End Try
+        End While
+        Console.Write("Acquisition complete, returning {0} images", numPages)
+        Return imageList
     End Function
 
     Function Scan(ByVal options As ScanSettings) As IO.MemoryStream
@@ -329,7 +433,6 @@ Public Class Scanner
         Else
             'Without preview
             Dim _device As Device
-            Dim _scanner As WIA.Item
 
             Try
                 _device = manager.DeviceInfos.Item(DeviceId).Connect
@@ -343,30 +446,30 @@ Public Class Scanner
 
             'Set all properties
             Try
-                SetBrightess(options.Brightness, _scanner)
-                SetContrast(options.Contrast, _scanner)
-                SetIntent(options.Intent, _scanner)
+                SetBrightess(options.Brightness)
+                SetContrast(options.Contrast)
+                SetIntent(options.Intent)
             Catch ex As Exception
                 Throw ex
             End Try
 
             Try
-                SetResolution(options.Resolution, _scanner)
+                SetResolution(options.Resolution)
             Catch ex As Exception
                 Console.WriteLine("Couldn't set resolution to {0}.", options.Resolution)
             End Try
-            SetMaxExtent(_scanner)
+            SetMaxExtent()
 
             Try
-                SetBitDepth(options.BitDepth, _scanner)
+                SetBitDepth(options.BitDepth)
             Catch ex As COMException
 
             End Try
 
             'Begin the transfer. The file is saved to a WIA image file that is then put on a memory stream.
             Try
-                tmpImg = dialog.ShowTransfer(_device.Items(1), , True)
-
+                tmpImg = dialog.ShowTransfer(_scanner, , True)
+                _scanner = Nothing
             Catch ex As Runtime.InteropServices.COMException
                 If ex.ErrorCode <> WIA_ERRORS.WIA_ERROR_NO_SCANNER_CONNECTED Then Throw ex
 
@@ -462,6 +565,7 @@ Public Class Scanner
             nodeScaProp.AppendChild(PropToXML(p, doc))
         Next
 
+        _scanner = Nothing
     End Sub
 
 End Class
