@@ -235,6 +235,8 @@ exit_app:
         If ex.Message = "Exit" Then
             Exit Sub
         End If
+        Console.WriteLine("Exception caught.")
+        Console.WriteLine(ex.ToString())
         If TypeOf ex Is IO.FileNotFoundException Then
             RegisterWiaautdll(False)
         ElseIf TypeOf ex Is Runtime.InteropServices.COMException Then

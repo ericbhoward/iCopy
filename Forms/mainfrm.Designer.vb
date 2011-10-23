@@ -45,9 +45,9 @@ Partial Class mainFrm
         Me.ScanMenuStrip = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.ScanMultiplePages = New System.Windows.Forms.ToolStripMenuItem()
         Me.ScanToFile = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ScanToEmail = New System.Windows.Forms.ToolStripMenuItem()
         Me.cboPaperSize = New System.Windows.Forms.ComboBox()
         Me.Label2 = New System.Windows.Forms.Label()
+        Me.ScanADF = New System.Windows.Forms.ToolStripMenuItem()
         CType(Me.nudNCopie, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.StatusStrip1.SuspendLayout()
         Me.ScanMenuStrip.SuspendLayout()
@@ -165,7 +165,7 @@ Partial Class mainFrm
         '
         Me.VersionStatusLabel.IsLink = True
         Me.VersionStatusLabel.Name = "VersionStatusLabel"
-        Me.VersionStatusLabel.Size = New System.Drawing.Size(193, 17)
+        Me.VersionStatusLabel.Size = New System.Drawing.Size(224, 17)
         Me.VersionStatusLabel.Spring = True
         Me.VersionStatusLabel.Text = "New Version Available!"
         Me.VersionStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -221,16 +221,16 @@ Partial Class mainFrm
         '
         'ScanMenuStrip
         '
-        Me.ScanMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ScanMultiplePages, Me.ScanToFile, Me.ScanToEmail})
+        Me.ScanMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ScanMultiplePages, Me.ScanToFile, Me.ScanADF})
         Me.ScanMenuStrip.Name = "ScanMenuStrip"
-        Me.ScanMenuStrip.Size = New System.Drawing.Size(229, 70)
+        Me.ScanMenuStrip.Size = New System.Drawing.Size(234, 92)
         '
         'ScanMultiplePages
         '
         Me.ScanMultiplePages.Name = "ScanMultiplePages"
         Me.ScanMultiplePages.ShortcutKeyDisplayString = "Ctrl +M"
         Me.ScanMultiplePages.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.M), System.Windows.Forms.Keys)
-        Me.ScanMultiplePages.Size = New System.Drawing.Size(228, 22)
+        Me.ScanMultiplePages.Size = New System.Drawing.Size(233, 22)
         Me.ScanMultiplePages.Text = "Scan Multiple Pages"
         '
         'ScanToFile
@@ -238,15 +238,8 @@ Partial Class mainFrm
         Me.ScanToFile.Name = "ScanToFile"
         Me.ScanToFile.ShortcutKeyDisplayString = "Ctrl+F"
         Me.ScanToFile.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.F), System.Windows.Forms.Keys)
-        Me.ScanToFile.Size = New System.Drawing.Size(228, 22)
+        Me.ScanToFile.Size = New System.Drawing.Size(233, 22)
         Me.ScanToFile.Text = "Scan to &File"
-        '
-        'ScanToEmail
-        '
-        Me.ScanToEmail.Name = "ScanToEmail"
-        Me.ScanToEmail.Size = New System.Drawing.Size(228, 22)
-        Me.ScanToEmail.Text = "Scan To &Email"
-        Me.ScanToEmail.Visible = False
         '
         'cboPaperSize
         '
@@ -267,6 +260,13 @@ Partial Class mainFrm
         Me.Label2.TabIndex = 22
         Me.Label2.Text = "Paper Size"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.TopRight
+        '
+        'ScanADF
+        '
+        Me.ScanADF.Name = "ScanADF"
+        Me.ScanADF.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.A), System.Windows.Forms.Keys)
+        Me.ScanADF.Size = New System.Drawing.Size(233, 22)
+        Me.ScanADF.Text = "Scan Using ADF (beta)"
         '
         'mainFrm
         '
@@ -323,11 +323,11 @@ Partial Class mainFrm
     Friend WithEvents btnImageSettings As System.Windows.Forms.Button
     Friend WithEvents ScanMenuStrip As System.Windows.Forms.ContextMenuStrip
     Friend WithEvents ScanToFile As System.Windows.Forms.ToolStripMenuItem
-    Friend WithEvents ScanToEmail As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ScanMultiplePages As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents cboPaperSize As System.Windows.Forms.ComboBox
     Friend WithEvents Label2 As System.Windows.Forms.Label
     Friend WithEvents ScannerStatusLabel As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents PrinterStatusLabel As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents VersionStatusLabel As System.Windows.Forms.ToolStripStatusLabel
+    Friend WithEvents ScanADF As System.Windows.Forms.ToolStripMenuItem
 End Class

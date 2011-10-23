@@ -300,7 +300,6 @@ Class mainFrm
 
     Private Sub ScanToFile_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ScanToFile.Click
         Dim res As Short
-
         appControl.SaveToFile(getScanSettings())
     End Sub
 
@@ -324,5 +323,9 @@ Class mainFrm
 
     Private Sub VersionStatusLabel_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles VersionStatusLabel.Click
         Process.Start(weburl)
+    End Sub
+
+    Private Sub ScanADF_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ScanADF.Click
+        appControl.CopyADF(getScanSettings())
     End Sub
 End Class

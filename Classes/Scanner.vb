@@ -342,7 +342,8 @@ Public Class Scanner
             Throw
         End Try
 
-        'Set all properties
+            'Set all properties
+            Console.WriteLine("Setting scan properties")
         Try
                 SetBrightess(options.Brightness)
                 SetContrast(options.Contrast)
@@ -366,7 +367,7 @@ Public Class Scanner
 
             Try
                 Console.WriteLine("Image count {0}. Acquiring next image", numPages)
-                img = DirectCast(dialog.ShowTransfer(_scanner, WIA.FormatID.wiaFormatTIFF, False), ImageFile)
+                img = DirectCast(dialog.ShowTransfer(_scanner, WIA.FormatID.wiaFormatTIFF, True), ImageFile)
 
                 'process image:
                 'one would do image processing here
