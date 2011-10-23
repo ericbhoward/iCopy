@@ -22,10 +22,10 @@ Partial Class dlgScanMorePages
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.components = New System.ComponentModel.Container
-        Me.btnAddPage = New System.Windows.Forms.Button
-        Me.btnPrint = New System.Windows.Forms.Button
-        Me.Label1 = New System.Windows.Forms.Label
+        Me.components = New System.ComponentModel.Container()
+        Me.btnAddPage = New System.Windows.Forms.Button()
+        Me.btnPrint = New System.Windows.Forms.Button()
+        Me.Label1 = New System.Windows.Forms.Label()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.SuspendLayout()
         '
@@ -35,7 +35,7 @@ Partial Class dlgScanMorePages
         Me.btnAddPage.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
         Me.btnAddPage.Cursor = System.Windows.Forms.Cursors.Default
         Me.btnAddPage.DialogResult = System.Windows.Forms.DialogResult.Yes
-        Me.btnAddPage.Image = Global.iCopy.My.Resources.Resources.scanner_lare
+        Me.btnAddPage.Image = Global.iCopy.My.Resources.Resources.scanner_big
         Me.btnAddPage.ImageAlign = System.Drawing.ContentAlignment.TopCenter
         Me.btnAddPage.Location = New System.Drawing.Point(12, 49)
         Me.btnAddPage.Name = "btnAddPage"
@@ -50,7 +50,7 @@ Partial Class dlgScanMorePages
         '
         Me.btnPrint.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnPrint.DialogResult = System.Windows.Forms.DialogResult.No
-        Me.btnPrint.Image = Global.iCopy.My.Resources.Resources.printer_large_copy2
+        Me.btnPrint.Image = Global.iCopy.My.Resources.Resources.printer_big
         Me.btnPrint.ImageAlign = System.Drawing.ContentAlignment.TopCenter
         Me.btnPrint.Location = New System.Drawing.Point(159, 49)
         Me.btnPrint.Name = "btnPrint"

@@ -42,11 +42,9 @@ Class appControl
 
     Shared Sub Main(ByVal sArgs() As String)
         Application.EnableVisualStyles()
-
         If My.Settings.LastScanSettings Is Nothing Then
             My.Settings.LastScanSettings = New ScanSettings()
         End If
-
         Dim tmp As TextWriter 'Temporary output stream for the console
         Dim sw As StreamWriter
         If console_fs Is Nothing Then
@@ -101,8 +99,11 @@ Class appControl
 
             MainForm = New mainFrm()
             Application.Run(MainForm)
-
-            My.Settings.Save()
+            If My.Settings.RememberSettings Then
+                My.Settings.Save()
+            Else
+                My.Settings.Reset()
+            End If
 
         Else    'Handle Command line arguments
             CommandLine = True 'To inform the program that it is running in command line mode
@@ -224,11 +225,11 @@ Class appControl
 #End If
 
 exit_app:
-        If Not tmp Is Nothing Then
-            Console.SetOut(tmp)
-            sw.Close()
-        End If
-        Application.Exit()
+            If Not tmp Is Nothing Then
+                Console.SetOut(tmp)
+                sw.Close()
+            End If
+            Application.Exit()
     End Sub
 
     Private Shared Sub HandleException(ByVal ex As Exception)
@@ -706,21 +707,6 @@ retry:
         'Prints images
         _printer.Print(options.Copies)
 
-    End Sub
-
-    Shared Sub scannerDisconnected(ByVal sender As Object, ByVal e As EventArgs) Handles _scanner.ScannerDisconnected
-
-        MainForm.Enabled = False
-        Dim msg As MsgBoxResult = MsgBox(LocRM.GetString("Msg_ConnectionLost"), MsgBoxStyle.Critical + MsgBoxStyle.RetryCancel, "iCopy")
-        If msg = MsgBoxResult.Retry Then
-            Dim newscanner As String = changescanner(My.Settings.DeviceID)
-            If Not newscanner = Nothing Then
-                MainForm.Enabled = True
-                MainForm.Show()
-            End If
-        Else
-            Application.Exit()
-        End If
     End Sub
 
     Shared ReadOnly Property ScannerDescription()
