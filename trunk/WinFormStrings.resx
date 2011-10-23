@@ -603,4 +603,13 @@ ADVANCED PARAMETERS
     <value>Click here to go to iCopy website and download the latest version</value>
     <comment>Click here to go to iCopy website and download the latest version</comment>
   </data>
+  <data name="mainFrm_ScanADF" xml:space="preserve">
+    <value>Scan Using ADF (beta)</value>
+    <comment>Scan Using ADF (beta)</comment>
+  </data>
+  <data name="mainFrom_ScanADFToolTipText" xml:space="preserve">
+    <value>Scan using your scanner Auto Document Feeder (if supported).
+This is an experimental feature.</value>
+    <comment>Scan using your scanner Auto Document Feeder (if supported).</comment>
+  </data>
 </root>
