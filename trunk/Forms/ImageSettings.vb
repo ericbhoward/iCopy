@@ -47,7 +47,8 @@ Class frmImageSettings
         locRootStr = Me.Name & "_"
         'Applies localized strings to the controls
         For Each control As System.Windows.Forms.Control In Me.Controls
-            control.Text = appControl.GetLocalizedString(locRootStr & control.Name)
+            Dim text As String = appControl.GetLocalizedString(locRootStr & control.Name)
+            If text <> "" Then control.Text = text
             ToolTip1.SetToolTip(control, appControl.GetLocalizedString(locRootStr & control.Name & "ToolTip"))
         Next
 
@@ -144,4 +145,5 @@ Class frmImageSettings
         cboResolution.Text = 100
         tbScaling.Value = 100
     End Sub
+
 End Class

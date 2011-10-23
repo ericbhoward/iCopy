@@ -348,6 +348,8 @@
     </Content>
     <Content Include="Resources\btn_donateCC_LG.gif" />
     <None Include="Resources\iCopy2.ico" />
+    <None Include="Resources\Devices-scanner-icon.png" />
+    <None Include="Resources\Printer-icon.png" />
     <Content Include="wiaaut.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

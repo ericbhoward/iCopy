@@ -25,7 +25,6 @@ Public Class Scanner
     Dim _AvailableResolutions As List(Of Integer)
     Dim _description As String = ""
     Dim _deviceID As String = ""
-    Public Event ScannerDisconnected As EventHandler
 
     Sub New(ByVal deviceID As String)
         If deviceID Is Nothing Then Throw New ArgumentNullException("deviceID", "No deviceID specified")

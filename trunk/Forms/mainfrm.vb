@@ -87,7 +87,8 @@ Class mainFrm
 
         'Applies localized strings to the controls
         For Each control As System.Windows.Forms.Control In Me.Controls
-            control.Text = appControl.GetLocalizedString(LocalizedRootStr & control.Name)
+            Dim text As String = appControl.GetLocalizedString(LocalizedRootStr & control.Name)
+            If text <> "" Then control.Text = text
             ToolTip1.SetToolTip(control, appControl.GetLocalizedString(LocalizedRootStr & control.Name & "ToolTip"))
         Next
 

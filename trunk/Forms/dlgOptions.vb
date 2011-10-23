@@ -37,7 +37,6 @@ Public Class dlgOptions
             MsgBox(appControl.GetLocalizedString("Msg_Language"), MsgBoxStyle.Information, "iCopy")
         End If
 
-        My.Settings.StoreLocation = chkRememberWindowPos.Checked
         If cboBitDepth.Text = "Auto" Then
             My.Settings.LastScanSettings.BitDepth = 0
         Else
@@ -46,17 +45,11 @@ Public Class dlgOptions
     End Sub
 
     Sub LoadSettings()
-
         localeRootStr = Me.Name & "_"
         'Applies localized strings to the controls
         For Each control As System.Windows.Forms.Control In Me.Controls
-            'If control.HasChildren = True Then
-            '    For Each subcontrol As Windows.Forms.Control In control.Controls
-            '        subcontrol.Text = LocRM.GetString(subcontrol.Name)
-            '        ToolTip1.SetToolTip(subcontrol, LocRM.GetString(subcontrol.Name & "ToolTip"))
-            '    Next
-            'End If
-            control.Text = appControl.GetLocalizedString(localeRootStr & control.Name)
+            Dim text As String = appControl.GetLocalizedString(localeRootStr & control.Name)
+            If text <> "" Then control.Text = text
             ToolTip1.SetToolTip(control, appControl.GetLocalizedString(localeRootStr & control.Name & "ToolTip"))
         Next
 
@@ -86,8 +79,6 @@ retry:
             cboBitDepth.Text = My.Settings.LastScanSettings.BitDepth
         End If
 
-        'Loads other settings
-        chkRememberWindowPos.Checked = My.Settings.StoreLocation
     End Sub
 
     Private Sub dlgOptions_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
