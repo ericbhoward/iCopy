@@ -25,6 +25,7 @@ Public Class Scanner
     Dim _AvailableResolutions As List(Of Integer)
     Dim _description As String = ""
     Dim _deviceID As String = ""
+    Dim _canUseADF As Boolean = False
 
     Sub New(ByVal deviceID As String)
         If deviceID Is Nothing Then Throw New ArgumentNullException("deviceID", "No deviceID specified")
@@ -39,6 +40,17 @@ Public Class Scanner
             _description = _device.Properties.Item("Description").Value
             Console.WriteLine("Connection established with {0}. DeviceID: {1}", _description, _deviceID)
             _AvailableResolutions = GetAvailableResolutions()
+
+            Try
+                Dim caps As WIA_DPS_DOCUMENT_HANDLING_CAPABILITIES = _device.Properties("Document Handling Capabilities").Value
+                If caps And WIA_DPS_DOCUMENT_HANDLING_CAPABILITIES.FEED Then
+                    Console.WriteLine("This scanner supports ADF")
+                    _canUseADF = True
+                End If
+
+            Catch ex As Exception
+                'The scanner does not support ADF
+            End Try
         Catch ex As Exception
             Throw
         Finally
@@ -172,6 +184,7 @@ Public Class Scanner
     End Sub
 
     Public Sub SetIntent(ByVal value As WiaImageIntent) 'TODO: Set channels per pixel if intent is not supported
+
         If value = WiaImageIntent.ColorIntent Then
             Try
                 _scanner.Properties("Current Intent").Value = value
@@ -316,9 +329,14 @@ Public Class Scanner
         Return newimg
     End Function
 
+    Public ReadOnly Property CanUseADF() As Boolean
+        Get
+            Return _canUseADF
+        End Get
+    End Property
 
-    'First try. iCopy saves images to a temp location, then 
     Function ScanADF(ByVal options As ScanSettings) As List(Of Image)
+
         Console.WriteLine("Starting ADF acquisition")
         Dim imageList As New List(Of Image)()
         Dim dialog As New WIA.CommonDialog
@@ -327,13 +345,30 @@ Public Class Scanner
 
         Dim img As WIA.ImageFile = Nothing
 
-        Dim x As Integer = 0
-        Dim numPages As Integer = 0
+        Dim AcquiredPages As Integer = 0
 
-        While hasMorePages
         Try 'Make connection to the scanner
             _device = manager.DeviceInfos.Item(DeviceId).Connect
             _deviceID = DeviceId
+
+            Try 'Some scanner need this property to be set to feeder
+                If options.UseADF Then
+                    _device.Properties("Document Handling Select").Value = WIA_DPS_DOCUMENT_HANDLING_SELECT.FEEDER
+                    Console.WriteLine("WIA_DPS_DOCUMENT_HANDLING_SELECT set to {0}", WIA_DPS_DOCUMENT_HANDLING_SELECT.FEEDER)
+                Else
+                    _device.Properties("Document Handling Select").Value = WIA_DPS_DOCUMENT_HANDLING_SELECT.FLATBED
+                    Console.WriteLine("WIA_DPS_DOCUMENT_HANDLING_SELECT set to {0}", WIA_DPS_DOCUMENT_HANDLING_SELECT.FLATBED)
+                End If
+
+            Catch ex As COMException
+                Select Case ex.ErrorCode
+                    Case WIA_ERRORS.WIA_ERROR_PROPERTY_DONT_EXIST
+                        Console.WriteLine("WIA_DPS_DOCUMENT_HANDLING_SELECT not supported")
+                    Case Else
+                        Console.WriteLine("Couldn't set WIA_DPS_DOCUMENT_HANDLING_SELECT. Error code {0}", CType(ex.ErrorCode, WIA_ERRORS))
+                End Select
+            End Try
+
             _scanner = _device.Items(1)
 
         Catch ex As Exception
@@ -341,82 +376,92 @@ Public Class Scanner
             Throw
         End Try
 
+        While hasMorePages
             'Set all properties
             Console.WriteLine("Setting scan properties")
-        Try
+            Try
                 SetBrightess(options.Brightness)
                 SetContrast(options.Contrast)
                 SetIntent(options.Intent)
-        Catch ex As Exception
-            Throw ex
-        End Try
+            Catch ex As Exception
+                Throw ex
+            End Try
 
             Try
                 SetResolution(options.Resolution)
             Catch ex As Exception
                 Console.WriteLine("Couldn't set resolution to {0}.", options.Resolution)
+                Console.WriteLine("\tError: {0}", ex.ToString())
             End Try
             SetMaxExtent() 'After setting resolution, maximize the extent
 
-        Try
+            Try
                 SetBitDepth(options.BitDepth)
-        Catch ex As COMException
-
-        End Try
+            Catch ex As COMException
+                Console.WriteLine("Couldn't set BitDepth to {0}.", options.BitDepth)
+            End Try
 
             Try
-                Console.WriteLine("Image count {0}. Acquiring next image", numPages)
-                img = DirectCast(dialog.ShowTransfer(_scanner, WIA.FormatID.wiaFormatTIFF, True), ImageFile)
-
-                'process image:
-                'one would do image processing here
-                '
-                'Save to file
-                Dim stream As IO.MemoryStream
-                stream = New IO.MemoryStream(CType(img.FileData.BinaryData, Byte()))
-                Console.WriteLine("Saving image to memory stream")
-                Dim tmpImage As Image = Image.FromStream(stream)
-                imageList.Add(tmpImage)
-                numPages += 1
-                img = Nothing
+                Console.WriteLine("Image count {0}. Acquiring next image", AcquiredPages)
+                img = DirectCast(dialog.ShowTransfer(_scanner, WIA.FormatID.wiaFormatTIFF, False), ImageFile)
+                If img IsNot Nothing Then
+                    Dim stream As IO.MemoryStream
+                    stream = New IO.MemoryStream(CType(img.FileData.BinaryData, Byte()))
+                    Console.WriteLine("Saving image to memory stream")
+                    Dim tmpImage As Image = Image.FromStream(stream)
+                    imageList.Add(tmpImage)
+                    AcquiredPages += 1
+                    img = Nothing
+                Else 'Acquisition canceled
+                    Return Nothing
+                End If
             Catch ex As COMException
-                Console.WriteLine("Acquisition threw the exception {0}", ex.ErrorCode)
+                Select Case ex.ErrorCode
+                    Case WIA_ERRORS.WIA_ERROR_PAPER_EMPTY   'This error is reported when ADF is empty
+                        Console.WriteLine("The ADF is empty")
+                        Exit While                          'The acquisition is complete
+                    Case WIA_ERRORS.WIA_ERROR_PAPER_JAM
+                        Dim result As MsgBoxResult = MsgBox("The paper in the document feeder is jammed." + _
+                                                             "Please check the feeder and click Ok to resume the acquisition, Cancel to abort", vbOKCancel + vbExclamation, "iCopy")
+                        If result = MsgBoxResult.Ok Then Continue While
+                        If result = MsgBoxResult.Cancel Then Return Nothing
+                    Case Else
+                        Console.WriteLine("Acquisition threw the exception {0}", ex.ErrorCode)
+                End Select
                 Throw
             Catch ex As Exception
                 Throw 'TODO: Error handling
-            Finally
-                _scanner = Nothing
-                'determine if there are any more pages waiting
-                Console.WriteLine("Checking if there are more pages...")
-                Dim documentHandlingSelect As WIA.Property = Nothing
-                Dim documentHandlingStatus As WIA.Property = Nothing
-                For Each prop As WIA.Property In _device.Properties
-                    If prop.PropertyID = WIA_PROPERTIES.WIA_DPS_DOCUMENT_HANDLING_SELECT Then
-                        documentHandlingSelect = prop
-                    End If
-                    If prop.PropertyID = WIA_PROPERTIES.WIA_DPS_DOCUMENT_HANDLING_STATUS Then
-                        documentHandlingStatus = prop
-                    End If
-                Next
+            End Try
+            If Not options.UseADF Then Exit While
+            'determine if there are any more pages waiting
+            Console.WriteLine("Checking if there are more pages...")
 
-                hasMorePages = False
-                'assume there are no more pages
-                If documentHandlingSelect IsNot Nothing Then
-                    'may not exist on flatbed scanner but required for feeder
-                    'check for document feeder
-                    Console.WriteLine("WIA_DPS_DOCUMENT_HANDLING_SELECT: {0}", Convert.ToUInt32(documentHandlingSelect.Value))
-                    Console.WriteLine("WIA_DPS_DOCUMENT_HANDLING_STATUS: {0}", Convert.ToUInt32(documentHandlingStatus.Value))
-                    If (Convert.ToUInt32(documentHandlingSelect.Value) And WIA_DPS_DOCUMENT_HANDLING_SELECT.FEEDER) <> 0 Then
+            hasMorePages = False 'assume there are no more pages
+            Try
+                Dim status As WIA_DPS_DOCUMENT_HANDLING_STATUS = _device.Properties("Document Handling Status").Value
+                Console.WriteLine("WIA_DPS_DOCUMENT_HANDLING_STATUS: {0}", status.ToString())
+                hasMorePages = ((status And WIA_DPS_DOCUMENT_HANDLING_STATUS.FEED_READY) <> 0)
+            Catch ex As COMException
+                Select Case ex.ErrorCode
+                    Case WIA_ERRORS.WIA_ERROR_PROPERTY_DONT_EXIST
+                        Console.WriteLine("WIA_DPS_DOCUMENT_HANDLING_STATUS not supported")
+                    Case Else
+                        Console.WriteLine("Couldn't get WIA_DPS_DOCUMENT_HANDLING_STATUS. Error code {0}", ex.ErrorCode)
+                End Select
+            End Try
 
-                        hasMorePages = ((Convert.ToUInt32(documentHandlingStatus.Value) And WIA_DPS_DOCUMENT_HANDLING_STATUS.FEED_READY) <> 0)
-                    End If
-                Else
-                    Console.WriteLine("Scanner doesn't support WIA_DPS_DOCUMENT_HANDLING_SELECT")
+            Try
+                Console.WriteLine("WIA_DPS_PAGES Value: {0}", _device.Properties("Pages").Value)
+                If Convert.ToInt32(_device.Properties("Pages").Value) > 0 Then
+                    'More pages are available
+                    hasMorePages = True
                 End If
-                x += 1
+            Catch ex As COMException
+                Console.WriteLine("Couldn't read WIA_DPS_PAGES. Error {0}", ex.ErrorCode)
             End Try
         End While
-        Console.Write("Acquisition complete, returning {0} images", numPages)
+        _scanner = Nothing
+        Console.Write("Acquisition complete, returning {0} images", AcquiredPages)
         Return imageList
     End Function
 

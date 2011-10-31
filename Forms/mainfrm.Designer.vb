@@ -47,7 +47,7 @@ Partial Class mainFrm
         Me.ScanToFile = New System.Windows.Forms.ToolStripMenuItem()
         Me.cboPaperSize = New System.Windows.Forms.ComboBox()
         Me.Label2 = New System.Windows.Forms.Label()
-        Me.ScanADF = New System.Windows.Forms.ToolStripMenuItem()
+        Me.chkADF = New System.Windows.Forms.CheckBox()
         CType(Me.nudNCopie, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.StatusStrip1.SuspendLayout()
         Me.ScanMenuStrip.SuspendLayout()
@@ -130,7 +130,7 @@ Partial Class mainFrm
         '
         Me.Label1.Cursor = System.Windows.Forms.Cursors.Default
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(160, 118)
+        Me.Label1.Location = New System.Drawing.Point(167, 118)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(111, 19)
         Me.Label1.TabIndex = 12
@@ -174,7 +174,7 @@ Partial Class mainFrm
         'chkPreview
         '
         Me.chkPreview.AutoSize = True
-        Me.chkPreview.Location = New System.Drawing.Point(251, 157)
+        Me.chkPreview.Location = New System.Drawing.Point(181, 157)
         Me.chkPreview.Name = "chkPreview"
         Me.chkPreview.Size = New System.Drawing.Size(64, 17)
         Me.chkPreview.TabIndex = 4
@@ -221,16 +221,16 @@ Partial Class mainFrm
         '
         'ScanMenuStrip
         '
-        Me.ScanMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ScanMultiplePages, Me.ScanToFile, Me.ScanADF})
+        Me.ScanMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ScanMultiplePages, Me.ScanToFile})
         Me.ScanMenuStrip.Name = "ScanMenuStrip"
-        Me.ScanMenuStrip.Size = New System.Drawing.Size(234, 92)
+        Me.ScanMenuStrip.Size = New System.Drawing.Size(229, 48)
         '
         'ScanMultiplePages
         '
         Me.ScanMultiplePages.Name = "ScanMultiplePages"
         Me.ScanMultiplePages.ShortcutKeyDisplayString = "Ctrl +M"
         Me.ScanMultiplePages.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.M), System.Windows.Forms.Keys)
-        Me.ScanMultiplePages.Size = New System.Drawing.Size(233, 22)
+        Me.ScanMultiplePages.Size = New System.Drawing.Size(228, 22)
         Me.ScanMultiplePages.Text = "Scan Multiple Pages"
         '
         'ScanToFile
@@ -238,7 +238,7 @@ Partial Class mainFrm
         Me.ScanToFile.Name = "ScanToFile"
         Me.ScanToFile.ShortcutKeyDisplayString = "Ctrl+F"
         Me.ScanToFile.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.F), System.Windows.Forms.Keys)
-        Me.ScanToFile.Size = New System.Drawing.Size(233, 22)
+        Me.ScanToFile.Size = New System.Drawing.Size(228, 22)
         Me.ScanToFile.Text = "Scan to &File"
         '
         'cboPaperSize
@@ -261,12 +261,14 @@ Partial Class mainFrm
         Me.Label2.Text = "Paper Size"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.TopRight
         '
-        'ScanADF
+        'chkADF
         '
-        Me.ScanADF.Name = "ScanADF"
-        Me.ScanADF.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.A), System.Windows.Forms.Keys)
-        Me.ScanADF.Size = New System.Drawing.Size(233, 22)
-        Me.ScanADF.Text = "Scan Using ADF (beta)"
+        Me.chkADF.Location = New System.Drawing.Point(262, 150)
+        Me.chkADF.Name = "chkADF"
+        Me.chkADF.Size = New System.Drawing.Size(141, 31)
+        Me.chkADF.TabIndex = 23
+        Me.chkADF.Text = "Use Document Feeder (beta)"
+        Me.chkADF.UseVisualStyleBackColor = True
         '
         'mainFrm
         '
@@ -275,6 +277,7 @@ Partial Class mainFrm
         Me.ClientSize = New System.Drawing.Size(513, 210)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label8)
+        Me.Controls.Add(Me.chkADF)
         Me.Controls.Add(Me.cboPrintMode)
         Me.Controls.Add(Me.llblSettings)
         Me.Controls.Add(Me.btnScanModes)
@@ -284,12 +287,12 @@ Partial Class mainFrm
         Me.Controls.Add(Me.StatusStrip1)
         Me.Controls.Add(Me.btnCopy)
         Me.Controls.Add(Me.nudNCopie)
-        Me.Controls.Add(Me.chkPreview)
         Me.Controls.Add(Me.btnImageSettings)
         Me.Controls.Add(Me.btnSelScanner)
-        Me.Controls.Add(Me.Label1)
+        Me.Controls.Add(Me.chkPreview)
         Me.Controls.Add(Me.llblAbout)
         Me.Controls.Add(Me.btnPrintSetup)
+        Me.Controls.Add(Me.Label1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.KeyPreview = True
         Me.MaximizeBox = False
@@ -329,5 +332,5 @@ Partial Class mainFrm
     Friend WithEvents ScannerStatusLabel As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents PrinterStatusLabel As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents VersionStatusLabel As System.Windows.Forms.ToolStripStatusLabel
-    Friend WithEvents ScanADF As System.Windows.Forms.ToolStripMenuItem
+    Friend WithEvents chkADF As System.Windows.Forms.CheckBox
 End Class

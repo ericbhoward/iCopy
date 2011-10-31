@@ -132,7 +132,7 @@ Class mainFrm
         Next
 
         cboPaperSize.Text = My.Settings.PrinterSize 'Sets default paper size as stored in settings
-
+        chkADF.Enabled = appControl.CanUseADF()
     End Sub
 
     Private Sub mainFrm_KeyUp(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles MyBase.KeyUp
@@ -207,6 +207,7 @@ Class mainFrm
             End If
 
             ScannerStatusLabel.Text = appControl.ScannerDescription
+            chkADF.Enabled = appControl.CanUseADF()
             If frmImageSettings.Visible Then btnImageSettings.PerformClick()
             frmImageSettings.Dispose()
             frmImageSettings = New frmImageSettings()
@@ -294,6 +295,7 @@ Class mainFrm
         opts.Copies = nudNCopie.Value
         opts.Scaling = frmImageSettings.tbScaling.Value
         opts.BitDepth = My.Settings.LastScanSettings.BitDepth
+        opts.UseADF = chkADF.Checked
 
         My.Settings.LastScanSettings = opts
         Return opts
@@ -324,9 +326,5 @@ Class mainFrm
 
     Private Sub VersionStatusLabel_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles VersionStatusLabel.Click
         Process.Start(weburl)
-    End Sub
-
-    Private Sub ScanADF_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ScanADF.Click
-        appControl.CopyADF(getScanSettings())
     End Sub
 End Class

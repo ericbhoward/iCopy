@@ -87,17 +87,18 @@ Friend Class Printer
         _scaleperc = scaleperc
     End Sub
 
-    'TODO: Experimental
     Sub AddImages(ByVal images As List(Of Image), Optional ByVal scaleperc As Short = 100)
-        For Each img As Image In images
-            _images.Add(img)
-        Next
-        _scaleperc = scaleperc
+        If images IsNot Nothing Then
+            For Each img As Image In images
+                _images.Add(img)
+            Next
+            _scaleperc = scaleperc
+        End If
     End Sub
 
     Public Sub Print(Optional ByVal copies As Short = 1)
         'Check if Image Buffer is empty
-        If _images.Count = 0 Then Throw New ArgumentException("No images in image buffer")
+        If _images.Count = 0 Then Exit Sub
 
         pd.PrinterSettings.Copies = copies
         'Starts printing process
