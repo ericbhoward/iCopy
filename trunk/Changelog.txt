@@ -1,4 +1,8 @@
-﻿==1.5==
+﻿==1.5 beta2==
+- FIX: ADF with some scanners was not working (thanks to cmumathwhiz)
+- FIX: Some minor stability fixes
+
+==1.5 beta1==
 - ADD: Logging for troubleshooting purposes. iCopy will save a .log file either in its folder or in %AppData%\Local\iCopy
 - IMPROVED: Revised command line parameters. See README.txt for information or type iCopy.exe /help
 - FIX: Scanner handling has been revised, now it's more robust. Should avoid problems when scanning a second page

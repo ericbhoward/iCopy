@@ -187,7 +187,7 @@ Class appControl
                         RegisterWiaautdll(True)
                         GoTo exit_app
                     Case "/adf"
-                        CopyADF(settings)
+                        settings.UseADF = True
                     Case "/copy", "/c"
                         Copy(settings)
                         GoTo exit_app
@@ -552,6 +552,8 @@ retry:
         Dim format As Imaging.ImageFormat
         'Determines the extension of the file
         Dim ext As String = Right(options.Path, 3)
+        Dim pathWoExt = Left(options.Path, options.Path.Length - 4)
+        Dim images As List(Of Image)
 
         Select Case ext
             Case "jpg"
@@ -570,21 +572,23 @@ retry:
         Dim img As Image
         'Calls scan routine
         Try
-            img = _scanner.ScanImg(options)
-
-            img.Save(options.Path, format)
-
-            img.Dispose()
+            images = _scanner.ScanADF(options)
 
         Catch ex As System.Runtime.InteropServices.COMException
             If ex.ErrorCode = -2145320860 Then       'If acquisition is cancelled
-
+                Exit Sub
             ElseIf ex.ErrorCode = Convert.ToInt32("0x80004005", 16) Then
                 MsgBox("An error occured while processing the acquired image. Please try again with a lower resolution." & vbCrLf & "If the problem persists please report it (http://icopy.sourceforge.net/reportabug.html).", MsgBoxStyle.Critical, "iCopy")
+                Exit Sub
             Else
                 Throw
             End If
         End Try
+        images(0).Save(options.Path, format)
+        'For i = 0 To images.Count - 1
+        '    Dim path As String = pathWoExt + i.ToString("000") + "." + ext
+        '    images(i).Save(path, format)
+        'Next
 
     End Sub
 
@@ -606,6 +610,10 @@ retry:
         Return _scanner.AvailableResolutions
     End Function
 
+    Shared Function CanUseADF() As Boolean
+        Return _scanner.CanUseADF
+    End Function
+
     Shared Sub CopyMultiplePages(ByVal options As ScanSettings)
 
         'Sets acquisition properties
@@ -624,8 +632,7 @@ retry:
             'Calls scan routine
             Try
                 'Add the image to the print buffer
-                _printer.AddImage(_scanner.Scan(options), options.Scaling)
-
+                _printer.AddImages(_scanner.ScanADF(options), options.Scaling)
                 morePages = dlg.ShowDialog()
 
             Catch ex As System.Runtime.InteropServices.COMException
@@ -665,33 +672,7 @@ retry:
         'Calls scan routine
         Try
             'Add the image to the printer buffer
-            _printer.AddImage(_scanner.Scan(options), options.Scaling)
-
-        Catch ex As System.Runtime.InteropServices.COMException
-            If ex.ErrorCode = -2145320860 Then       'If acquisition is cancelled
-                Exit Sub
-            ElseIf ex.ErrorCode = Convert.ToInt32("0x80004005", 16) Then
-                MsgBox("An error occured while processing the acquired image. Please try again with a lower resolution." & vbCrLf & "If the problem persists please report it (http://icopy.sourceforge.net/reportabug.html).", MsgBoxStyle.Critical, "iCopy")
-                Exit Sub
-            Else
-                Throw
-            End If
-        End Try
-
-        'Prints images
-        _printer.Print(options.Copies)
-
-    End Sub
-
-    Shared Sub CopyADF(ByVal options As ScanSettings)
-        'Sets acquisition properties
-
-        changescanner(_scanner.DeviceId)
-        'Calls scan routine
-        Try
-            'Add the image to the printer buffer
-            Dim imageList As List(Of Image) = _scanner.ScanADF(options)
-            If imageList.Count > 0 Then _printer.AddImages(imageList, options.Scaling)
+            _printer.AddImages(_scanner.ScanADF(options), options.Scaling)
 
         Catch ex As System.Runtime.InteropServices.COMException
             If ex.ErrorCode = -2145320860 Then       'If acquisition is cancelled

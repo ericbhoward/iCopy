@@ -1,5 +1,5 @@
 ﻿'iCopy - Simple Photocopier
-'Copyright (C) 2007-2009 Matteo Rossi
+'Copyright (C) 2007-2011 Matteo Rossi
 
 'This program is free software: you can redistribute it and/or modify
 'it under the terms of the GNU General Public License as published by
