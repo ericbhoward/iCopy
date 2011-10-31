@@ -14,18 +14,15 @@ As it's small and no installation is required, iCopy is also suitable for USB pe
 1) Features
 ---------------------------
 
-# Simple interface
+# Simple and quick interface
 # Scanning mode selection
 # Run by pressing scanner button
-# Brightness and contrast settings
-# Scanner quality setting
+# Resolution, brightness and contrast, scaling settings
+# Scan Multiple Pages before printing, including ADF support
 # Scan to file function
-# Scan Multiple Pages before printing
 # Preview function
-# Enlargement by percentage function
 # Command-line parameters
-# No installation needed
-# Little hard disk space required
+# No installation needed and little hard disk space required
 # Compatible with all WIA scanners and all printers
 
 2) System requirements
@@ -52,6 +49,9 @@ No parameters: standard mode with windows
 /multiplePages			Scan a multipage document.
 /copymultiplepages
 
+Parameters:
+
+/adf							Enable ADF support
 /resolution -or- /r	[value]		Specify a valid scanning resolution in DPI (eg /resolution 100, /r 500)
 /color -or- /col				Color acquisition
 /grayscale -or- /gray			Grayscale acquisition
@@ -105,10 +105,7 @@ http://icopy.sourceforge.net/?page_id=10
 
 If you want to report an exception or a bug, to suggest a new feature or a change, or ask for support, please use Sourceforge Bug tracker:
 
-http://sourceforge.net/apps/trac/icopy/newticket
-
-NOTE: 	Please leave a valid email address in order to be contacted for more details or fixes to your problem. Anonymous reports will be discarded.
-		Your email address will be safe and not visible to other users.
+https://sourceforge.net/tracker/?func=add&group_id=201245&atid=976783
 
 6) Please Help!
 ------------------------
