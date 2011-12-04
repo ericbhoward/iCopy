@@ -1,4 +1,7 @@
-﻿==1.5 beta2==
+﻿==1.5 beta3==
+- FIX: ArgumentException during acquisition with some scanners
+
+==1.5 beta2==
 - FIX: ADF with some scanners was not working (thanks to cmumathwhiz)
 - FIX: Some minor stability fixes
 

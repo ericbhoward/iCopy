@@ -34,6 +34,7 @@ Public Class Scanner
         Dim _device As Device
 
         Try
+            Console.WriteLine("Trying to establish connection with the Device {0}", deviceID)
             _device = manager.DeviceInfos.Item(deviceID).Connect
             _deviceID = deviceID
             _scanner = _device.Items(1)
@@ -203,7 +204,11 @@ Public Class Scanner
             End Try
 
             If My.Settings.LastScanSettings.BitDepth <> 0 Then
-                SetBitDepth(My.Settings.LastScanSettings.BitDepth)
+                Try
+                    SetBitDepth(My.Settings.LastScanSettings.BitDepth)
+                Catch ex As Exception
+
+                End Try
             End If
         ElseIf value = WiaImageIntent.GrayscaleIntent Or value = WiaImageIntent.TextIntent Then
             Try
