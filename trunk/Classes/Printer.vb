@@ -30,7 +30,6 @@ Friend Class Printer
     Public Sub New()
         'Initializes PrintDocument
         pd = New PrintDocument
-        pd.DocumentName = "iCopy"
     End Sub
 
     Public Property Name() As String
@@ -101,6 +100,7 @@ Friend Class Printer
         If _images.Count = 0 Then Exit Sub
 
         pd.PrinterSettings.Copies = copies
+        pd.DocumentName = "iCopy " + Date.Now.ToString("yyyy-MM-dd hh-mm")
         'Starts printing process
         pd.Print()
         'TODO:Check Win32Exception
