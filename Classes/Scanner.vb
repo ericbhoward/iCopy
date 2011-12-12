@@ -353,39 +353,36 @@ Public Class Scanner
 
         Dim AcquiredPages As Integer = 0
 
-        Try 'Make connection to the scanner
-            _device = manager.DeviceInfos.Item(DeviceId).Connect
-            _deviceID = DeviceId
-
-            Try 'Some scanner need this property to be set to feeder
-                If options.UseADF Then
-                    _device.Properties("Document Handling Select").Value = WIA_DPS_DOCUMENT_HANDLING_SELECT.FEEDER
-                    Console.WriteLine("WIA_DPS_DOCUMENT_HANDLING_SELECT set to {0}", WIA_DPS_DOCUMENT_HANDLING_SELECT.FEEDER)
-                Else
-                    _device.Properties("Document Handling Select").Value = WIA_DPS_DOCUMENT_HANDLING_SELECT.FLATBED
-                    Console.WriteLine("WIA_DPS_DOCUMENT_HANDLING_SELECT set to {0}", WIA_DPS_DOCUMENT_HANDLING_SELECT.FLATBED)
-                End If
-            Catch ex As COMException
-                Select Case ex.ErrorCode
-                    Case WIA_ERRORS.WIA_ERROR_PROPERTY_DONT_EXIST
-                        Console.WriteLine("WIA_DPS_DOCUMENT_HANDLING_SELECT not supported")
-                    Case Else
-                        Console.WriteLine("Couldn't set WIA_DPS_DOCUMENT_HANDLING_SELECT. Error code {0}", CType(ex.ErrorCode, WIA_ERRORS))
-                End Select
-            Catch ex As Exception
-                Console.WriteLine("Exception thrown on WIA_DPS_DOCUMENT_HANDLING_SELECT")
-                Console.Write(ex.ToString())
-            End Try
-
-            _scanner = _device.Items(1)
-        Catch ex As Exception
-            Console.WriteLine("Couldn't connect to the scanner. ERROR {0}", ex.Message)
-            Throw
-        End Try
-
-        Throw New Exception("Porco dio") 'TODO: Remove
-
         While hasMorePages
+            Try 'Make connection to the scanner
+                _device = manager.DeviceInfos.Item(DeviceId).Connect
+                _deviceID = DeviceId
+
+                Try 'Some scanner need this property to be set to feeder
+                    If options.UseADF Then
+                        _device.Properties("Document Handling Select").Value = WIA_DPS_DOCUMENT_HANDLING_SELECT.FEEDER
+                        Console.WriteLine("WIA_DPS_DOCUMENT_HANDLING_SELECT set to {0}", WIA_DPS_DOCUMENT_HANDLING_SELECT.FEEDER)
+                    Else
+                        _device.Properties("Document Handling Select").Value = WIA_DPS_DOCUMENT_HANDLING_SELECT.FLATBED
+                        Console.WriteLine("WIA_DPS_DOCUMENT_HANDLING_SELECT set to {0}", WIA_DPS_DOCUMENT_HANDLING_SELECT.FLATBED)
+                    End If
+                Catch ex As COMException
+                    Select Case ex.ErrorCode
+                        Case WIA_ERRORS.WIA_ERROR_PROPERTY_DONT_EXIST
+                            Console.WriteLine("WIA_DPS_DOCUMENT_HANDLING_SELECT not supported")
+                        Case Else
+                            Console.WriteLine("Couldn't set WIA_DPS_DOCUMENT_HANDLING_SELECT. Error code {0}", CType(ex.ErrorCode, WIA_ERRORS))
+                    End Select
+                Catch ex As Exception
+                    Console.WriteLine("Exception thrown on WIA_DPS_DOCUMENT_HANDLING_SELECT")
+                    Console.Write(ex.ToString())
+                End Try
+
+                _scanner = _device.Items(1)
+            Catch ex As Exception
+                Console.WriteLine("Couldn't connect to the scanner. ERROR {0}", ex.Message)
+                Throw
+            End Try
             'Set all properties
             Console.WriteLine("Setting scan properties")
             Try

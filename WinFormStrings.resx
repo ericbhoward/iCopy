@@ -467,19 +467,21 @@ Setting more than 1000 DPI will require a lot of extra time.</comment>
     <value>Some invalid command line parameters have been passed. Please check command line parameter syntax in README.txt.</value>
     <comment>Some invalid command line parameters have been passed. Please check command line parameter syntax in README.txt.</comment>
   </data>
-  <data name="Msg_SendErrorReport" xml:space="preserve">
+  <data name="Msg_SendErrorReport2" xml:space="preserve">
     <value>iCopy encountered an unhandled exception:
 
 {0}  
 
-We would greatly appreciate your help in making iCopy a better application. If you click OK, a web page for bug reporting will be opened. A report of the application status when the exception occurred has been copied to the clipboard. Please paste it in Description Field. No personal information will be sent.
-Thank you very much for your help.</value>
+We would greatly appreciate your help in making iCopy a better application. If you click OK, an error report file will be saved and you will be redirected to iCopy bug tracker. Please take the time to file a new bug and upload the generated file (its content has been copied to the Clipboard, you can also paste it in the bug report).
+
+Thank you for your support!</value>
     <comment>iCopy encountered an unhandled exception:
 
 {0}  
 
-We would greatly appreciate your help in making iCopy a better application. If you click OK, a web page for bug reporting will be opened. A report of the application status when the exception occurred has been copied to the clipboard. Please paste it in Description Field. No personal information will be sent.
-Thank you very much for your help.</comment>
+We would greatly appreciate your help in making iCopy a better application. If you click OK, an error report file will be saved and you will be redirected to iCopy bug tracker. Please take the time to file a new bug and upload the generated file.
+
+Thank you for your support!</comment>
   </data>
   <data name="Msg_Language" xml:space="preserve">
     <value>Language will be changed on next restart.</value>
