@@ -167,16 +167,18 @@ Public Class Scanner
         End Get
     End Property
 
-    Public Sub SetBitDepth(ByVal value As Short)
+    Public Sub SetBitDepth(ByVal value As Short) 'TODO: Probably useless
         If value <= 32 And value Mod 8 = 0 Then 'La profondità è multipla di 8 e minore o uguale a 32 bit
             Try
                 _scanner.Properties("Bits Per Pixel").Value = value
                 Console.WriteLine("Bits per Pixel set to {0}", value)
+            Catch ex As ArgumentException
+                Console.WriteLine("Couldn't set Bits per Pixel set to {0}. ERROR {1}", ex.Message)
+                'Do nothing, there isn't any problem 
             Catch ex As UnauthorizedAccessException
                 'Do nothing, the scanner doesn't allow to change the property
             Catch ex As COMException
                 Console.WriteLine("Couldn't set Bits per Pixel set to {0}. ERROR {1}", ex.Message)
-                Throw ex
             End Try
         Else
             Throw New ArgumentException("Bit depth must be multiple of 8 and less or equal to 32")
@@ -341,7 +343,6 @@ Public Class Scanner
     End Property
 
     Function ScanADF(ByVal options As ScanSettings) As List(Of Image)
-
         Console.WriteLine("Starting ADF acquisition")
         Dim imageList As New List(Of Image)()
         Dim dialog As New WIA.CommonDialog
@@ -364,7 +365,6 @@ Public Class Scanner
                     _device.Properties("Document Handling Select").Value = WIA_DPS_DOCUMENT_HANDLING_SELECT.FLATBED
                     Console.WriteLine("WIA_DPS_DOCUMENT_HANDLING_SELECT set to {0}", WIA_DPS_DOCUMENT_HANDLING_SELECT.FLATBED)
                 End If
-
             Catch ex As COMException
                 Select Case ex.ErrorCode
                     Case WIA_ERRORS.WIA_ERROR_PROPERTY_DONT_EXIST
@@ -372,14 +372,18 @@ Public Class Scanner
                     Case Else
                         Console.WriteLine("Couldn't set WIA_DPS_DOCUMENT_HANDLING_SELECT. Error code {0}", CType(ex.ErrorCode, WIA_ERRORS))
                 End Select
+            Catch ex As Exception
+                Console.WriteLine("Exception thrown on WIA_DPS_DOCUMENT_HANDLING_SELECT")
+                Console.Write(ex.ToString())
             End Try
 
             _scanner = _device.Items(1)
-
         Catch ex As Exception
             Console.WriteLine("Couldn't connect to the scanner. ERROR {0}", ex.Message)
             Throw
         End Try
+
+        Throw New Exception("Porco dio") 'TODO: Remove
 
         While hasMorePages
             'Set all properties
@@ -402,7 +406,7 @@ Public Class Scanner
 
             Try
                 SetBitDepth(options.BitDepth)
-            Catch ex As COMException
+            Catch ex As Exception
                 Console.WriteLine("Couldn't set BitDepth to {0}.", options.BitDepth)
             End Try
 
@@ -453,6 +457,9 @@ Public Class Scanner
                     Case Else
                         Console.WriteLine("Couldn't get WIA_DPS_DOCUMENT_HANDLING_STATUS. Error code {0}", ex.ErrorCode)
                 End Select
+            Catch ex As Exception
+                Console.WriteLine("Exception thrown on WIA_DPS_DOCUMENT_HANDLING_STATUS")
+                Console.Write(ex.ToString())
             End Try
 
             Try
