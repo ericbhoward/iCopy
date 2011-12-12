@@ -41,6 +41,7 @@ Class appControl
     Public Shared MainForm As mainFrm
 
     Shared Sub Main(ByVal sArgs() As String)
+
         Application.EnableVisualStyles()
         If My.Settings.LastScanSettings Is Nothing Then
             My.Settings.LastScanSettings = New ScanSettings()
@@ -63,173 +64,174 @@ Class appControl
                 End Try
             End Try
             sw = New StreamWriter(console_fs)
+            Dim log As New StringWriter()
             sw.AutoFlush = True
             tmp = Console.Out
             Console.SetOut(sw)
         End If
-
-#If Not Debug Then
-            Try
-#End If
-        If sArgs.Length = 0 Then 'If there are no arguments, run app normally
-            CommandLine = False
-            'Avoids that two processes run simultaneously
-            If Process.GetProcessesByName("icopy").Length > 1 Then
-                MsgBox(LocRM.GetString("Msg_AlreadyRunning"), MsgBoxStyle.Information, "iCopy")
-                Throw New Exception("Exit")
-            End If
-
-            'Searches for languages installed
-            Try            'Should avoid ThreadStateException
-                If GetCulturesThread.ThreadState = Threading.ThreadState.Unstarted Then
-                    GetCulturesThread.Start()
+        Try
+            If sArgs.Length = 0 Then 'If there are no arguments, run app normally
+                CommandLine = False
+                'Avoids that two processes run simultaneously
+                If Process.GetProcessesByName("icopy").Length > 1 Then
+                    MsgBox(LocRM.GetString("Msg_AlreadyRunning"), MsgBoxStyle.Information, "iCopy")
+                    Throw New Exception("Exit")
                 End If
-            Catch ex As Threading.ThreadStateException
-                MsgBox(ex.ToString)
-            End Try
 
-            'Initializes new scanning interface
-            appControl.CreateScanner(My.Settings.DeviceID)
-
-            Try
-                My.Settings.DeviceID = _scanner.DeviceId
-            Catch ex As NullReferenceException
-                Application.Exit()
-            End Try
-
-            MainForm = New mainFrm()
-            Application.Run(MainForm)
-            If My.Settings.RememberSettings Then
-                My.Settings.Save()
-            Else
-                My.Settings.Reset()
-            End If
-
-        Else    'Handle Command line arguments
-            CommandLine = True 'To inform the program that it is running in command line mode
-
-            'Prints the argument list for debugging purpose
-            Dim argstring As String = ""
-            For Each arg As String In sArgs
-                argstring += arg + " "
-            Next
-            Console.WriteLine("Command Line parameters: {0}", argstring)
-
-            Dim settings As ScanSettings = My.Settings.LastScanSettings
-
-            'Command line arguments parsing
-            'STEP 1 Parameters with an argument
-            Dim i As Integer
-            For i = 0 To sArgs.GetUpperBound(0)
-                Try
-                    Select Case sArgs(i)
-                        Case "/brightness", "/b"
-                            settings.Brightness = CType(sArgs(i + 1), Integer)
-                        Case "/contrast", "/cnt"
-                            settings.Contrast = CType(sArgs(i + 1), Integer)
-                        Case "/resolution", "/r"
-                            settings.Resolution = CType(sArgs(i + 1), Integer)
-                        Case "/copies", "/nc"
-                            settings.Copies = CType(sArgs(i + 1), Integer)
-                        Case "/scaling", "/s"
-                            settings.Scaling = CType(sArgs(i + 1), Integer)
-                        Case "/printer"
-                            Try
-                                _printer.Name = sArgs(i + 1)
-                            Catch ex As ArgumentException
-                                MsgBox("The provided printer name is not valid. Using default printer.")
-                            End Try
-                        Case "/path"
-                            settings.Path = sArgs(i + 1)
-                    End Select
-                Catch ex As InvalidCastException
-                    MsgBox("Command line parsing failed. See README for correct sintax")
-                    GoTo exit_app
+                'Searches for languages installed
+                Try            'Should avoid ThreadStateException
+                    If GetCulturesThread.ThreadState = Threading.ThreadState.Unstarted Then
+                        GetCulturesThread.Start()
+                    End If
+                Catch ex As Threading.ThreadStateException
+                    MsgBox(ex.ToString)
                 End Try
 
-                'STEP 2 Parameters without an argument
-                Select Case sArgs(i)
-                    Case "/color", "/colour", "/col"
-                        settings.Intent = WiaImageIntent.ColorIntent
-                    Case "/grayscale", "/gray"
-                        settings.Intent = WiaImageIntent.GrayscaleIntent
-                    Case "/text", "/bw"
-                        settings.Intent = WiaImageIntent.TextIntent
-                    Case "/preview", "/p"
-                        settings.Preview = True
-                End Select
+                'Initializes new scanning interface
+                appControl.CreateScanner(My.Settings.DeviceID)
 
-                If sArgs(i).StartsWith("/StiDevice:") Then
-                    _deviceID = sArgs(i).Substring(sArgs(i).IndexOf(":") + 1)
-                End If
-                If sArgs(i).StartsWith("/StiEvent:") Then
-                    'TODO: Implement
-                End If
-            Next
+                Try
+                    My.Settings.DeviceID = _scanner.DeviceId
+                Catch ex As NullReferenceException
+                    Application.Exit()
+                End Try
 
-            If _deviceID = "" Then
-                _deviceID = changescanner(My.Settings.DeviceID)
-            Else
-                _deviceID = changescanner(_deviceID)
+                MainForm = New mainFrm()
+                Application.Run(MainForm)
+                If My.Settings.RememberSettings Then
+                    My.Settings.Save()
+                Else
+                    My.Settings.Reset()
+                End If
+
+            Else    'Handle Command line arguments
+                CommandLine = True 'To inform the program that it is running in command line mode
+
+                'Prints the argument list for debugging purpose
+                Dim argstring As String = ""
+                For Each arg As String In sArgs
+                    argstring += arg + " "
+                Next
+                Console.WriteLine("Command Line parameters: {0}", argstring)
+
+                Dim settings As ScanSettings = My.Settings.LastScanSettings
+
+                'Command line arguments parsing
+                'STEP 1 Parameters with an argument
+                Dim i As Integer
+                For i = 0 To sArgs.GetUpperBound(0)
+                    Try
+                        Select Case sArgs(i)
+                            Case "/brightness", "/b"
+                                settings.Brightness = CType(sArgs(i + 1), Integer)
+                            Case "/contrast", "/cnt"
+                                settings.Contrast = CType(sArgs(i + 1), Integer)
+                            Case "/resolution", "/r"
+                                settings.Resolution = CType(sArgs(i + 1), Integer)
+                            Case "/copies", "/nc"
+                                settings.Copies = CType(sArgs(i + 1), Integer)
+                            Case "/scaling", "/s"
+                                settings.Scaling = CType(sArgs(i + 1), Integer)
+                            Case "/printer"
+                                Try
+                                    _printer.Name = sArgs(i + 1)
+                                Catch ex As ArgumentException
+                                    MsgBox("The provided printer name is not valid. Using default printer.")
+                                End Try
+                            Case "/path"
+                                settings.Path = sArgs(i + 1)
+                        End Select
+                    Catch ex As InvalidCastException
+                        MsgBox("Command line parsing failed. See README for correct sintax")
+                        GoTo exit_app
+                    End Try
+
+                    'STEP 2 Parameters without an argument
+                    Select Case sArgs(i)
+                        Case "/color", "/colour", "/col"
+                            settings.Intent = WiaImageIntent.ColorIntent
+                        Case "/grayscale", "/gray"
+                            settings.Intent = WiaImageIntent.GrayscaleIntent
+                        Case "/text", "/bw"
+                            settings.Intent = WiaImageIntent.TextIntent
+                        Case "/preview", "/p"
+                            settings.Preview = True
+                    End Select
+
+                    If sArgs(i).StartsWith("/StiDevice:") Then
+                        _deviceID = sArgs(i).Substring(sArgs(i).IndexOf(":") + 1)
+                    End If
+                    If sArgs(i).StartsWith("/StiEvent:") Then
+                        'TODO: Implement
+                    End If
+                Next
+
+                If _deviceID = "" Then
+                    _deviceID = changescanner(My.Settings.DeviceID)
+                Else
+                    _deviceID = changescanner(_deviceID)
+                End If
+
+                _device = manager.DeviceInfos.Item(_deviceID).Connect()
+                Console.WriteLine("DeviceID = {0}", _deviceID)
+                _wscanner = _device.Items(1)
+
+                'STEP 3 Action parameters
+                For i = 0 To sArgs.GetUpperBound(0)
+                    Select Case sArgs(i).ToLower()
+                        Case "/?"
+                            Console.SetOut(tmp)
+                            Console.Write(LocRM.GetString("Console_Help"))
+                        Case "/wiareg", "/wr"
+                            RegisterWiaautdll(True)
+                            GoTo exit_app
+                        Case "/adf"
+                            settings.UseADF = True
+                        Case "/copy", "/c"
+                            Copy(settings)
+                            GoTo exit_app
+                        Case "/file", "/tofile", "/Scantofile", "/f"
+                            Try
+                                SaveToFile(settings)
+                            Catch ex As ArgumentException
+                                MsgBox(ex.Message, vbExclamation, "iCopy")
+                            End Try
+                            GoTo exit_app
+                        Case "/copymultiplepages", "/multiplepages"
+                            CopyMultiplePages(settings)
+                            GoTo exit_app
+                        Case "/register", "/reg"
+                            Try
+                                manager.RegisterPersistentEvent(Application.ExecutablePath + " /StiDevice:%1 /StiEvent:%2 /copy", "iCopy", "Directly print using iCopy", Application.ExecutablePath + ",0", WIA.EventID.wiaEventScanImage)
+                            Catch ex As UnauthorizedAccessException
+                                MsgBox("iCopy must be executed with administrative privileges in order to complete the operation.", vbInformation, "iCopy")
+                            End Try
+                        Case "/unregister", "/unreg"
+                            Try
+                                manager.UnregisterPersistentEvent(Application.ExecutablePath + " /StiDevice:%1 /StiEvent:%2 /copy", "iCopy", "Directly print using iCopy", Application.ExecutablePath & ",0", WIA.EventID.wiaEventScanImage)
+                            Catch ex As UnauthorizedAccessException
+                                MsgBox("iCopy must be executed with administrative privileges in order to complete the operation.", vbInformation, "iCopy")
+                            Catch ex As ArgumentException 'Thrown if the event is not found. Either wrong sintax or has already been removed
+                                MsgBox("Couldn't find the correct entry in the registry. Maybe it has already been removed?")
+                            End Try
+                    End Select
+                Next
             End If
 
-            _device = manager.DeviceInfos.Item(_deviceID).Connect()
-            Console.WriteLine("DeviceID = {0}", _deviceID)
-            _wscanner = _device.Items(1)
-
-            'STEP 3 Action parameters
-            For i = 0 To sArgs.GetUpperBound(0)
-                Select Case sArgs(i).ToLower()
-                    Case "/?"
-                        Console.SetOut(tmp)
-                        Console.Write(LocRM.GetString("Console_Help"))
-                    Case "/wiareg", "/wr"
-                        RegisterWiaautdll(True)
-                        GoTo exit_app
-                    Case "/adf"
-                        settings.UseADF = True
-                    Case "/copy", "/c"
-                        Copy(settings)
-                        GoTo exit_app
-                    Case "/file", "/tofile", "/Scantofile", "/f"
-                        Try
-                            SaveToFile(settings)
-                        Catch ex As ArgumentException
-                            MsgBox(ex.Message, vbExclamation, "iCopy")
-                        End Try
-                        GoTo exit_app
-                    Case "/copymultiplepages", "/multiplepages"
-                        CopyMultiplePages(settings)
-                        GoTo exit_app
-                    Case "/register", "/reg"
-                        Try
-                            manager.RegisterPersistentEvent(Application.ExecutablePath + " /StiDevice:%1 /StiEvent:%2 /copy", "iCopy", "Directly print using iCopy", Application.ExecutablePath + ",0", WIA.EventID.wiaEventScanImage)
-                        Catch ex As UnauthorizedAccessException
-                            MsgBox("iCopy must be executed with administrative privileges in order to complete the operation.", vbInformation, "iCopy")
-                        End Try
-                    Case "/unregister", "/unreg"
-                        Try
-                            manager.UnregisterPersistentEvent(Application.ExecutablePath + " /StiDevice:%1 /StiEvent:%2 /copy", "iCopy", "Directly print using iCopy", Application.ExecutablePath & ",0", WIA.EventID.wiaEventScanImage)
-                        Catch ex As UnauthorizedAccessException
-                            MsgBox("iCopy must be executed with administrative privileges in order to complete the operation.", vbInformation, "iCopy")
-                        Catch ex As ArgumentException 'Thrown if the event is not found. Either wrong sintax or has already been removed
-                            MsgBox("Couldn't find the correct entry in the registry. Maybe it has already been removed?")
-                        End Try
-                End Select
-            Next
-        End If
-#If Not Debug Then
         Catch ex As Exception
             If ex.Message <> "Exit" Then HandleException(ex) 'Overrides .NET message box to include error reporting
         End Try
-#End If
 
 exit_app:
-            If Not tmp Is Nothing Then
-                Console.SetOut(tmp)
+        If Not tmp Is Nothing Then
+            Console.SetOut(tmp)
+            Try
                 sw.Close()
-            End If
-            Application.Exit()
+            Catch ex As Exception
+                'The stream was already disposed
+            End Try
+        End If
+        Application.Exit()
     End Sub
 
     Private Shared Sub HandleException(ByVal ex As Exception)
@@ -256,7 +258,7 @@ exit_app:
 
     Private Shared Sub ErrorReport(ByVal ex As Exception)
 
-        Dim sendReport As MsgBoxResult = MsgBox(String.Format(appControl.GetLocalizedString("Msg_SendErrorReport"), ex.ToString()), MsgBoxStyle.Critical + MsgBoxStyle.OkCancel, "iCopy")
+        Dim sendReport As MsgBoxResult = MsgBox(String.Format(appControl.GetLocalizedString("Msg_SendErrorReport2"), ex.GetType().ToString() + " in " + ex.TargetSite.ToString()), MsgBoxStyle.Critical + MsgBoxStyle.OkCancel, "iCopy")
         If sendReport = MsgBoxResult.Cancel Then
             Exit Sub
         End If
@@ -287,6 +289,20 @@ exit_app:
                 ex.StackTrace.Replace("D:\Matteo\Documenti\Visual Studio Codename Orcas\Projects\iCopy\", "*\")
         exception.AppendChild(doc.CreateNode(Xml.XmlNodeType.Element, "Method", "")).InnerText = ex.TargetSite.Name
 
+        console_fs.Close()
+        Dim log As TextReader
+        Try
+            log = File.OpenText("iCopy.log")
+        Catch e As Exception
+            Dim path As String = Application.LocalUserAppDataPath
+            path = path.Replace(Application.CompanyName + "\", "")
+            path = path.Replace(Application.ProductVersion, "")
+            log = File.OpenText(path + "iCopy.log")
+        End Try
+
+        Dim logXML As Xml.XmlNode = exception.AppendChild(doc.CreateNode(Xml.XmlNodeType.Element, "Log", ""))
+        logXML.InnerText = log.ReadToEnd()
+
         Try
             appControl.Scanner.WritePropertiesLogXML(doc)
         Catch e As Exception
@@ -300,7 +316,14 @@ exit_app:
         Clipboard.SetText(sw.ToString())
         Dim version As System.Version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version
         Dim sVersion As String = String.Format("{0}.{1}{2}", version.Major, version.Minor, version.Build)
-        Process.Start(String.Format("", ex.GetType().ToString(), ex.TargetSite.Name, sVersion, "pincopallino", "Please paste here")) 'TODO: Change with Sourceforge BugTracker
+        Dim fileDial As New SaveFileDialog()
+        fileDial.AddExtension = True
+        fileDial.Filter = "File XML (*.xml)|*.xml"
+        fileDial.FileName = "iCopyErrorReport.xml"
+        If fileDial.ShowDialog() = DialogResult.OK Then
+            doc.Save(fileDial.FileName)
+        End If
+        Process.Start("https://sourceforge.net/tracker/?group_id=201245&atid=976783")
     End Sub
 
     Shared Function GetLocalizedString(ByVal Label As String) As String
@@ -336,15 +359,14 @@ exit_app:
             root.AppendChild(nodeDevProp)
             nodeDevProp.InnerText = "Impossible to read scanner properties: " & e.Message
         End Try
-        doc.Save(Console.Out)
 
-        'Dim fileDial As New SaveFileDialog()
-        'fileDial.AddExtension = True
-        'fileDial.Filter = "File XML (*.xml)|*.xml"
-        'fileDial.FileName = "iCopyDiagnosis.xml"
-        'If fileDial.ShowDialog() = DialogResult.OK Then
-        '    doc.Save(fileDial.FileName)
-        'End If
+        Dim fileDial As New SaveFileDialog()
+        fileDial.AddExtension = True
+        fileDial.Filter = "File XML (*.xml)|*.xml"
+        fileDial.FileName = "iCopyDiagnosis.xml"
+        If fileDial.ShowDialog() = DialogResult.OK Then
+            doc.Save(fileDial.FileName)
+        End If
     End Sub
 
     Private Shared Sub RegisterWiaautdll(ByVal suppressMessage As Boolean)
@@ -441,11 +463,9 @@ exit_app:
                 'Shows WIA scanner selection dialog
                 Dim dialog As New CommonDialog
                 _scanner = New Scanner(dialog.ShowSelectDevice(WiaDeviceType.ScannerDeviceType, True, True).DeviceID)
-                Diagnosis()
                 Return _scanner.DeviceId
             Else
                 _scanner = New Scanner(deviceID)
-                Diagnosis()
                 Return _scanner.DeviceId
             End If
 

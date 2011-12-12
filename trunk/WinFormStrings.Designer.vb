@@ -963,12 +963,13 @@ Namespace My.Resources
         '''
         '''{0}  
         '''
-        '''We would greatly appreciate your help in making iCopy a better application. If you click OK, a web page for bug reporting will be opened. A report of the application status when the exception occurred has been copied to the clipboard. Please paste it in Description Field. No personal information will be sent.
-        '''Thank you very much for your help..
+        '''We would greatly appreciate your help in making iCopy a better application. If you click OK, an error report file will be saved and you will be redirected to iCopy bug tracker. Please take the time to file a new bug and upload the generated file (its content has been copied to the Clipboard, you can also paste it in the bug report).
+        '''
+        '''Thank you for your support!.
         '''</summary>
-        Friend Shared ReadOnly Property Msg_SendErrorReport() As String
+        Friend Shared ReadOnly Property Msg_SendErrorReport2() As String
             Get
-                Return ResourceManager.GetString("Msg_SendErrorReport", resourceCulture)
+                Return ResourceManager.GetString("Msg_SendErrorReport2", resourceCulture)
             End Get
         End Property
         
