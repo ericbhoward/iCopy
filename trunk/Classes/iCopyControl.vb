@@ -593,7 +593,6 @@ retry:
         'Calls scan routine
         Try
             images = _scanner.ScanADF(options)
-
         Catch ex As System.Runtime.InteropServices.COMException
             If ex.ErrorCode = -2145320860 Then       'If acquisition is cancelled
                 Exit Sub
@@ -604,11 +603,15 @@ retry:
                 Throw
             End If
         End Try
-        images(0).Save(options.Path, format)
-        'For i = 0 To images.Count - 1
-        '    Dim path As String = pathWoExt + i.ToString("000") + "." + ext
-        '    images(i).Save(path, format)
-        'Next
+        If images.Count = 1 Then
+            images(0).Save(options.Path, format)
+        Else
+            For i = 0 To images.Count - 1
+                Dim path As String = pathWoExt + i.ToString("000") + "." + ext
+                images(i).Save(path, format)
+            Next
+        End If
+
 
     End Sub
 
