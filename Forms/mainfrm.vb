@@ -327,4 +327,5 @@ Class mainFrm
     Private Sub VersionStatusLabel_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles VersionStatusLabel.Click
         Process.Start(weburl)
     End Sub
+
 End Class
