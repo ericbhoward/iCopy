@@ -223,7 +223,7 @@ Partial Class mainFrm
         '
         Me.ScanMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ScanMultiplePages, Me.ScanToFile})
         Me.ScanMenuStrip.Name = "ScanMenuStrip"
-        Me.ScanMenuStrip.Size = New System.Drawing.Size(229, 48)
+        Me.ScanMenuStrip.Size = New System.Drawing.Size(229, 70)
         '
         'ScanMultiplePages
         '

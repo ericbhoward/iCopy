@@ -409,7 +409,12 @@ Public Class Scanner
 
             Try
                 Console.WriteLine("Image count {0}. Acquiring next image", AcquiredPages)
-                img = DirectCast(dialog.ShowTransfer(_scanner, WIA.FormatID.wiaFormatTIFF, False), ImageFile)
+                If options.Preview Then
+                    img = DirectCast(dialog.ShowAcquireImage(WiaDeviceType.ScannerDeviceType, options.Intent, , WIA.FormatID.wiaFormatTIFF, False, False, False), ImageFile)
+                Else
+                    img = DirectCast(dialog.ShowTransfer(_scanner, WIA.FormatID.wiaFormatTIFF, False), ImageFile)
+                End If
+
                 If img IsNot Nothing Then
                     Dim stream As IO.MemoryStream
                     stream = New IO.MemoryStream(CType(img.FileData.BinaryData, Byte()))
@@ -419,7 +424,7 @@ Public Class Scanner
                     AcquiredPages += 1
                     img = Nothing
                 Else 'Acquisition canceled
-                    Return Nothing
+                    Exit While
                 End If
             Catch ex As COMException
                 Select Case ex.ErrorCode
@@ -430,7 +435,7 @@ Public Class Scanner
                         Dim result As MsgBoxResult = MsgBox("The paper in the document feeder is jammed." + _
                                                              "Please check the feeder and click Ok to resume the acquisition, Cancel to abort", vbOKCancel + vbExclamation, "iCopy")
                         If result = MsgBoxResult.Ok Then Continue While
-                        If result = MsgBoxResult.Cancel Then Return Nothing
+                        If result = MsgBoxResult.Cancel Then Exit While
                     Case Else
                         Console.WriteLine("Acquisition threw the exception {0}", ex.ErrorCode)
                 End Select
@@ -468,8 +473,10 @@ Public Class Scanner
             Catch ex As COMException
                 Console.WriteLine("Couldn't read WIA_DPS_PAGES. Error {0}", ex.ErrorCode)
             End Try
+            _scanner = Nothing
+            Console.WriteLine("Closed connection to the scanner")
         End While
-        _scanner = Nothing
+        If _scanner IsNot Nothing Then _scanner = Nothing
         Console.Write("Acquisition complete, returning {0} images", AcquiredPages)
         Return imageList
     End Function
@@ -551,7 +558,7 @@ Public Class Scanner
         PropToXML = doc.CreateNode(XmlNodeType.Element, "Property", "")
         PropToXML.Attributes.Append(doc.CreateAttribute("Name", "")).Value = prop.Name
         PropToXML.Attributes.Append(doc.CreateAttribute("ID", "")).Value = prop.PropertyID
-        PropToXML.Attributes.Append(doc.CreateAttribute("Type", "")).Value = prop.Type
+        PropToXML.Attributes.Append(doc.CreateAttribute("Tsype", "")).Value = prop.Type
         If prop.IsVector Then
             PropToXML.AppendChild(doc.CreateNode(XmlNodeType.Element, "Vector", "")).InnerText = prop.IsVector
         Else
