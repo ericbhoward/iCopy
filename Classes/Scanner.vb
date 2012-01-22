@@ -34,18 +34,18 @@ Public Class Scanner
         Dim _device As Device
 
         Try
-            Console.WriteLine("Trying to establish connection with the Device {0}", deviceID)
+            Trace.WriteLine(String.Format("Trying to establish connection with the Device {0}", deviceID))
             _device = manager.DeviceInfos.Item(deviceID).Connect
             _deviceID = deviceID
             _scanner = _device.Items(1)
             _description = _device.Properties.Item("Description").Value
-            Console.WriteLine("Connection established with {0}. DeviceID: {1}", _description, _deviceID)
+            Trace.WriteLine(String.Format("Connection established with {0}. DeviceID: {1}", _description, _deviceID))
             _AvailableResolutions = GetAvailableResolutions()
 
             Try
                 Dim caps As WIA_DPS_DOCUMENT_HANDLING_CAPABILITIES = _device.Properties("Document Handling Capabilities").Value
                 If caps And WIA_DPS_DOCUMENT_HANDLING_CAPABILITIES.FEED Then
-                    Console.WriteLine("This scanner supports ADF")
+                    Trace.WriteLine(String.Format("This scanner supports ADF"))
                     _canUseADF = True
                 End If
 
@@ -91,9 +91,9 @@ Public Class Scanner
                 Dim tmpVal As Integer = CInt(Math.Round(value / 100 * delta + center, 0))
                 Try
                     temp.Value = tmpVal
-                    Console.WriteLine("Brightness set to {0} -> {1}", value.ToString(), _scanner.Properties(prop_name).Value.ToString())
+                    Trace.WriteLine(String.Format("Brightness set to {0} -> {1}", value.ToString(), _scanner.Properties(prop_name).Value.ToString()))
                 Catch ex As Exception
-                    Console.WriteLine("Brighness value not accepted by the scanner: ", tmpVal.ToString())
+                    Trace.WriteLine(String.Format("Brighness value not accepted by the scanner: ", tmpVal.ToString()))
                     Throw New ArgumentException(prop_name + " value not accepted by the scanner: " + value.ToString() + " -> " + tmpVal.ToString())
                 End Try
             Else
@@ -141,9 +141,9 @@ Public Class Scanner
                 Dim tmpVal As Integer = CInt(Math.Round(value / 100 * delta + center, 0))
                 Try
                     temp.Value = tmpVal
-                    Console.WriteLine("Contrast set to {0} -> {1}", value.ToString(), _scanner.Properties(prop_name).Value.ToString())
+                    Trace.WriteLine(String.Format("Contrast set to {0} -> {1}", value.ToString(), _scanner.Properties(prop_name).Value.ToString()))
                 Catch ex As Exception
-                    Console.WriteLine("Contrast value not accepted by the scanner: ", tmpVal.ToString())
+                    Trace.WriteLine(String.Format("Contrast value not accepted by the scanner: ", tmpVal.ToString()))
                     Throw New ArgumentException(prop_name + " value not accepted by the scanner: " + value.ToString() + " -> " + tmpVal.ToString())
                 End Try
             Else
@@ -171,14 +171,14 @@ Public Class Scanner
         If value <= 32 And value Mod 8 = 0 Then 'La profondità è multipla di 8 e minore o uguale a 32 bit
             Try
                 _scanner.Properties("Bits Per Pixel").Value = value
-                Console.WriteLine("Bits per Pixel set to {0}", value)
+                Trace.WriteLine(String.Format("Bits per Pixel set to {0}", value))
             Catch ex As ArgumentException
-                Console.WriteLine("Couldn't set Bits per Pixel set to {0}. ERROR {1}", ex.Message)
+                Trace.WriteLine(String.Format("Couldn't set Bits per Pixel set to {0}. ERROR {1}", ex.Message))
                 'Do nothing, there isn't any problem 
             Catch ex As UnauthorizedAccessException
                 'Do nothing, the scanner doesn't allow to change the property
             Catch ex As COMException
-                Console.WriteLine("Couldn't set Bits per Pixel set to {0}. ERROR {1}", ex.Message)
+                Trace.WriteLine(String.Format("Couldn't set Bits per Pixel set to {0}. ERROR {1}", ex.Message))
             End Try
         Else
             Throw New ArgumentException("Bit depth must be multiple of 8 and less or equal to 32")
@@ -191,14 +191,14 @@ Public Class Scanner
         If value = WiaImageIntent.ColorIntent Then
             Try
                 _scanner.Properties("Current Intent").Value = value
-                Console.WriteLine("Intent set to {0}", value)
+                Trace.WriteLine(String.Format("Intent set to {0}", value))
             Catch e As COMException
                 If e.ErrorCode = WIA_ERRORS.WIA_ERROR_PROPERTY_DONT_EXIST Then
                     Try
                         _scanner.Properties("Channels per pixel").Value = 3 '3 channels (RGB)
-                        Console.WriteLine("E: Couldn't set intent. Set channels per pixel instead")
+                        Trace.WriteLine(String.Format("E: Couldn't set intent. Set channels per pixel instead"))
                     Catch ex As COMException
-                        Console.WriteLine("E: Couldn't set intent. Report error")
+                        Trace.WriteLine(String.Format("E: Couldn't set intent. Report error"))
                         Throw ex
                     End Try
                 Else : Throw e
@@ -219,9 +219,9 @@ Public Class Scanner
                 If e.ErrorCode = WIA_ERRORS.WIA_ERROR_PROPERTY_DONT_EXIST Then
                     Try
                         _scanner.Properties("Channels per pixel").Value = 1 '1 channel (Grayscale)
-                        Console.WriteLine("E: Couldn't set intent. Set channels per pixel instead")
+                        Trace.WriteLine(String.Format("E: Couldn't set intent. Set channels per pixel instead"))
                     Catch ex As COMException
-                        Console.WriteLine("E: Couldn't set intent. Report error")
+                        Trace.WriteLine(String.Format("E: Couldn't set intent. Report error"))
                         Throw ex
                     End Try
                 Else : Throw e
@@ -236,14 +236,15 @@ Public Class Scanner
         If value = 0 Then value = _scanner.Properties("Horizontal Resolution").SubTypeDefault 'In case resolution value hasn't been set
         _scanner.Properties("Horizontal Resolution").Value = value
         _scanner.Properties("Vertical Resolution").Value = value
-        Console.WriteLine("Resolution set to {0}", value)
+        Trace.WriteLine(String.Format("Resolution set to {0}", value))
+
     End Sub
 
     Public Sub SetMaxExtent()
         With _scanner.Properties("Horizontal Extent")
             If .SubType = WiaSubType.RangeSubType Then
                 .Value = .SubTypeMax
-                Console.WriteLine("Set Horizontal Extent to its maximum value: {0}", .Value)
+                Trace.WriteLine(String.Format("Set Horizontal Extent to its maximum value: {0}", .Value))
             Else                'TODO: Remove those things
                 Dim max As Boolean = False
                 Dim hext As Integer = 1000
@@ -267,7 +268,7 @@ Public Class Scanner
         With _scanner.Properties("Vertical Extent")
             If .SubType = WiaSubType.RangeSubType Then
                 .Value = .SubTypeMax
-                Console.WriteLine("Set Vertical Extent to its maximum value: {0}", .Value)
+                Trace.WriteLine(String.Format("Set Vertical Extent to its maximum value: {0}", .Value))
             Else
                 Dim max As Boolean = False
                 Dim vext As Integer = 1000
@@ -343,7 +344,7 @@ Public Class Scanner
     End Property
 
     Function ScanADF(ByVal options As ScanSettings) As List(Of Image)
-        Console.WriteLine("Starting ADF acquisition")
+        Trace.WriteLine(String.Format("Starting ADF acquisition"))
         Dim imageList As New List(Of Image)()
         Dim dialog As New WIA.CommonDialog
         Dim _device As Device
@@ -361,30 +362,33 @@ Public Class Scanner
                 Try 'Some scanner need this property to be set to feeder
                     If options.UseADF Then
                         _device.Properties("Document Handling Select").Value = WIA_DPS_DOCUMENT_HANDLING_SELECT.FEEDER
-                        Console.WriteLine("WIA_DPS_DOCUMENT_HANDLING_SELECT set to {0}", WIA_DPS_DOCUMENT_HANDLING_SELECT.FEEDER)
+                        Trace.WriteLine(String.Format("WIA_DPS_DOCUMENT_HANDLING_SELECT set to {0}", WIA_DPS_DOCUMENT_HANDLING_SELECT.FEEDER))
                     Else
                         _device.Properties("Document Handling Select").Value = WIA_DPS_DOCUMENT_HANDLING_SELECT.FLATBED
-                        Console.WriteLine("WIA_DPS_DOCUMENT_HANDLING_SELECT set to {0}", WIA_DPS_DOCUMENT_HANDLING_SELECT.FLATBED)
+                        Trace.WriteLine(String.Format("WIA_DPS_DOCUMENT_HANDLING_SELECT set to {0}", WIA_DPS_DOCUMENT_HANDLING_SELECT.FLATBED))
                     End If
                 Catch ex As COMException
                     Select Case ex.ErrorCode
                         Case WIA_ERRORS.WIA_ERROR_PROPERTY_DONT_EXIST
-                            Console.WriteLine("WIA_DPS_DOCUMENT_HANDLING_SELECT not supported")
+                            Trace.WriteLine(String.Format("WIA_DPS_DOCUMENT_HANDLING_SELECT not supported"))
                         Case Else
-                            Console.WriteLine("Couldn't set WIA_DPS_DOCUMENT_HANDLING_SELECT. Error code {0}", CType(ex.ErrorCode, WIA_ERRORS))
+                            Trace.WriteLine(String.Format("Couldn't set WIA_DPS_DOCUMENT_HANDLING_SELECT. Error code {0}", CType(ex.ErrorCode, WIA_ERRORS)))
                     End Select
                 Catch ex As Exception
-                    Console.WriteLine("Exception thrown on WIA_DPS_DOCUMENT_HANDLING_SELECT")
+                    Trace.WriteLine(String.Format("Exception thrown on WIA_DPS_DOCUMENT_HANDLING_SELECT"))
                     Console.Write(ex.ToString())
                 End Try
 
+                'Connects the scanner
                 _scanner = _device.Items(1)
             Catch ex As Exception
-                Console.WriteLine("Couldn't connect to the scanner. ERROR {0}", ex.Message)
+                Trace.WriteLine(String.Format("Couldn't connect to the scanner. ERROR {0}", ex.Message))
                 Throw
             End Try
+
             'Set all properties
-            Console.WriteLine("Setting scan properties")
+            Trace.WriteLine(String.Format("Setting scan properties"))
+            Trace.WriteLine(options)
             Try
                 SetBrightess(options.Brightness)
                 SetContrast(options.Contrast)
@@ -396,19 +400,20 @@ Public Class Scanner
             Try
                 SetResolution(options.Resolution)
             Catch ex As Exception
-                Console.WriteLine("Couldn't set resolution to {0}.", options.Resolution)
-                Console.WriteLine("\tError: {0}", ex.ToString())
+                Trace.WriteLine(String.Format("Couldn't set resolution to {0}.", options.Resolution))
+                Trace.WriteLine(String.Format("\tError: {0}", ex.ToString()))
             End Try
             SetMaxExtent() 'After setting resolution, maximize the extent
 
             Try
                 SetBitDepth(options.BitDepth)
             Catch ex As Exception
-                Console.WriteLine("Couldn't set BitDepth to {0}.", options.BitDepth)
+                Trace.WriteLine(String.Format("Couldn't set BitDepth to {0}.", options.BitDepth))
             End Try
 
             Try
-                Console.WriteLine("Image count {0}. Acquiring next image", AcquiredPages)
+                Trace.WriteLine(String.Format("Image count {0}. Acquiring next image", AcquiredPages))
+
                 If options.Preview Then
                     img = DirectCast(dialog.ShowAcquireImage(WiaDeviceType.ScannerDeviceType, options.Intent, , WIA.FormatID.wiaFormatTIFF, False, False, False), ImageFile)
                 Else
@@ -418,7 +423,7 @@ Public Class Scanner
                 If img IsNot Nothing Then
                     Dim stream As IO.MemoryStream
                     stream = New IO.MemoryStream(CType(img.FileData.BinaryData, Byte()))
-                    Console.WriteLine("Saving image to memory stream")
+                    Trace.WriteLine(String.Format("Saving image to memory stream"))
                     Dim tmpImage As Image = Image.FromStream(stream)
                     imageList.Add(tmpImage)
                     AcquiredPages += 1
@@ -429,7 +434,7 @@ Public Class Scanner
             Catch ex As COMException
                 Select Case ex.ErrorCode
                     Case WIA_ERRORS.WIA_ERROR_PAPER_EMPTY   'This error is reported when ADF is empty
-                        Console.WriteLine("The ADF is empty")
+                        Trace.WriteLine(String.Format("The ADF is empty"))
                         Exit While                          'The acquisition is complete
                     Case WIA_ERRORS.WIA_ERROR_PAPER_JAM
                         Dim result As MsgBoxResult = MsgBox("The paper in the document feeder is jammed." + _
@@ -437,44 +442,46 @@ Public Class Scanner
                         If result = MsgBoxResult.Ok Then Continue While
                         If result = MsgBoxResult.Cancel Then Exit While
                     Case Else
-                        Console.WriteLine("Acquisition threw the exception {0}", ex.ErrorCode)
+                        Trace.WriteLine(String.Format("Acquisition threw the exception {0}", ex.ErrorCode))
                 End Select
                 Throw
             Catch ex As Exception
+                Trace.WriteLine("Eccezione.")
+                Trace.WriteLine(ex)
                 Throw 'TODO: Error handling
             End Try
             If Not options.UseADF Then Exit While
             'determine if there are any more pages waiting
-            Console.WriteLine("Checking if there are more pages...")
+            Trace.WriteLine(String.Format("Checking if there are more pages..."))
 
             hasMorePages = False 'assume there are no more pages
             Try
                 Dim status As WIA_DPS_DOCUMENT_HANDLING_STATUS = _device.Properties("Document Handling Status").Value
-                Console.WriteLine("WIA_DPS_DOCUMENT_HANDLING_STATUS: {0}", status.ToString())
+                Trace.WriteLine(String.Format("WIA_DPS_DOCUMENT_HANDLING_STATUS: {0}", status.ToString()))
                 hasMorePages = ((status And WIA_DPS_DOCUMENT_HANDLING_STATUS.FEED_READY) <> 0)
             Catch ex As COMException
                 Select Case ex.ErrorCode
                     Case WIA_ERRORS.WIA_ERROR_PROPERTY_DONT_EXIST
-                        Console.WriteLine("WIA_DPS_DOCUMENT_HANDLING_STATUS not supported")
+                        Trace.WriteLine(String.Format("WIA_DPS_DOCUMENT_HANDLING_STATUS not supported"))
                     Case Else
-                        Console.WriteLine("Couldn't get WIA_DPS_DOCUMENT_HANDLING_STATUS. Error code {0}", ex.ErrorCode)
+                        Trace.WriteLine(String.Format("Couldn't get WIA_DPS_DOCUMENT_HANDLING_STATUS. Error code {0}", ex.ErrorCode))
                 End Select
             Catch ex As Exception
-                Console.WriteLine("Exception thrown on WIA_DPS_DOCUMENT_HANDLING_STATUS")
+                Trace.WriteLine(String.Format("Exception thrown on WIA_DPS_DOCUMENT_HANDLING_STATUS"))
                 Console.Write(ex.ToString())
             End Try
 
             Try
-                Console.WriteLine("WIA_DPS_PAGES Value: {0}", _device.Properties("Pages").Value)
+                Trace.WriteLine(String.Format("WIA_DPS_PAGES Value: {0}", _device.Properties("Pages").Value))
                 If Convert.ToInt32(_device.Properties("Pages").Value) > 0 Then
                     'More pages are available
                     hasMorePages = True
                 End If
             Catch ex As COMException
-                Console.WriteLine("Couldn't read WIA_DPS_PAGES. Error {0}", ex.ErrorCode)
+                Trace.WriteLine(String.Format("Couldn't read WIA_DPS_PAGES. Error {0}", ex.ErrorCode))
             End Try
             _scanner = Nothing
-            Console.WriteLine("Closed connection to the scanner")
+            Trace.WriteLine(String.Format("Closed connection to the scanner"))
         End While
         If _scanner IsNot Nothing Then _scanner = Nothing
         Console.Write("Acquisition complete, returning {0} images", AcquiredPages)
@@ -501,7 +508,7 @@ Public Class Scanner
                 _scanner = _device.Items(1)
 
             Catch ex As Exception
-                Console.WriteLine("Couldn't connect to the scanner. ERROR {0}", ex.Message)
+                Trace.WriteLine(String.Format("Couldn't connect to the scanner. ERROR {0}", ex.Message))
                 Throw
             End Try
 
@@ -517,7 +524,7 @@ Public Class Scanner
             Try
                 SetResolution(options.Resolution)
             Catch ex As Exception
-                Console.WriteLine("Couldn't set resolution to {0}.", options.Resolution)
+                Trace.WriteLine(String.Format("Couldn't set resolution to {0}.", options.Resolution))
             End Try
             SetMaxExtent()
 

@@ -1,5 +1,7 @@
 ﻿==1.5 beta3==
+- FIX: Improved ADF with a bunch of scanners
 - FIX: ArgumentException during acquisition with some scanners
+- FIX: Exception if the default scanner is no longer connected or has been moved to another USB port
 
 ==1.5 beta2==
 - FIX: ADF with some scanners was not working (thanks to cmumathwhiz)

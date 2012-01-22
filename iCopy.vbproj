@@ -214,6 +214,7 @@
     <EmbeddedResource Include="Language Files\WinFormStrings.es-ES.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Language Files\WinFormStrings.fi-FI.resx" />
     <EmbeddedResource Include="Language Files\WinFormStrings.fr-FR.resx" />
     <EmbeddedResource Include="Language Files\WinFormStrings.nl-NL.resx">
       <SubType>Designer</SubType>
