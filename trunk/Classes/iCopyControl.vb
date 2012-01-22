@@ -28,7 +28,7 @@ Class appControl
     Shared _deviceID As String
     Shared _device As Device
     Shared _wscanner As WIA.Item
-    Shared console_fs As FileStream
+
     Private Shared LocRM As New System.Resources.ResourceManager("iCopy.WinFormStrings", GetType(mainFrm).Assembly)
     Private Shared GetCulturesThread As New Threading.Thread(AddressOf GetAvailableLanguages)
 
@@ -46,29 +46,31 @@ Class appControl
         If My.Settings.LastScanSettings Is Nothing Then
             My.Settings.LastScanSettings = New ScanSettings()
         End If
-        Dim tmp As TextWriter 'Temporary output stream for the console
-        Dim sw As StreamWriter
-        If console_fs Is Nothing Then
+
+        Dim XMLListener As New XmlWriterTraceListener("iCopy.xml", "XML")
+
+        Dim logListener As TextWriterTraceListener
+        Try
+            logListener = New TextWriterTraceListener("iCopy.log", "log")
+        Catch ex As Exception
+            Dim path As String = Application.LocalUserAppDataPath
+
+            path = path.Replace(Application.CompanyName + "\", "")
+            path = path.Replace(Application.ProductVersion, "")
             Try
-                console_fs = New FileStream("iCopy.log", FileMode.Create)
-            Catch ex As UnauthorizedAccessException
-                Dim path As String = Application.LocalUserAppDataPath
+                IO.Directory.CreateDirectory(path)
+                logListener = New TextWriterTraceListener("iCopy.log", "log")
+            Catch e As Exception
 
-                path = path.Replace(Application.CompanyName + "\", "")
-                path = path.Replace(Application.ProductVersion, "")
-                Try
-                    IO.Directory.CreateDirectory(path)
-                    console_fs = New FileStream(path + "iCopy.log", FileMode.Create)
-                Catch e As Exception
-
-                End Try
             End Try
-            sw = New StreamWriter(console_fs)
-            Dim log As New StringWriter()
-            sw.AutoFlush = True
-            tmp = Console.Out
-            Console.SetOut(sw)
-        End If
+        End Try
+
+        Trace.Listeners.Add(logListener)
+        Trace.Listeners.Add(XMLListener)
+        Trace.Listeners.Add(New ConsoleTraceListener())
+
+        Trace.AutoFlush = True
+
         Try
             If sArgs.Length = 0 Then 'If there are no arguments, run app normally
                 CommandLine = False
@@ -112,7 +114,7 @@ Class appControl
                 For Each arg As String In sArgs
                     argstring += arg + " "
                 Next
-                Console.WriteLine("Command Line parameters: {0}", argstring)
+                Trace.TraceInformation("Command Line parameters: {0}", argstring)
 
                 Dim settings As ScanSettings = My.Settings.LastScanSettings
 
@@ -143,7 +145,7 @@ Class appControl
                         End Select
                     Catch ex As InvalidCastException
                         MsgBox("Command line parsing failed. See README for correct sintax")
-                        GoTo exit_app
+                        Exit Sub
                     End Try
 
                     'STEP 2 Parameters without an argument
@@ -173,33 +175,28 @@ Class appControl
                 End If
 
                 _device = manager.DeviceInfos.Item(_deviceID).Connect()
-                Console.WriteLine("DeviceID = {0}", _deviceID)
+                Trace.TraceInformation("DeviceID = {0}", _deviceID)
                 _wscanner = _device.Items(1)
 
                 'STEP 3 Action parameters
                 For i = 0 To sArgs.GetUpperBound(0)
                     Select Case sArgs(i).ToLower()
                         Case "/?"
-                            Console.SetOut(tmp)
                             Console.Write(LocRM.GetString("Console_Help"))
                         Case "/wiareg", "/wr"
                             RegisterWiaautdll(True)
-                            GoTo exit_app
                         Case "/adf"
                             settings.UseADF = True
                         Case "/copy", "/c"
                             Copy(settings)
-                            GoTo exit_app
                         Case "/file", "/tofile", "/Scantofile", "/f"
                             Try
                                 SaveToFile(settings)
                             Catch ex As ArgumentException
                                 MsgBox(ex.Message, vbExclamation, "iCopy")
                             End Try
-                            GoTo exit_app
                         Case "/copymultiplepages", "/multiplepages"
                             CopyMultiplePages(settings)
-                            GoTo exit_app
                         Case "/register", "/reg"
                             Try
                                 manager.RegisterPersistentEvent(Application.ExecutablePath + " /StiDevice:%1 /StiEvent:%2 /copy", "iCopy", "Directly print using iCopy", Application.ExecutablePath + ",0", WIA.EventID.wiaEventScanImage)
@@ -222,15 +219,6 @@ Class appControl
             If ex.Message <> "Exit" Then HandleException(ex) 'Overrides .NET message box to include error reporting
         End Try
 
-exit_app:
-        If Not tmp Is Nothing Then
-            Console.SetOut(tmp)
-            Try
-                sw.Close()
-            Catch ex As Exception
-                'The stream was already disposed
-            End Try
-        End If
         Application.Exit()
     End Sub
 
@@ -238,8 +226,8 @@ exit_app:
         If ex.Message = "Exit" Then
             Exit Sub
         End If
-        Console.WriteLine("Exception caught.")
-        Console.WriteLine(ex.ToString())
+        Trace.TraceError("Exception caught.")
+        Trace.TraceError(ex.ToString())
         If TypeOf ex Is IO.FileNotFoundException Then
             RegisterWiaautdll(False)
         ElseIf TypeOf ex Is Runtime.InteropServices.COMException Then
@@ -289,19 +277,8 @@ exit_app:
                 ex.StackTrace.Replace("D:\Matteo\Documenti\Visual Studio Codename Orcas\Projects\iCopy\", "*\")
         exception.AppendChild(doc.CreateNode(Xml.XmlNodeType.Element, "Method", "")).InnerText = ex.TargetSite.Name
 
-        console_fs.Close()
-        Dim log As TextReader
-        Try
-            log = File.OpenText("iCopy.log")
-        Catch e As Exception
-            Dim path As String = Application.LocalUserAppDataPath
-            path = path.Replace(Application.CompanyName + "\", "")
-            path = path.Replace(Application.ProductVersion, "")
-            log = File.OpenText(path + "iCopy.log")
-        End Try
-
-        Dim logXML As Xml.XmlNode = exception.AppendChild(doc.CreateNode(Xml.XmlNodeType.Element, "Log", ""))
-        logXML.InnerText = log.ReadToEnd()
+        'Dim logXML As Xml.XmlNode = exception.AppendChild(doc.CreateNode(Xml.XmlNodeType.Element, "Log", ""))
+        'logXML.InnerText = sr.ReadToEnd()
 
         Try
             appControl.Scanner.WritePropertiesLogXML(doc)
@@ -313,6 +290,7 @@ exit_app:
         Dim tx As Xml.XmlTextWriter = New Xml.XmlTextWriter(sw)
         tx.Formatting = Xml.Formatting.Indented
         doc.WriteTo(tx)
+        Trace.Write(sw)
         Clipboard.SetText(sw.ToString())
         Dim version As System.Version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version
         Dim sVersion As String = String.Format("{0}.{1}{2}", version.Major, version.Minor, version.Build)
@@ -519,6 +497,8 @@ exit_app:
                     Else
                         Throw New ArgumentException("Exit")
                     End If
+                Case WIA_ERRORS.WIA_ERROR_UNKNOWN_ERROR 'Could happen if the deviceID is invalid (e.g. changed scanner)
+                    Return changescanner()
 
                 Case Else
                     Throw
@@ -542,7 +522,9 @@ retry:
             End If
 
         Else
-            changescanner(deviceID)
+            If changescanner(deviceID) Is Nothing Then
+                Throw New ArgumentException("Exit")
+            End If
         End If
     End Sub
 
