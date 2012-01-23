@@ -210,10 +210,10 @@ Class mainFrm
             If frmImageSettings.Visible Then btnImageSettings.PerformClick()
             frmImageSettings.Dispose()
             frmImageSettings = New frmImageSettings()
+        Catch ex As ExitException
+            'Don't change the scanner
         Catch ex As NullReferenceException
-            If ex.Message = "Exit" Then
-                'Don't change the scanner
-            End If
+
         Catch ex As Exception
             Throw
         End Try
