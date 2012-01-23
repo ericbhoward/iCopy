@@ -558,7 +558,7 @@ Public Class Scanner
     End Function
 
     <CLSCompliant(False)> _
-    Function TraceProp(ByVal prop As WIA.IProperty)
+    Sub TraceProp(ByVal prop As WIA.IProperty)
         Trace.WriteLine(String.Format("Property {0}: {1}  TYPE {2}", prop.PropertyID, prop.Name, prop.Type))
 
         If prop.IsVector Then
@@ -587,7 +587,7 @@ Public Class Scanner
             Case Else 'UnspecifiedSubType
         End Select
 
-    End Function
+    End Sub
 
     Public Sub WritePropertiesLog()
 

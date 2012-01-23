@@ -90,7 +90,7 @@ Class appControl
                 'Avoids that two processes run simultaneously
                 If Process.GetProcessesByName("icopy").Length > 1 Then
                     MsgBox(LocRM.GetString("Msg_AlreadyRunning"), MsgBoxStyle.Information, "iCopy")
-                    Throw New Exception("Exit")
+                    Throw New ExitException
                 End If
 
                 'Searches for languages installed
@@ -227,38 +227,32 @@ Class appControl
                     End Select
                 Next
             End If
+        Catch ex As ExitException
 
+        Catch ex As FileNotFoundException
+            Trace.WriteLine("Need wiaaut registration")
+            RegisterWiaautdll(False)
+        Catch ex As Runtime.InteropServices.COMException
+            If ex.ErrorCode = WIA_ERRORS.WIA_ERROR_NOT_REGISTERED Then 'WIA COM error
+                Trace.WriteLine("Need wiaaut registration")
+                RegisterWiaautdll(False)
+            ElseIf ex.ErrorCode = WIA_ERRORS.WIA_ERROR_UNKNOWN_ERROR Or ex.ErrorCode = WIA_ERRORS.WIA_ERROR_NO_SCANNER_CONNECTED Then
+                MsgBox("There is a problem with your scanner connection. Please try to reconnect your scanner and restart iCopy. If this doesn't solve the problem, please report it on iCopy website", MsgBoxStyle.Critical, "iCopy")
+            End If
         Catch ex As Exception
-            If ex.Message <> "Exit" Then HandleException(ex) 'Overrides .NET message box to include error reporting
+            HandleException(ex) 'Overrides .NET message box to include error reporting
         End Try
         Trace.WriteLine(vbCrLf)
 
-            Application.Exit()
+        Application.Exit()
     End Sub
 
     Private Shared Sub HandleException(ByVal ex As Exception)
-        If ex.Message = "Exit" Then
-            Exit Sub
-        End If
+
         Trace.TraceError("Exception caught.")
         Trace.TraceError(ex.ToString())
-        If TypeOf ex Is IO.FileNotFoundException Then
-            RegisterWiaautdll(False)
-        ElseIf TypeOf ex Is Runtime.InteropServices.COMException Then
-            Dim cex As Runtime.InteropServices.COMException = TryCast(ex, Runtime.InteropServices.COMException)
-            If cex.ErrorCode = WIA_ERRORS.WIA_ERROR_NOT_REGISTERED Then 'WIA COM error
-                RegisterWiaautdll(False)
-            ElseIf cex.ErrorCode = WIA_ERRORS.WIA_ERROR_UNKNOWN_ERROR Or cex.ErrorCode = WIA_ERRORS.WIA_ERROR_NO_SCANNER_CONNECTED Then
-                MsgBox("There is a problem with your scanner connection. Please try to reconnect your scanner and restart iCopy. If this doesn't solve the problem, please report it on iCopy website", MsgBoxStyle.Critical, "iCopy")
-            End If
-        Else
-            'If the exception is unhandled, prepare error report and send info
-            ErrorReport(ex) 'Prepare error report
-        End If
-    End Sub
 
-    Private Shared Sub ErrorReport(ByVal ex As Exception)
-
+        'If the exception is unhandled, prepare error report and send info
         Dim sendReport As MsgBoxResult = MsgBox(String.Format(appControl.GetLocalizedString("Msg_SendErrorReport2"), ex.GetType().ToString() + " in " + ex.TargetSite.ToString()), MsgBoxStyle.Critical + MsgBoxStyle.OkCancel, "iCopy")
         If sendReport = MsgBoxResult.Cancel Then
             Exit Sub
@@ -384,7 +378,7 @@ Class appControl
             If msg = MsgBoxResult.Retry Then
                 Return changescanner(deviceID)
             Else
-                Throw New ArgumentException("Exit")
+                Throw New ExitException
             End If
 
         Catch ex As Runtime.InteropServices.COMException
@@ -398,7 +392,7 @@ Class appControl
                     If msg = MsgBoxResult.Retry Then
                         Return changescanner(deviceID)
                     Else
-                        Throw New ArgumentException("Exit")
+                        Throw New ExitException
                     End If
 
                 Case WIA_ERRORS.WIA_ERROR_CONNECTION_ERROR  'Can't establish connection with the scanner
@@ -406,7 +400,7 @@ Class appControl
                     If msg = MsgBoxResult.Retry Then
                         Return changescanner(deviceID)
                     Else
-                        Throw New ArgumentException("Exit")
+                        Throw New ExitException
                     End If
 
                 Case WIA_ERRORS.WIA_ERROR_OFFLINE
@@ -414,19 +408,19 @@ Class appControl
                     If msg = MsgBoxResult.Retry Then
                         Return changescanner(deviceID)
                     Else
-                        Throw New ArgumentException("Exit")
+                        Throw New ExitException
                     End If
 
                 Case WIA_ERRORS.WIA_ERROR_EXCEPTION_IN_DRIVER
                     MsgBox(My.Resources.WinFormStrings.Msg_DriverException, MsgBoxStyle.Critical, "iCopy")
-                    Throw New ArgumentException("Exit")
+                    Throw New ExitException
 
                 Case WIA_ERRORS.WIA_ERROR_BUSY 'Scanner in use
                     Dim msg As MsgBoxResult = MsgBox(LocRM.GetString("Msg_ScannerInUse"), MsgBoxStyle.Exclamation + MsgBoxStyle.RetryCancel)
                     If msg = MsgBoxResult.Retry Then
                         Return changescanner(deviceID)
                     Else
-                        Throw New ArgumentException("Exit")
+                        Throw New ExitException
                     End If
                 Case WIA_ERRORS.WIA_ERROR_UNKNOWN_ERROR 'Could happen if the deviceID is invalid (e.g. changed scanner)
                     Return changescanner()
@@ -448,13 +442,13 @@ retry:
                 If msg = MsgBoxResult.Yes Then
                     GoTo retry
                 Else
-                    Throw New ArgumentException("Exit")
+                    Throw New ExitException
                 End If
             End If
 
         Else
             If changescanner(deviceID) Is Nothing Then
-                Throw New ArgumentException("Exit")
+                Throw New ExitException
             End If
         End If
 
