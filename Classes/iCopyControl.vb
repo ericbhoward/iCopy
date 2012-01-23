@@ -28,7 +28,6 @@ Class appControl
     Shared _deviceID As String
     Shared _device As Device
     Shared _wscanner As WIA.Item
-
     Private Shared LocRM As New System.Resources.ResourceManager("iCopy.WinFormStrings", GetType(mainFrm).Assembly)
     Private Shared GetCulturesThread As New Threading.Thread(AddressOf GetAvailableLanguages)
 
@@ -40,18 +39,12 @@ Class appControl
 
     Public Shared MainForm As mainFrm
 
-    Shared Sub Main(ByVal sArgs() As String)
-
-        Application.EnableVisualStyles()
-        If My.Settings.LastScanSettings Is Nothing Then
-            My.Settings.LastScanSettings = New ScanSettings()
-        End If
-
-        Dim XMLListener As New XmlWriterTraceListener("iCopy.xml", "XML")
-
-        Dim logListener As TextWriterTraceListener
+    Shared Function GetWritablePath() As String
         Try
-            logListener = New TextWriterTraceListener("iCopy.log", "log")
+            Dim fs As FileStream = File.Create("writable")
+            fs.Close()
+            File.Delete("writable")
+            Return ""
         Catch ex As Exception
             Dim path As String = Application.LocalUserAppDataPath
 
@@ -59,15 +52,35 @@ Class appControl
             path = path.Replace(Application.ProductVersion, "")
             Try
                 IO.Directory.CreateDirectory(path)
-                logListener = New TextWriterTraceListener("iCopy.log", "log")
+                Return path
             Catch e As Exception
 
             End Try
         End Try
 
+        Return Application.LocalUserAppDataPath
+    End Function
+
+    Shared Sub Main(ByVal sArgs() As String)
+
+        Application.EnableVisualStyles()
+        If My.Settings.LastScanSettings Is Nothing Then
+            My.Settings.LastScanSettings = New ScanSettings()
+        End If
+
+        Dim logPath As String = GetWritablePath() + "iCopy.log"
+
+        Dim logListener As New TextWriterTraceListener(logPath, "log")
+
+
         Trace.Listeners.Add(logListener)
-        Trace.Listeners.Add(XMLListener)
+
         Trace.Listeners.Add(New ConsoleTraceListener())
+        Trace.WriteLine(DateTime.Now)
+        Trace.WriteLine(String.Format("iCopy Version: {0}", Application.ProductVersion))
+        Trace.WriteLine(String.Format("Windows Version: {0}", System.Environment.OSVersion.VersionString))
+        Trace.WriteLine(String.Format(".NET Version: {0}", System.Environment.Version.ToString()))
+        Trace.WriteLine(String.Format("-----------------"))
 
         Trace.AutoFlush = True
 
@@ -114,7 +127,7 @@ Class appControl
                 For Each arg As String In sArgs
                     argstring += arg + " "
                 Next
-                Trace.TraceInformation("Command Line parameters: {0}", argstring)
+                Trace.WriteLine(String.Format("Command Line parameters: {0}", argstring))
 
                 Dim settings As ScanSettings = My.Settings.LastScanSettings
 
@@ -175,7 +188,7 @@ Class appControl
                 End If
 
                 _device = manager.DeviceInfos.Item(_deviceID).Connect()
-                Trace.TraceInformation("DeviceID = {0}", _deviceID)
+                Trace.WriteLine(String.Format("DeviceID = {0}", _deviceID))
                 _wscanner = _device.Items(1)
 
                 'STEP 3 Action parameters
@@ -218,8 +231,9 @@ Class appControl
         Catch ex As Exception
             If ex.Message <> "Exit" Then HandleException(ex) 'Overrides .NET message box to include error reporting
         End Try
+        Trace.WriteLine(vbCrLf)
 
-        Application.Exit()
+            Application.Exit()
     End Sub
 
     Private Shared Sub HandleException(ByVal ex As Exception)
@@ -239,7 +253,6 @@ Class appControl
             End If
         Else
             'If the exception is unhandled, prepare error report and send info
-            'If Not System.Diagnostics.Debugger.IsAttached Then SendInfo() 'Send info on iCopy
             ErrorReport(ex) 'Prepare error report
         End If
     End Sub
@@ -251,57 +264,12 @@ Class appControl
             Exit Sub
         End If
 
-        'Prepares error report XML
-        Dim doc As New Xml.XmlDocument()
-        doc.LoadXml("<?xml version=""1.0"" encoding=""utf-8""?> <errorReport> </errorReport>")
-        Dim root As Xml.XmlNode = doc.DocumentElement
-        'Date & Time
-        root.Attributes.Append(doc.CreateAttribute("Date")).Value = Date.Now
+        Trace.Close()
 
-        'System information
-        Dim sysInfo As Xml.XmlNode = root.AppendChild(doc.CreateNode(Xml.XmlNodeType.Element, "SystemInfo", ""))
+        Dim rd As New StreamReader(GetWritablePath() + "iCopy.log")
+        Clipboard.SetText(rd.ReadToEnd())
 
-        'iCopy version
-        sysInfo.AppendChild(doc.CreateNode(Xml.XmlNodeType.Element, "iCopy", "")).InnerText = Application.ProductVersion & vbCrLf
-
-        'Windows version
-        sysInfo.AppendChild(doc.CreateNode(Xml.XmlNodeType.Element, "Windows", "")).InnerText = System.Environment.OSVersion.VersionString
-
-        sysInfo.AppendChild(doc.CreateNode(Xml.XmlNodeType.Element, "NET", "")).InnerText = System.Environment.Version.ToString()
-
-        Dim exception As Xml.XmlNode = root.AppendChild(doc.CreateNode(Xml.XmlNodeType.Element, "Exception", ""))
-        exception.AppendChild(doc.CreateNode(Xml.XmlNodeType.Element, "Type", "")).InnerText = ex.GetType().ToString()
-        exception.AppendChild(doc.CreateNode(Xml.XmlNodeType.Element, "Message", "")).InnerText = ex.Message
-        exception.AppendChild(doc.CreateNode(Xml.XmlNodeType.Element, "Source", "")).InnerText = ex.Source
-        exception.AppendChild(doc.CreateNode(Xml.XmlNodeType.Element, "StackTrace", "")).InnerText = _
-                ex.StackTrace.Replace("D:\Matteo\Documenti\Visual Studio Codename Orcas\Projects\iCopy\", "*\")
-        exception.AppendChild(doc.CreateNode(Xml.XmlNodeType.Element, "Method", "")).InnerText = ex.TargetSite.Name
-
-        'Dim logXML As Xml.XmlNode = exception.AppendChild(doc.CreateNode(Xml.XmlNodeType.Element, "Log", ""))
-        'logXML.InnerText = sr.ReadToEnd()
-
-        Try
-            appControl.Scanner.WritePropertiesLogXML(doc)
-        Catch e As Exception
-            'Do nothing, the scanner wasn't initialized
-        End Try
-
-        Dim sw As IO.StringWriter = New IO.StringWriter()
-        Dim tx As Xml.XmlTextWriter = New Xml.XmlTextWriter(sw)
-        tx.Formatting = Xml.Formatting.Indented
-        doc.WriteTo(tx)
-        Trace.Write(sw)
-        Clipboard.SetText(sw.ToString())
-        Dim version As System.Version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version
-        Dim sVersion As String = String.Format("{0}.{1}{2}", version.Major, version.Minor, version.Build)
-        Dim fileDial As New SaveFileDialog()
-        fileDial.AddExtension = True
-        fileDial.Filter = "File XML (*.xml)|*.xml"
-        fileDial.FileName = "iCopyErrorReport.xml"
-        If fileDial.ShowDialog() = DialogResult.OK Then
-            doc.Save(fileDial.FileName)
-        End If
-        Process.Start("https://sourceforge.net/tracker/?group_id=201245&atid=976783")
+        Process.Start("https://sourceforge.net/tracker/?func=add&group_id=201245&atid=976783")
     End Sub
 
     Shared Function GetLocalizedString(ByVal Label As String) As String
@@ -309,43 +277,6 @@ Class appControl
         LocalizedString = LocRM.GetString(Label)
         Return LocalizedString
     End Function
-
-    Private Shared Sub Diagnosis()
-        'Prepares error report XML
-        Dim doc As New Xml.XmlDocument()
-        doc.LoadXml("<?xml version=""1.0"" encoding=""utf-8""?> <errorReport> </errorReport>")
-        Dim root As Xml.XmlNode = doc.DocumentElement
-        'Date & Time
-        root.Attributes.Append(doc.CreateAttribute("Date")).Value = Date.Now
-
-        'System information
-        Dim sysInfo As Xml.XmlNode = root.AppendChild(doc.CreateNode(Xml.XmlNodeType.Element, "SystemInfo", ""))
-
-        'iCopy version
-        sysInfo.AppendChild(doc.CreateNode(Xml.XmlNodeType.Element, "iCopy", "")).InnerText = Application.ProductVersion & vbCrLf
-
-        'Windows version
-        sysInfo.AppendChild(doc.CreateNode(Xml.XmlNodeType.Element, "Windows", "")).InnerText = System.Environment.OSVersion.VersionString
-
-        sysInfo.AppendChild(doc.CreateNode(Xml.XmlNodeType.Element, "NET", "")).InnerText = System.Environment.Version.ToString()
-
-        Try
-            appControl.Scanner.WritePropertiesLogXML(doc)
-        Catch e As Exception
-            Dim nodeDevProp As Xml.XmlNode
-            nodeDevProp = doc.CreateNode(Xml.XmlNodeType.Element, "DeviceProperties", "")
-            root.AppendChild(nodeDevProp)
-            nodeDevProp.InnerText = "Impossible to read scanner properties: " & e.Message
-        End Try
-
-        Dim fileDial As New SaveFileDialog()
-        fileDial.AddExtension = True
-        fileDial.Filter = "File XML (*.xml)|*.xml"
-        fileDial.FileName = "iCopyDiagnosis.xml"
-        If fileDial.ShowDialog() = DialogResult.OK Then
-            doc.Save(fileDial.FileName)
-        End If
-    End Sub
 
     Private Shared Sub RegisterWiaautdll(ByVal suppressMessage As Boolean)
 
@@ -526,6 +457,8 @@ retry:
                 Throw New ArgumentException("Exit")
             End If
         End If
+
+        Scanner.WritePropertiesLog()
     End Sub
 
     Shared Sub SaveToFile(ByVal options As ScanSettings)
@@ -571,7 +504,6 @@ retry:
         End Select
 
         changescanner(_scanner.DeviceId)
-        Dim img As Image
         'Calls scan routine
         Try
             images = _scanner.ScanADF(options)
@@ -594,22 +526,7 @@ retry:
             Next
         End If
 
-
     End Sub
-
-    Private Shared Function GetEncoder(ByVal format As ImageFormat) As ImageCodecInfo
-
-        Dim codecs As ImageCodecInfo() = ImageCodecInfo.GetImageDecoders()
-
-        Dim codec As ImageCodecInfo
-        For Each codec In codecs
-            If codec.FormatID = format.Guid Then
-                Return codec
-            End If
-        Next codec
-        Return Nothing
-
-    End Function
 
     Shared Function GetAvailableResolutions() As List(Of Integer)
         Return _scanner.AvailableResolutions
@@ -629,7 +546,6 @@ retry:
             dlg.Location = New Point(Screen.PrimaryScreen.WorkingArea.Width / 2 - dlg.Width, Screen.PrimaryScreen.WorkingArea.Height / 2 - dlg.Height)
         Else
             dlg.Location = New Point(MainForm.Left + (MainForm.Width - dlg.Width) / 2, MainForm.Top + (MainForm.Height - dlg.Height) / 2)
-
         End If
 retry:
         Do Until morePages = DialogResult.No Or morePages = DialogResult.Cancel

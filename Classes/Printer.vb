@@ -69,23 +69,6 @@ Friend Class Printer
         pd.DefaultPageSettings = dlg.Document.DefaultPageSettings
     End Sub
 
-    Sub AddImage(ByVal image As Image, Optional ByVal scaleperc As Short = 100)
-        'Adds an image to the image buffer
-        Dim stream As IO.MemoryStream
-        stream = New IO.MemoryStream()
-        image.Save(stream, image.RawFormat)
-        _images.Add(image.FromStream(stream))
-
-        _scaleperc = scaleperc
-    End Sub
-
-    Sub AddImage(ByVal stream As IO.MemoryStream, Optional ByVal scaleperc As Short = 100)
-        _images.Add(Image.FromStream(stream))
-        stream.Close()
-        stream.Dispose()
-        _scaleperc = scaleperc
-    End Sub
-
     Sub AddImages(ByVal images As List(Of Image), Optional ByVal scaleperc As Short = 100)
         If images IsNot Nothing Then
             For Each img As Image In images
