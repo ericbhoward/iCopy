@@ -33,8 +33,9 @@ Partial Class dlgOptions
         Me.cboBitDepth = New System.Windows.Forms.ComboBox()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
-        Me.TabPage2 = New System.Windows.Forms.TabPage()
         Me.chkRememberScanSettings = New System.Windows.Forms.CheckBox()
+        Me.TabPage2 = New System.Windows.Forms.TabPage()
+        Me.btnDefaultSettings = New System.Windows.Forms.Button()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.SuspendLayout()
@@ -131,16 +132,6 @@ Partial Class dlgOptions
         Me.TabPage1.Text = "General"
         Me.TabPage1.UseVisualStyleBackColor = True
         '
-        'TabPage2
-        '
-        Me.TabPage2.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage2.Name = "TabPage2"
-        Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2.Size = New System.Drawing.Size(322, 215)
-        Me.TabPage2.TabIndex = 1
-        Me.TabPage2.Text = "Scanner Buttons"
-        Me.TabPage2.UseVisualStyleBackColor = True
-        '
         'chkRememberScanSettings
         '
         Me.chkRememberScanSettings.AutoSize = True
@@ -154,6 +145,25 @@ Partial Class dlgOptions
         Me.chkRememberScanSettings.Text = "Remeber Scan Settings"
         Me.chkRememberScanSettings.UseVisualStyleBackColor = True
         '
+        'TabPage2
+        '
+        Me.TabPage2.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage2.Name = "TabPage2"
+        Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage2.Size = New System.Drawing.Size(322, 215)
+        Me.TabPage2.TabIndex = 1
+        Me.TabPage2.Text = "Scanner Buttons"
+        Me.TabPage2.UseVisualStyleBackColor = True
+        '
+        'btnDefaultSettings
+        '
+        Me.btnDefaultSettings.Location = New System.Drawing.Point(16, 259)
+        Me.btnDefaultSettings.Name = "btnDefaultSettings"
+        Me.btnDefaultSettings.Size = New System.Drawing.Size(75, 23)
+        Me.btnDefaultSettings.TabIndex = 9
+        Me.btnDefaultSettings.Text = "&Default"
+        Me.btnDefaultSettings.UseVisualStyleBackColor = True
+        '
         'dlgOptions
         '
         Me.AcceptButton = Me.btnOk
@@ -161,6 +171,7 @@ Partial Class dlgOptions
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.btnCancel
         Me.ClientSize = New System.Drawing.Size(354, 294)
+        Me.Controls.Add(Me.btnDefaultSettings)
         Me.Controls.Add(Me.TabControl1)
         Me.Controls.Add(Me.btnCancel)
         Me.Controls.Add(Me.btnOk)
@@ -189,5 +200,6 @@ Partial Class dlgOptions
     Friend WithEvents TabPage1 As System.Windows.Forms.TabPage
     Friend WithEvents chkRememberScanSettings As System.Windows.Forms.CheckBox
     Friend WithEvents TabPage2 As System.Windows.Forms.TabPage
+    Friend WithEvents btnDefaultSettings As System.Windows.Forms.Button
 
 End Class

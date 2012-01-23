@@ -85,7 +85,7 @@ retry:
         LoadSettings()
     End Sub
 
-    Private Sub btnResetSettings_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
+    Private Sub btnResetSettings_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnDefaultSettings.Click
         My.Settings.Reset()
     End Sub
 End Class

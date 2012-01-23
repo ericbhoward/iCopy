@@ -32,7 +32,6 @@ Public Class Scanner
         If manager.DeviceInfos.Count = 0 Then Throw New ArgumentException("No WIA device connected")
 
         Dim _device As Device
-
         Try
             Trace.WriteLine(String.Format("Trying to establish connection with the Device {0}", deviceID))
             _device = manager.DeviceInfos.Item(deviceID).Connect
@@ -67,7 +66,7 @@ Public Class Scanner
         If temp.SubType = WiaSubType.RangeSubType Then
             Dim min As Integer = temp.SubTypeMin
             Dim max As Integer = temp.SubTypeMax
-            Dim stp As Integer = temp.SubTypeStep
+            'Dim stp As Integer = temp.SubTypeStep
             Dim center As Integer = (max + min) / 2
             Dim delta As Integer = max - center
             Return CInt(Math.Round((temp.Value - center) / delta * 100, 0))
@@ -83,7 +82,7 @@ Public Class Scanner
         If temp.SubType = WiaSubType.RangeSubType Then
             Dim min As Integer = temp.SubTypeMin
             Dim max As Integer = temp.SubTypeMax
-            Dim stp As Integer = temp.SubTypeStep
+            'Dim stp As Integer = temp.SubTypeStep
             Dim center As Integer = (max + min) / 2
             Dim delta As Integer = max - center
 
@@ -117,7 +116,7 @@ Public Class Scanner
         If temp.SubType = WiaSubType.RangeSubType Then
             Dim min As Integer = temp.SubTypeMin
             Dim max As Integer = temp.SubTypeMax
-            Dim stp As Integer = temp.SubTypeStep
+            ' Dim stp As Integer = temp.SubTypeStep
             Dim center As Integer = (max + min) / 2
             Dim delta As Integer = max - center
             Return CInt(Math.Round((temp.Value - center) / delta * 100, 0))
@@ -133,7 +132,7 @@ Public Class Scanner
         If temp.SubType = WiaSubType.RangeSubType Then
             Dim min As Integer = temp.SubTypeMin
             Dim max As Integer = temp.SubTypeMax
-            Dim stp As Integer = temp.SubTypeStep
+            'Dim stp As Integer = temp.SubTypeStep
             Dim center As Integer = (max + min) / 2
             Dim delta As Integer = max - center
 
@@ -446,8 +445,6 @@ Public Class Scanner
                 End Select
                 Throw
             Catch ex As Exception
-                Trace.WriteLine("Eccezione.")
-                Trace.WriteLine(ex)
                 Throw 'TODO: Error handling
             End Try
             If Not options.UseADF Then Exit While
@@ -561,52 +558,38 @@ Public Class Scanner
     End Function
 
     <CLSCompliant(False)> _
-    Function PropToXML(ByVal prop As WIA.IProperty, ByVal doc As XmlDocument) As XmlNode
-        PropToXML = doc.CreateNode(XmlNodeType.Element, "Property", "")
-        PropToXML.Attributes.Append(doc.CreateAttribute("Name", "")).Value = prop.Name
-        PropToXML.Attributes.Append(doc.CreateAttribute("ID", "")).Value = prop.PropertyID
-        PropToXML.Attributes.Append(doc.CreateAttribute("Tsype", "")).Value = prop.Type
+    Function TraceProp(ByVal prop As WIA.IProperty)
+        Trace.WriteLine(String.Format("Property {0}: {1}  TYPE {2}", prop.PropertyID, prop.Name, prop.Type))
+
         If prop.IsVector Then
-            PropToXML.AppendChild(doc.CreateNode(XmlNodeType.Element, "Vector", "")).InnerText = prop.IsVector
+            Trace.WriteLine(vbTab + "IsVector")
         Else
             If prop.SubType <> WIA.WiaSubType.UnspecifiedSubType Then
-                PropToXML.AppendChild(doc.CreateNode(XmlNodeType.Element, "DefaultValue", "")).InnerText = prop.SubTypeDefault
+                Trace.WriteLine(String.Format(vbTab + "Default value: {0}", prop.SubTypeDefault))
             End If
         End If
 
-        PropToXML.Attributes.Append(doc.CreateAttribute("isReadOnly", "")).Value = prop.IsReadOnly
-        PropToXML.AppendChild(doc.CreateNode(XmlNodeType.Element, "Value", "")).InnerText = prop.Value
-        Dim subType As XmlNode = PropToXML.AppendChild(doc.CreateNode(XmlNodeType.Element, "SubType", ""))
+        Trace.WriteLine(String.Format(vbTab + "ReadOnly: {0}", prop.IsReadOnly))
+        Trace.WriteLine(String.Format(vbTab + "Value: {0}", prop.Value))
 
+        Trace.WriteLine(String.Format(vbTab + "SubType: {0}", prop.SubType))
         Select Case prop.SubType
             Case WiaSubType.FlagSubType
-                subType.Attributes.Append(doc.CreateAttribute("Type")).Value = "Flag"
-                Dim flags As XmlNode = doc.CreateNode(XmlNodeType.Element, "PossibleValues", "")
                 For i = 1 To prop.SubTypeValues.Count
-                    flags.AppendChild(doc.CreateNode(XmlNodeType.Element, "Value", "")).InnerText = prop.SubTypeValues(i)
+                    Trace.WriteLine(String.Format(vbTab + vbTab + "{0}", prop.SubTypeValues(i)))
                 Next
-                subType.AppendChild(flags)
             Case WiaSubType.ListSubType
-                subType.Attributes.Append(doc.CreateAttribute("Type")).Value = "List"
-                Dim flags As XmlNode = doc.CreateNode(XmlNodeType.Element, "PossibleValues", "")
                 For i = 1 To prop.SubTypeValues.Count
-                    flags.AppendChild(doc.CreateNode(XmlNodeType.Element, "Value", "")).InnerText = prop.SubTypeValues(i)
+                    Trace.WriteLine(String.Format(vbTab + vbTab + "{0}", prop.SubTypeValues(i)))
                 Next
-                subType.AppendChild(flags)
             Case WiaSubType.RangeSubType
-                subType.Attributes.Append(doc.CreateAttribute("Type")).Value = "Range"
-                subType.Attributes.Append(doc.CreateAttribute("Min")).Value = prop.SubTypeMin
-                subType.Attributes.Append(doc.CreateAttribute("Max")).Value = prop.SubTypeMax
-                subType.Attributes.Append(doc.CreateAttribute("Step")).Value = prop.SubTypeStep
-
+                Trace.WriteLine(String.Format(vbTab + vbTab + "Min {0}, Max {1}, Step {2}", prop.SubTypeMin, prop.SubTypeMax, prop.SubTypeStep))
             Case Else 'UnspecifiedSubType
-                subType.Attributes.Append(doc.CreateAttribute("Type")).Value = "Unspecified"
-
         End Select
 
     End Function
 
-    Sub WritePropertiesLogXML(ByVal doc As XmlDocument)
+    Public Sub WritePropertiesLog()
 
         Dim _device As Device
         Dim _scanner As WIA.Item
@@ -615,22 +598,12 @@ Public Class Scanner
         _deviceID = DeviceId
         _scanner = _device.Items(1)
 
-        Dim root As XmlElement = doc.DocumentElement
-
-        Dim nodeDevProp As XmlNode
-        nodeDevProp = doc.CreateNode(XmlNodeType.Element, "DeviceProperties", "")
-        root.AppendChild(nodeDevProp)
-
         For Each p As WIA.Property In _device.Properties
-            nodeDevProp.AppendChild(PropToXML(p, doc))
+            TraceProp(p)
         Next
 
-        Dim nodeScaProp As XmlNode
-        nodeScaProp = doc.CreateNode(XmlNodeType.Element, "ScannerProperties", "")
-        root.AppendChild(nodeScaProp)
-
         For Each p In _scanner.Properties
-            nodeScaProp.AppendChild(PropToXML(p, doc))
+            TraceProp(p)
         Next
 
         _scanner = Nothing

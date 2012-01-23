@@ -30,7 +30,6 @@ Class mainFrm
     Dim LocalizedRootStr As String
 
     Sub VersionCheck()
-        Dim diff As Long = DateDiff(DateInterval.WeekOfYear, My.Settings.LastVersionCheck, Today)
         If True Then '(My.Settings.LastVersionCheck = Nothing) Or diff > 2 Then
             Dim reader As Xml.XmlTextReader
             Dim newVersion As Version
@@ -302,19 +301,12 @@ Class mainFrm
     End Function
 
     Private Sub ScanToFile_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ScanToFile.Click
-        Dim res As Short
         appControl.SaveToFile(getScanSettings())
     End Sub
 
     Private Sub ScanMultiplePages_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ScanMultiplePages.Click
         Me.Enabled = False
         'Starts copy process
-        Dim res As Short
-        Try
-            res = Convert.ToInt16(frmImageSettings.cboResolution.Text, Globalization.CultureInfo.InvariantCulture)
-        Catch ex As FormatException
-            If My.Settings.LastScanSettings.Resolution <> 0 Or (Not Nothing) Then res = My.Settings.LastScanSettings.Resolution
-        End Try
         appControl.CopyMultiplePages(getScanSettings())
         Me.Enabled = True
     End Sub
