@@ -70,18 +70,29 @@ Class appControl
 
         Dim logPath As String = GetWritablePath() + "iCopy.log"
 
-        Dim logListener As New TextWriterTraceListener(logPath, "log")
+        Dim MyFile As New FileInfo(logPath)
+        Dim FileSize As Long = MyFile.Length
+        If FileSize > 50 * 1024 Then 'Clear the log if it is more than 50 KB
+            Try
+                File.Delete(logPath)
+            Catch ex As Exception
 
+            End Try
+        End If
+
+        Dim logListener As New TextWriterTraceListener(logPath, "log")
 
         Trace.Listeners.Add(logListener)
 
         Trace.Listeners.Add(New ConsoleTraceListener())
+        Trace.WriteLine("")
         Trace.WriteLine(DateTime.Now)
         Trace.WriteLine(String.Format("iCopy Version: {0}", Application.ProductVersion))
         Trace.WriteLine(String.Format("Windows Version: {0}", System.Environment.OSVersion.VersionString))
         Trace.WriteLine(String.Format(".NET Version: {0}", System.Environment.Version.ToString()))
         Trace.WriteLine(String.Format("-----------------"))
 
+        Trace.Indent()
         Trace.AutoFlush = True
 
         Try

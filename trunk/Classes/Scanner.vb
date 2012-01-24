@@ -343,7 +343,8 @@ Public Class Scanner
     End Property
 
     Function ScanADF(ByVal options As ScanSettings) As List(Of Image)
-        Trace.WriteLine(String.Format("Starting ADF acquisition"))
+        Trace.WriteLine(String.Format("Starting acquisition"))
+        Trace.Indent()
         Dim imageList As New List(Of Image)()
         Dim dialog As New WIA.CommonDialog
         Dim _device As Device
@@ -428,6 +429,7 @@ Public Class Scanner
                     AcquiredPages += 1
                     img = Nothing
                 Else 'Acquisition canceled
+                    Trace.WriteLine("Acquisition canceled by the user")
                     Exit While
                 End If
             Catch ex As COMException
@@ -482,79 +484,8 @@ Public Class Scanner
         End While
         If _scanner IsNot Nothing Then _scanner = Nothing
         Console.Write("Acquisition complete, returning {0} images", AcquiredPages)
+        Trace.Unindent()
         Return imageList
-    End Function
-
-    Function Scan(ByVal options As ScanSettings) As IO.MemoryStream
-        Dim dialog As New WIA.CommonDialog
-        Dim tmpImg As ImageFile
-        If options.Preview Then
-            'With preview
-            Try
-                tmpImg = dialog.ShowAcquireImage(WiaDeviceType.ScannerDeviceType, options.Intent, WiaImageBias.MaximizeQuality, , False, True, True)
-            Catch ex As ArgumentException
-                Throw
-            End Try
-        Else
-            'Without preview
-            Dim _device As Device
-
-            Try
-                _device = manager.DeviceInfos.Item(DeviceId).Connect
-                _deviceID = DeviceId
-                _scanner = _device.Items(1)
-
-            Catch ex As Exception
-                Trace.WriteLine(String.Format("Couldn't connect to the scanner. ERROR {0}", ex.Message))
-                Throw
-            End Try
-
-            'Set all properties
-            Try
-                SetBrightess(options.Brightness)
-                SetContrast(options.Contrast)
-                SetIntent(options.Intent)
-            Catch ex As Exception
-                Throw ex
-            End Try
-
-            Try
-                SetResolution(options.Resolution)
-            Catch ex As Exception
-                Trace.WriteLine(String.Format("Couldn't set resolution to {0}.", options.Resolution))
-            End Try
-            SetMaxExtent()
-
-            Try
-                SetBitDepth(options.BitDepth)
-            Catch ex As COMException
-
-            End Try
-
-            'Begin the transfer. The file is saved to a WIA image file that is then put on a memory stream.
-            Try
-                tmpImg = dialog.ShowTransfer(_scanner, , True)
-                _scanner = Nothing
-            Catch ex As Runtime.InteropServices.COMException
-                If ex.ErrorCode <> WIA_ERRORS.WIA_ERROR_NO_SCANNER_CONNECTED Then Throw ex
-
-            Catch ex As Exception
-                MessageBox.Show(ex.Message)
-                MessageBox.Show("Stack Trace: " & vbCrLf & ex.StackTrace)
-            End Try
-        End If
-
-        tmpImg = Compress(options.Quality, tmpImg)
-        'Converts WIA.ImageFile into Image
-        'Don't dispose this stream!
-        Dim stream As IO.MemoryStream
-        stream = New IO.MemoryStream(CType(tmpImg.FileData.BinaryData, Byte()))
-        Return stream
-    End Function
-
-    Function ScanImg(ByVal options As ScanSettings) As Image
-        Dim Img As Image = Image.FromStream(Scan(options))
-        Return Img
     End Function
 
     <CLSCompliant(False)> _
@@ -590,7 +521,7 @@ Public Class Scanner
     End Sub
 
     Public Sub WritePropertiesLog()
-
+        Trace.Indent()
         Dim _device As Device
         Dim _scanner As WIA.Item
 
@@ -605,7 +536,7 @@ Public Class Scanner
         For Each p In _scanner.Properties
             TraceProp(p)
         Next
-
+        Trace.Unindent()
         _scanner = Nothing
     End Sub
 
