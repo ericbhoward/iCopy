@@ -367,6 +367,7 @@ Public Class Scanner
                         _device.Properties("Document Handling Select").Value = WIA_DPS_DOCUMENT_HANDLING_SELECT.FLATBED
                         Trace.WriteLine(String.Format("WIA_DPS_DOCUMENT_HANDLING_SELECT set to {0}", WIA_DPS_DOCUMENT_HANDLING_SELECT.FLATBED))
                     End If
+                    Trace.WriteLine(String.Format("WIA_DPS_DOCUMENT_HANDLING_SELECT value: {0}", _device.Properties("Document Handling Select").Value))
                 Catch ex As COMException
                     Select Case ex.ErrorCode
                         Case WIA_ERRORS.WIA_ERROR_PROPERTY_DONT_EXIST
@@ -389,13 +390,10 @@ Public Class Scanner
             'Set all properties
             Trace.WriteLine(String.Format("Setting scan properties"))
             Trace.WriteLine(options)
-            Try
-                SetBrightess(options.Brightness)
-                SetContrast(options.Contrast)
-                SetIntent(options.Intent)
-            Catch ex As Exception
-                Throw ex
-            End Try
+
+            SetBrightess(options.Brightness)
+            SetContrast(options.Contrast)
+            SetIntent(options.Intent)
 
             Try
                 SetResolution(options.Resolution)
@@ -403,6 +401,7 @@ Public Class Scanner
                 Trace.WriteLine(String.Format("Couldn't set resolution to {0}.", options.Resolution))
                 Trace.WriteLine(String.Format("\tError: {0}", ex.ToString()))
             End Try
+
             SetMaxExtent() 'After setting resolution, maximize the extent
 
             Try
@@ -413,14 +412,28 @@ Public Class Scanner
 
             Try
                 Trace.WriteLine(String.Format("Image count {0}. Acquiring next image", AcquiredPages))
+
+                Try
+                    Trace.WriteLine(String.Format("WIA_DPS_PAGES Value: {0}", _device.Properties("Pages").Value))
+                    _device.Properties("Pages").Value = 1
+                Catch ex As COMException
+                    Trace.WriteLine(String.Format("Couldn't read/write WIA_DPS_PAGES. Error {0}", ex.ErrorCode))
+                End Try
+
+                Try
+                    Trace.WriteLine(String.Format("\tDOCUMENT_HANDLING_SELECT: {0}", _device.Properties("Document Handling Select").Value))
+                    Trace.WriteLine(String.Format("\tDOCUMENT_HANDLING_STATUS: {0}", _device.Properties("Document Handling Status").Value))
+                Catch ex As Exception
+                    Trace.WriteLine("Couldn't evaluate DOCUMENT_HANDLING_STATUS or DOCUMENT_HANDLING_SELECT")
+                End Try
                 Trace.WriteLine(_scanner.ItemID)
+                Trace.WriteLine(String.Format("Items count: {0}", _device.Items.Count))
+
                 If options.Preview Then
                     img = DirectCast(dialog.ShowAcquireImage(WiaDeviceType.ScannerDeviceType, options.Intent, , WIA.FormatID.wiaFormatTIFF, False, False, False), ImageFile)
                     Trace.WriteLine(String.Format("Image frame count {0}", img.FrameCount))
                 Else
-                    'img = DirectCast(dialog.ShowTransfer(_device.Items(1), WIA.FormatID.wiaFormatTIFF, False), ImageFile)
-                    img = DirectCast(dialog.ShowTransfer(_scanner), ImageFile)
-
+                    img = DirectCast(dialog.ShowTransfer(_scanner, WIA.FormatID.wiaFormatTIFF, False), ImageFile)
                 End If
 
                 If img IsNot Nothing Then
