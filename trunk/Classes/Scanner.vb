@@ -413,11 +413,14 @@ Public Class Scanner
 
             Try
                 Trace.WriteLine(String.Format("Image count {0}. Acquiring next image", AcquiredPages))
-
+                Trace.WriteLine(_scanner.ItemID)
                 If options.Preview Then
                     img = DirectCast(dialog.ShowAcquireImage(WiaDeviceType.ScannerDeviceType, options.Intent, , WIA.FormatID.wiaFormatTIFF, False, False, False), ImageFile)
+                    Trace.WriteLine(String.Format("Image frame count {0}", img.FrameCount))
                 Else
-                    img = DirectCast(dialog.ShowTransfer(_scanner, WIA.FormatID.wiaFormatTIFF, False), ImageFile)
+                    'img = DirectCast(dialog.ShowTransfer(_device.Items(1), WIA.FormatID.wiaFormatTIFF, False), ImageFile)
+                    img = DirectCast(dialog.ShowTransfer(_scanner), ImageFile)
+
                 End If
 
                 If img IsNot Nothing Then

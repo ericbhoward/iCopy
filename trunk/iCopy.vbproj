@@ -353,6 +353,7 @@
     <None Include="Resources\iCopy2.ico" />
     <None Include="Resources\Devices-scanner-icon.png" />
     <None Include="Resources\Printer-icon.png" />
+    <None Include="Resources\pdf_icon.gif" />
     <Content Include="wiaaut.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

@@ -116,6 +116,11 @@ Class mainFrm
         ScannerStatusLabel.Text = appControl.ScannerDescription
         PrinterStatusLabel.Image = My.Resources.printer
         PrinterStatusLabel.Text = appControl.Printer.Name
+        If PrinterStatusLabel.Text.Contains("PDF") Then
+            PrinterStatusLabel.Image = My.Resources.pdf_icon
+        Else
+            PrinterStatusLabel.Image = My.Resources.printer
+        End If
 
         'Loads saved intent setting
         If My.Settings.LastScanSettings.Intent = 4 Or My.Settings.LastScanSettings.Intent = 0 Then
@@ -223,6 +228,11 @@ Class mainFrm
         appControl.Printer.showPreferences()
         My.Settings.DefaultPrinter = appControl.Printer.Name
         PrinterStatusLabel.Text = appControl.Printer.Name
+        If PrinterStatusLabel.Text.Contains("PDF") Then
+            PrinterStatusLabel.Image = My.Resources.pdf_icon
+        Else
+            PrinterStatusLabel.Image = My.Resources.printer
+        End If
     End Sub
 
     Private Sub cboScanMode_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cboScanMode.SelectedIndexChanged

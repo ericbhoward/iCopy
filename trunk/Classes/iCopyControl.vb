@@ -69,16 +69,18 @@ Class appControl
         End If
 
         Dim logPath As String = GetWritablePath() + "iCopy.log"
+        Try
+            Dim MyFile As New FileInfo(logPath)
+            Dim FileSize As Long = MyFile.Length
+            If FileSize > 50 * 1024 Then 'Clear the log if it is more than 50 KB
 
-        Dim MyFile As New FileInfo(logPath)
-        Dim FileSize As Long = MyFile.Length
-        If FileSize > 50 * 1024 Then 'Clear the log if it is more than 50 KB
-            Try
                 File.Delete(logPath)
-            Catch ex As Exception
+ 
+            End If
 
-            End Try
-        End If
+        Catch ex As Exception
+
+        End Try
 
         Dim logListener As New TextWriterTraceListener(logPath, "log")
 
