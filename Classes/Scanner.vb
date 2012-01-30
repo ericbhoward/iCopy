@@ -421,20 +421,20 @@ Public Class Scanner
                 End Try
 
                 Try
-                    Trace.WriteLine(String.Format("\tDOCUMENT_HANDLING_SELECT: {0}", _device.Properties("Document Handling Select").Value))
-                    Trace.WriteLine(String.Format("\tDOCUMENT_HANDLING_STATUS: {0}", _device.Properties("Document Handling Status").Value))
+                    Trace.WriteLine(String.Format("DOCUMENT_HANDLING_STATUS: {0}", _device.Properties("Document Handling Status").Value))
                 Catch ex As Exception
-                    Trace.WriteLine("Couldn't evaluate DOCUMENT_HANDLING_STATUS or DOCUMENT_HANDLING_SELECT")
+                    Trace.WriteLine("Couldn't evaluate DOCUMENT_HANDLING_STATUS")
                 End Try
-                Trace.WriteLine(_scanner.ItemID)
-                Trace.WriteLine(String.Format("Items count: {0}", _device.Items.Count))
+                Trace.WriteLine(String.Format("Subitems count: {0}", _scanner.Items.Count))
 
                 If options.Preview Then
                     img = DirectCast(dialog.ShowAcquireImage(WiaDeviceType.ScannerDeviceType, options.Intent, , WIA.FormatID.wiaFormatTIFF, False, False, False), ImageFile)
-                    Trace.WriteLine(String.Format("Image frame count {0}", img.FrameCount))
+
                 Else
                     img = DirectCast(dialog.ShowTransfer(_scanner, WIA.FormatID.wiaFormatTIFF, False), ImageFile)
                 End If
+                Trace.WriteLine("Image acquired")
+                Trace.WriteLine(String.Format("Subitems count: {0}", _scanner.Items.Count))
 
                 If img IsNot Nothing Then
                     Dim stream As IO.MemoryStream
@@ -458,6 +458,11 @@ Public Class Scanner
                                                              "Please check the feeder and click Ok to resume the acquisition, Cancel to abort", vbOKCancel + vbExclamation, "iCopy")
                         If result = MsgBoxResult.Ok Then Continue While
                         If result = MsgBoxResult.Cancel Then Exit While
+                    Case WIA_ERRORS.WIA_ERROR_BUSY
+                        Trace.WriteLine("Device busy, waiting 2 seconds...")
+                        Threading.Thread.Sleep(2000)
+                        _scanner = Nothing
+                        Continue While
                     Case Else
                         Trace.WriteLine(String.Format("Acquisition threw the exception {0}", ex.ErrorCode))
                 End Select
@@ -486,15 +491,16 @@ Public Class Scanner
                 Console.Write(ex.ToString())
             End Try
 
-            Try
-                Trace.WriteLine(String.Format("WIA_DPS_PAGES Value: {0}", _device.Properties("Pages").Value))
-                If Convert.ToInt32(_device.Properties("Pages").Value) > 0 Then
-                    'More pages are available
-                    hasMorePages = True
-                End If
-            Catch ex As COMException
-                Trace.WriteLine(String.Format("Couldn't read WIA_DPS_PAGES. Error {0}", ex.ErrorCode))
-            End Try
+            'Try
+            '    Trace.WriteLine(String.Format("WIA_DPS_PAGES Value: {0}", _device.Properties("Pages").Value))
+            '    If Convert.ToInt32(_device.Properties("Pages").Value) > 0 Then
+            '        'More pages are available
+            '        hasMorePages = True
+            '    End If
+            'Catch ex As COMException
+            '    Trace.WriteLine(String.Format("Couldn't read WIA_DPS_PAGES. Error {0}", ex.ErrorCode))
+            'End Try
+
             _scanner = Nothing
             Trace.WriteLine(String.Format("Closed connection to the scanner"))
         End While
