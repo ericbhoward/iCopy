@@ -64,7 +64,7 @@ Partial Class mainFrm
         '
         'btnSelScanner
         '
-        Me.btnSelScanner.Location = New System.Drawing.Point(372, 12)
+        Me.btnSelScanner.Location = New System.Drawing.Point(383, 13)
         Me.btnSelScanner.Name = "btnSelScanner"
         Me.btnSelScanner.Size = New System.Drawing.Size(137, 23)
         Me.btnSelScanner.TabIndex = 7
@@ -109,7 +109,7 @@ Partial Class mainFrm
         '
         'btnPrintSetup
         '
-        Me.btnPrintSetup.Location = New System.Drawing.Point(372, 43)
+        Me.btnPrintSetup.Location = New System.Drawing.Point(383, 44)
         Me.btnPrintSetup.Name = "btnPrintSetup"
         Me.btnPrintSetup.Size = New System.Drawing.Size(137, 23)
         Me.btnPrintSetup.TabIndex = 6
@@ -142,7 +142,7 @@ Partial Class mainFrm
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ScannerStatusLabel, Me.PrinterStatusLabel, Me.VersionStatusLabel})
         Me.StatusStrip1.Location = New System.Drawing.Point(0, 188)
         Me.StatusStrip1.Name = "StatusStrip1"
-        Me.StatusStrip1.Size = New System.Drawing.Size(521, 22)
+        Me.StatusStrip1.Size = New System.Drawing.Size(532, 22)
         Me.StatusStrip1.SizingGrip = False
         Me.StatusStrip1.TabIndex = 20
         Me.StatusStrip1.Text = "StatusStrip1"
@@ -165,7 +165,7 @@ Partial Class mainFrm
         '
         Me.VersionStatusLabel.IsLink = True
         Me.VersionStatusLabel.Name = "VersionStatusLabel"
-        Me.VersionStatusLabel.Size = New System.Drawing.Size(224, 17)
+        Me.VersionStatusLabel.Size = New System.Drawing.Size(232, 17)
         Me.VersionStatusLabel.Spring = True
         Me.VersionStatusLabel.Text = "New Version Available!"
         Me.VersionStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -192,7 +192,7 @@ Partial Class mainFrm
         '
         'llblAbout
         '
-        Me.llblAbout.Location = New System.Drawing.Point(360, 163)
+        Me.llblAbout.Location = New System.Drawing.Point(371, 164)
         Me.llblAbout.Name = "llblAbout"
         Me.llblAbout.Size = New System.Drawing.Size(149, 13)
         Me.llblAbout.TabIndex = 10
@@ -202,7 +202,7 @@ Partial Class mainFrm
         '
         'llblSettings
         '
-        Me.llblSettings.Location = New System.Drawing.Point(365, 147)
+        Me.llblSettings.Location = New System.Drawing.Point(376, 148)
         Me.llblSettings.Name = "llblSettings"
         Me.llblSettings.Size = New System.Drawing.Size(144, 13)
         Me.llblSettings.TabIndex = 9
@@ -212,7 +212,7 @@ Partial Class mainFrm
         '
         'btnImageSettings
         '
-        Me.btnImageSettings.Location = New System.Drawing.Point(375, 97)
+        Me.btnImageSettings.Location = New System.Drawing.Point(386, 98)
         Me.btnImageSettings.Name = "btnImageSettings"
         Me.btnImageSettings.Size = New System.Drawing.Size(134, 42)
         Me.btnImageSettings.TabIndex = 5
@@ -223,7 +223,7 @@ Partial Class mainFrm
         '
         Me.ScanMenuStrip.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ScanMultiplePages, Me.ScanToFile})
         Me.ScanMenuStrip.Name = "ScanMenuStrip"
-        Me.ScanMenuStrip.Size = New System.Drawing.Size(229, 70)
+        Me.ScanMenuStrip.Size = New System.Drawing.Size(229, 48)
         '
         'ScanMultiplePages
         '
@@ -274,25 +274,25 @@ Partial Class mainFrm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(521, 210)
+        Me.ClientSize = New System.Drawing.Size(532, 210)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label8)
         Me.Controls.Add(Me.chkADF)
         Me.Controls.Add(Me.cboPrintMode)
         Me.Controls.Add(Me.btnScanModes)
-        Me.Controls.Add(Me.llblSettings)
         Me.Controls.Add(Me.cboPaperSize)
         Me.Controls.Add(Me.cboScanMode)
         Me.Controls.Add(Me.Label7)
         Me.Controls.Add(Me.StatusStrip1)
+        Me.Controls.Add(Me.llblSettings)
         Me.Controls.Add(Me.btnCopy)
         Me.Controls.Add(Me.nudNCopie)
         Me.Controls.Add(Me.chkPreview)
+        Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.btnImageSettings)
         Me.Controls.Add(Me.btnSelScanner)
-        Me.Controls.Add(Me.Label1)
-        Me.Controls.Add(Me.llblAbout)
         Me.Controls.Add(Me.btnPrintSetup)
+        Me.Controls.Add(Me.llblAbout)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.KeyPreview = True
         Me.MaximizeBox = False
