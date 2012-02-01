@@ -126,7 +126,7 @@ Class frmImageSettings
         txtBrightness.Text = tbBrightness.Value
     End Sub
 
-    Private Sub tbenlargement_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles tbScaling.Scroll
+    Private Sub tbScaling_ValueChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles tbScaling.ValueChanged
         txtScaling.Text = tbScaling.Value
     End Sub
 
@@ -140,7 +140,8 @@ Class frmImageSettings
     End Sub
 
     Private Sub btnDefault_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnDefault.Click
-        tbBrightness.Value = 0 : tbContrast.Value = 0
+        tbBrightness.Value = 0
+        tbContrast.Value = 0
         tbCompression.Value = 100
         cboResolution.Text = 100
         tbScaling.Value = 100
