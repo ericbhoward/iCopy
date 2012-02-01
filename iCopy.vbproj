@@ -354,6 +354,7 @@
     <None Include="Resources\Devices-scanner-icon.png" />
     <None Include="Resources\Printer-icon.png" />
     <None Include="Resources\pdf_icon.gif" />
+    <None Include="Scanner Logs\brother ADF.log" />
     <Content Include="wiaaut.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

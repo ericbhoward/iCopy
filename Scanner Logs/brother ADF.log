@@ -1,0 +1,479 @@
+
+1/26/2012 1:31:01 PM
+iCopy Version: 1.5.0.47
+Windows Version: Microsoft Windows NT 6.1.7601 Service Pack 1
+.NET Version: 2.0.50727.5448
+-----------------
+    Trying to establish connection with the Device {6BDD1FC6-810F-11D0-BEC7-08002BE2092F}\0000
+    Connection established with Brother MFC-6490CW LAN. DeviceID: {6BDD1FC6-810F-11D0-BEC7-08002BE2092F}\0000
+    This scanner supports ADF
+        Property 3112: User Name  TYPE 16
+        	ReadOnly: True
+        	Value: James-Windows\James
+        	SubType: UnspecifiedSubType
+        Property 4098: Item Name  TYPE 16
+        	ReadOnly: True
+        	Value: Root
+        	SubType: UnspecifiedSubType
+        Property 4099: Full Item Name  TYPE 16
+        	ReadOnly: True
+        	Value: 0000\Root
+        	SubType: UnspecifiedSubType
+        Property 4101: Item Flags  TYPE 5
+        	ReadOnly: True
+        	Value: 76
+        	SubType: UnspecifiedSubType
+        Property 2: Unique Device ID  TYPE 16
+        	ReadOnly: False
+        	Value: {6BDD1FC6-810F-11D0-BEC7-08002BE2092F}\0000
+        	SubType: UnspecifiedSubType
+        Property 3: Manufacturer  TYPE 16
+        	ReadOnly: True
+        	Value: Brother
+        	SubType: UnspecifiedSubType
+        Property 4: Description  TYPE 16
+        	ReadOnly: True
+        	Value: Brother MFC-6490CW LAN
+        	SubType: UnspecifiedSubType
+        Property 5: Type  TYPE 5
+        	ReadOnly: True
+        	Value: 65537
+        	SubType: UnspecifiedSubType
+        Property 6: Port  TYPE 16
+        	ReadOnly: True
+        	Value: AUTO
+        	SubType: UnspecifiedSubType
+        Property 7: Name  TYPE 16
+        	ReadOnly: True
+        	Value: Brother MFC-6490CW LAN
+        	SubType: UnspecifiedSubType
+        Property 8: Server  TYPE 16
+        	ReadOnly: False
+        	Value: local
+        	SubType: UnspecifiedSubType
+        Property 9: Remote Device ID  TYPE 16
+        	ReadOnly: False
+        	Value: 
+        	SubType: UnspecifiedSubType
+        Property 10: UI Class ID  TYPE 16
+        	ReadOnly: True
+        	Value: {4B29E704-7E5A-466c-A5FD-8BAEC62DC2BA}
+        	SubType: UnspecifiedSubType
+        Property 11: Hardware Configuration  TYPE 5
+        	ReadOnly: True
+        	Value: 0
+        	SubType: UnspecifiedSubType
+        Property 12: BaudRate  TYPE 16
+        	ReadOnly: True
+        	Value: 
+        	SubType: UnspecifiedSubType
+        Property 13: STI Generic Capabilities  TYPE 5
+        	ReadOnly: True
+        	Value: 57
+        	SubType: UnspecifiedSubType
+        Property 14: WIA Version  TYPE 16
+        	ReadOnly: True
+        	Value: 2.0
+        	SubType: UnspecifiedSubType
+        Property 15: Driver Version  TYPE 16
+        	ReadOnly: True
+        	Value: 3.10.6.13
+        	SubType: UnspecifiedSubType
+        Property 16: PnP ID String  TYPE 16
+        	ReadOnly: True
+        	Value: \\?\root#image#0000#{6bdd1fc6-810f-11d0-bec7-08002be2092f}
+        	SubType: UnspecifiedSubType
+        Property 17: STI Driver Version  TYPE 5
+        	ReadOnly: True
+        	Value: 3
+        	SubType: UnspecifiedSubType
+        Property 4125: Item Category  TYPE 15
+        	ReadOnly: True
+        	Value: {F193526F-59B8-4A26-9888-E16E4F97CE10}
+        	SubType: UnspecifiedSubType
+        Property 3086: Document Handling Capabilities  TYPE 5
+        	ReadOnly: True
+        	Value: 3
+        	SubType: UnspecifiedSubType
+        Property 3087: Document Handling Status  TYPE 5
+        	ReadOnly: True
+        	Value: 3
+        	SubType: UnspecifiedSubType
+        Property 3095: Max Scan Time  TYPE 5
+        	ReadOnly: True
+        	Value: 3600000
+        	SubType: UnspecifiedSubType
+        Property 4102: Access Rights  TYPE 5
+        	Default value: 1
+        	ReadOnly: True
+        	Value: 1
+        	SubType: FlagSubType
+        		1
+        		2
+        		128
+        Property 6165: Maximum Horizontal Scan Size  TYPE 5
+        	ReadOnly: True
+        	Value: 11693
+        	SubType: UnspecifiedSubType
+        Property 6166: Maximum Vertical Scan Size  TYPE 5
+        	ReadOnly: True
+        	Value: 17000
+        	SubType: UnspecifiedSubType
+        Property 6168: Minimum Vertical Scan Size  TYPE 5
+        	ReadOnly: True
+        	Value: 0
+        	SubType: UnspecifiedSubType
+        Property 6167: Minimum Horizontal Scan Size  TYPE 5
+        	ReadOnly: True
+        	Value: 0
+        	SubType: UnspecifiedSubType
+        Property 3079: Horizontal Bed Registration  TYPE 5
+        	ReadOnly: True
+        	Value: 0
+        	SubType: UnspecifiedSubType
+        Property 3080: Vertical Bed Registration  TYPE 5
+        	ReadOnly: True
+        	Value: 0
+        	SubType: UnspecifiedSubType
+        Property 1026: Firmware Version  TYPE 16
+        	ReadOnly: True
+        	Value: 1.0
+        	SubType: UnspecifiedSubType
+        Property 6162: DeskewX  TYPE 5
+        	Default value: 0
+        	ReadOnly: False
+        	Value: 0
+        	SubType: RangeSubType
+        		Min 0, Max 2338, Step 1
+        Property 6163: DeskewY  TYPE 5
+        	Default value: 0
+        	ReadOnly: False
+        	Value: 0
+        	SubType: RangeSubType
+        		Min 0, Max 3400, Step 1
+        Property 3090: Horizontal Optical Resolution  TYPE 5
+        	ReadOnly: True
+        	Value: 1200
+        	SubType: UnspecifiedSubType
+        Property 3091: Vertical Optical Resolution  TYPE 5
+        	ReadOnly: True
+        	Value: 2400
+        	SubType: UnspecifiedSubType
+        Property 3100: Preview  TYPE 5
+        	Default value: 0
+        	ReadOnly: False
+        	Value: 0
+        	SubType: ListSubType
+        		0
+        		1
+        Property 3103: Show preview control  TYPE 5
+        	ReadOnly: True
+        	Value: 0
+        	SubType: UnspecifiedSubType
+        Property 3076: Horizontal Sheet Feed Size  TYPE 5
+        	ReadOnly: True
+        	Value: 11693
+        	SubType: UnspecifiedSubType
+        Property 3077: Vertical Sheet Feed Size  TYPE 5
+        	ReadOnly: True
+        	Value: 17000
+        	SubType: UnspecifiedSubType
+        Property 3078: Sheet Feeder Registration  TYPE 5
+        	ReadOnly: True
+        	Value: 1
+        	SubType: UnspecifiedSubType
+        Property 3105: Minimum Vertical Sheet Feed Size  TYPE 5
+        	ReadOnly: True
+        	Value: 0
+        	SubType: UnspecifiedSubType
+        Property 3104: Minimum Horizontal Sheet Feed Size  TYPE 5
+        	ReadOnly: True
+        	Value: 0
+        	SubType: UnspecifiedSubType
+        Property 3088: Document Handling Select  TYPE 5
+        	Default value: 32
+        	ReadOnly: False
+        	Value: 2
+        	SubType: FlagSubType
+        		1
+        		2
+        		32
+        Property 3096: Pages  TYPE 5
+        	Default value: 1
+        	ReadOnly: False
+        	Value: 0
+        	SubType: RangeSubType
+        		Min 0, Max 30, Step 1
+        Property 3097: Page Size  TYPE 5
+        	Default value: 0
+        	ReadOnly: False
+        	Value: 0
+        	SubType: ListSubType
+        		0
+        Property 3098: Page Width  TYPE 5
+        	ReadOnly: True
+        	Value: 1169
+        	SubType: UnspecifiedSubType
+        Property 3099: Page Height  TYPE 5
+        	ReadOnly: True
+        	Value: 1700
+        	SubType: UnspecifiedSubType
+        Property 3074: Horizontal Bed Size  TYPE 5
+        	ReadOnly: True
+        	Value: 11693
+        	SubType: UnspecifiedSubType
+        Property 3075: Vertical Bed Size  TYPE 5
+        	ReadOnly: True
+        	Value: 17000
+        	SubType: UnspecifiedSubType
+        Property 4098: Item Name  TYPE 16
+        	ReadOnly: True
+        	Value: Scan
+        	SubType: UnspecifiedSubType
+        Property 4099: Full Item Name  TYPE 16
+        	ReadOnly: True
+        	Value: 0000\Root\Scan
+        	SubType: UnspecifiedSubType
+        Property 4101: Item Flags  TYPE 5
+        	ReadOnly: True
+        	Value: 532483
+        	SubType: UnspecifiedSubType
+        Property 4120: Color Profile Name  TYPE 16
+        	Default value: sRGB Color Space Profile.icm
+        	ReadOnly: False
+        	Value: sRGB Color Space Profile.icm
+        	SubType: ListSubType
+        		sRGB Color Space Profile.icm
+        Property 4102: Access Rights  TYPE 5
+        	Default value: 1
+        	ReadOnly: True
+        	Value: 1
+        	SubType: FlagSubType
+        		1
+        		2
+        		128
+        Property 6146: Current Intent  TYPE 5
+        	Default value: 0
+        	ReadOnly: False
+        	Value: 0
+        	SubType: FlagSubType
+        		1
+        		2
+        		4
+        		65536
+        		131072
+        Property 6147: Horizontal Resolution  TYPE 5
+        	Default value: 200
+        	ReadOnly: False
+        	Value: 200
+        	SubType: ListSubType
+        		100
+        		150
+        		200
+        		300
+        		400
+        		600
+        		1200
+        Property 6148: Vertical Resolution  TYPE 5
+        	Default value: 200
+        	ReadOnly: False
+        	Value: 200
+        	SubType: ListSubType
+        		100
+        		150
+        		200
+        		300
+        		400
+        		600
+        		1200
+        Property 6149: Horizontal Start Position  TYPE 5
+        	Default value: 0
+        	ReadOnly: False
+        	Value: 0
+        	SubType: RangeSubType
+        		Min 0, Max 2322, Step 1
+        Property 6150: Vertical Start Position  TYPE 5
+        	Default value: 0
+        	ReadOnly: False
+        	Value: 0
+        	SubType: RangeSubType
+        		Min 0, Max 3384, Step 1
+        Property 6151: Horizontal Extent  TYPE 5
+        	Default value: 2338
+        	ReadOnly: False
+        	Value: 2338
+        	SubType: RangeSubType
+        		Min 16, Max 2338, Step 1
+        Property 6152: Vertical Extent  TYPE 5
+        	Default value: 3400
+        	ReadOnly: False
+        	Value: 3400
+        	SubType: RangeSubType
+        		Min 16, Max 3400, Step 1
+        Property 6157: Rotation  TYPE 5
+        	Default value: 0
+        	ReadOnly: False
+        	Value: 0
+        	SubType: ListSubType
+        		0
+        		1
+        		2
+        		3
+        Property 6156: Orientation  TYPE 5
+        	Default value: 0
+        	ReadOnly: False
+        	Value: 0
+        	SubType: ListSubType
+        		0
+        		1
+        		2
+        		3
+        Property 6154: Brightness  TYPE 5
+        	Default value: 0
+        	ReadOnly: False
+        	Value: 0
+        	SubType: RangeSubType
+        		Min -50, Max 50, Step 1
+        Property 6155: Contrast  TYPE 5
+        	Default value: 0
+        	ReadOnly: False
+        	Value: 0
+        	SubType: RangeSubType
+        		Min -50, Max 50, Step 1
+        Property 4116: Item Size  TYPE 5
+        	ReadOnly: True
+        	Value: 0
+        	SubType: UnspecifiedSubType
+        Property 4103: Data Type  TYPE 5
+        	Default value: 3
+        	ReadOnly: False
+        	Value: 3
+        	SubType: ListSubType
+        		0
+        		2
+        		3
+        Property 4104: Bits Per Pixel  TYPE 5
+        	Default value: 24
+        	ReadOnly: False
+        	Value: 24
+        	SubType: ListSubType
+        		1
+        		8
+        		24
+        Property 4107: Compression  TYPE 5
+        	Default value: 0
+        	ReadOnly: False
+        	Value: 0
+        	SubType: ListSubType
+        		0
+        Property 6153: Photometric Interpretation  TYPE 5
+        	Default value: 0
+        	ReadOnly: False
+        	Value: 0
+        	SubType: ListSubType
+        		0
+        Property 6161: Lamp Warm up Time  TYPE 5
+        	ReadOnly: True
+        	Value: 10000
+        	SubType: UnspecifiedSubType
+        Property 4109: Channels Per Pixel  TYPE 5
+        	ReadOnly: True
+        	Value: 3
+        	SubType: UnspecifiedSubType
+        Property 4110: Bits Per Channel  TYPE 5
+        	ReadOnly: True
+        	Value: 8
+        	SubType: UnspecifiedSubType
+        Property 4111: Planar  TYPE 5
+        	ReadOnly: True
+        	Value: 0
+        	SubType: UnspecifiedSubType
+        Property 4112: Pixels Per Line  TYPE 5
+        	ReadOnly: True
+        	Value: 2338
+        	SubType: UnspecifiedSubType
+        Property 4114: Number of Lines  TYPE 5
+        	ReadOnly: True
+        	Value: 3400
+        	SubType: UnspecifiedSubType
+        Property 4113: Bytes Per Line  TYPE 5
+        	ReadOnly: True
+        	Value: 0
+        	SubType: UnspecifiedSubType
+        Property 6159: Threshold  TYPE 5
+        	Default value: 128
+        	ReadOnly: False
+        	Value: 128
+        	SubType: RangeSubType
+        		Min 0, Max 255, Step 1
+        Property 4118: Buffer Size  TYPE 5
+        	ReadOnly: True
+        	Value: 131072
+        	SubType: UnspecifiedSubType
+        Property 4123: Filename extension  TYPE 16
+        	ReadOnly: True
+        	Value: BMP
+        	SubType: UnspecifiedSubType
+        Property 4108: Media Type  TYPE 5
+        	Default value: 2
+        	ReadOnly: False
+        	Value: 2
+        	SubType: ListSubType
+        		128
+        		2
+        Property 4105: Preferred Format  TYPE 15
+        	ReadOnly: True
+        	Value: {B96B3CAB-0728-11D3-9D7B-0000F81EF32E}
+        	SubType: UnspecifiedSubType
+        Property 4106: Format  TYPE 15
+        	ReadOnly: False
+        	Value: {B96B3CAB-0728-11D3-9D7B-0000F81EF32E}
+        	SubType: UnspecifiedSubType
+    Trying to establish connection with the Device {6BDD1FC6-810F-11D0-BEC7-08002BE2092F}\0000
+    Connection established with Brother MFC-6490CW LAN. DeviceID: {6BDD1FC6-810F-11D0-BEC7-08002BE2092F}\0000
+    This scanner supports ADF
+    Starting acquisition
+        WIA_DPS_DOCUMENT_HANDLING_SELECT set to FEEDER
+        Setting scan properties
+        	Bit Depth: 	0
+	Brightness: 	0
+	Contrast: 	0
+	Resolution: 	100
+	Intent: 	ColorIntent
+	Quality: 	100
+	Scaling: 	100
+	Copies: 	1
+	Preview: 	False
+	UseADF: 	True
+	Path: 	
+
+        Brightness set to 0 -> 0
+        Contrast set to 0 -> 0
+        Intent set to ColorIntent
+        Resolution set to 100
+        Set Horizontal Extent to its maximum value: 1169
+        Set Vertical Extent to its maximum value: 1700
+        Couldn't set BitDepth to 0.
+        Image count 0. Acquiring next image
+        iCopy.vshost.exe Error: 0 : Exception caught.
+        iCopy.vshost.exe Error: 0 : System.ArgumentException: Value does not fall within the expected range.
+   at WIA.CommonDialogClass.ShowTransfer(Item Item, String FormatID, Boolean CancelError)
+   at iCopy.Scanner.ScanADF(ScanSettings options) in C:\Users\James\Desktop\trunk\Classes\Scanner.vb:line 450
+   at iCopy.appControl.Copy(ScanSettings options) in C:\Users\James\Desktop\trunk\Classes\iCopyControl.vb:line 603
+   at iCopy.mainFrm.btnCopy_Click(Object sender, EventArgs e) in C:\Users\James\Desktop\trunk\Forms\mainfrm.vb:line 195
+   at System.Windows.Forms.Control.OnClick(EventArgs e)
+   at System.Windows.Forms.Button.OnClick(EventArgs e)
+   at System.Windows.Forms.Button.OnMouseUp(MouseEventArgs mevent)
+   at System.Windows.Forms.Control.WmMouseUp(Message& m, MouseButtons button, Int32 clicks)
+   at System.Windows.Forms.Control.WndProc(Message& m)
+   at System.Windows.Forms.ButtonBase.WndProc(Message& m)
+   at System.Windows.Forms.Button.WndProc(Message& m)
+   at System.Windows.Forms.Control.ControlNativeWindow.OnMessage(Message& m)
+   at System.Windows.Forms.Control.ControlNativeWindow.WndProc(Message& m)
+   at System.Windows.Forms.NativeWindow.DebuggableCallback(IntPtr hWnd, Int32 msg, IntPtr wparam, IntPtr lparam)
+   at System.Windows.Forms.UnsafeNativeMethods.DispatchMessageW(MSG& msg)
+   at System.Windows.Forms.Application.ComponentManager.System.Windows.Forms.UnsafeNativeMethods.IMsoComponentManager.FPushMessageLoop(Int32 dwComponentID, Int32 reason, Int32 pvLoopData)
+   at System.Windows.Forms.Application.ThreadContext.RunMessageLoopInner(Int32 reason, ApplicationContext context)
+   at System.Windows.Forms.Application.ThreadContext.RunMessageLoop(Int32 reason, ApplicationContext context)
+   at System.Windows.Forms.Application.Run(Form mainForm)
+   at iCopy.appControl.Main(String[] sArgs) in C:\Users\James\Desktop\trunk\Classes\iCopyControl.vb:line 128
