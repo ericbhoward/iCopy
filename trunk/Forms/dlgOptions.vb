@@ -16,6 +16,7 @@
 
 Imports System.Windows.Forms
 Imports System.Globalization
+Imports WIA
 
 Public Class dlgOptions
     Dim localeRootStr As String
@@ -79,6 +80,29 @@ retry:
             cboBitDepth.Text = My.Settings.LastScanSettings.BitDepth
         End If
 
+        'Scan button association
+        lblScanner.Text = "Scanner: " + appControl.ScannerDescription
+        Dim deviceID As String = appControl.Scanner.DeviceId
+
+        Dim events As WIA.DeviceEvents = appControl.GetScannerEvents()
+        Dim evWrappers As New List(Of WIAEventWrapper)
+        Dim availActions As New List(Of Action)
+        availActions.Add(New Action("Show Interface", ""))
+        availActions.Add(New Action("Copy", "/c"))
+        availActions.Add(New Action("Scan to File", "/f"))
+
+        ComboBox1.DataSource = availActions
+        ComboBox1.ValueMember = "Arguments"
+        ComboBox1.DisplayMember = "Description"
+
+        For Each ev As DeviceEvent In events
+            If Not ev.Name.Contains("Device") Then
+                Dim evWr As New WIAEventWrapper(ev)
+                evWrappers.Add(evWr)
+                ListBox1.Items.Add(evWr)
+            End If
+        Next
+
     End Sub
 
     Private Sub dlgOptions_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
@@ -88,4 +112,101 @@ retry:
     Private Sub btnResetSettings_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnDefaultSettings.Click
         My.Settings.Reset()
     End Sub
+
+    Private Sub ListBox1_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles ListBox1.SelectedIndexChanged
+
+    End Sub
+
+    Private Sub btnRegister_Click(sender As System.Object, e As System.EventArgs) Handles btnRegister.Click
+
+        Dim manager As New DeviceManager()
+        Dim ev = DirectCast(ListBox1.SelectedItem, WIAEventWrapper)
+        Dim command As String = String.Format("{0} {1} {2}", Application.ExecutablePath, ComboBox1.SelectedValue.ToString(), "/StiDevice:%1")
+        manager.RegisterPersistentEvent(command, "iCopy", "Whatever", "", ev.EventID) ', appControl.Scanner.DeviceId)
+
+    End Sub
+
+    Private Sub Button1_Click(sender As System.Object, e As System.EventArgs) Handles Button1.Click
+
+        Dim manager As New DeviceManager()
+        Dim ev = DirectCast(ListBox1.SelectedItem, WIAEventWrapper)
+        Dim command As String = String.Format("{0} {1}", Application.ExecutablePath, ComboBox1.SelectedValue.ToString())
+        manager.UnregisterPersistentEvent(Command, "iCopy", "Whatever", "", ev.EventID) ', appControl.Scanner.DeviceId)
+    End Sub
+End Class
+
+Class WIAEventWrapper
+    Implements DeviceEvent
+
+    Dim _ev As WIA.DeviceEvent
+    Dim _action As Action
+
+    Sub New(ev As WIA.DeviceEvent)
+        _ev = ev
+    End Sub
+
+    Public Property currentAction() As Action
+        Get
+            Return _action
+        End Get
+        Set(ByVal value As Action)
+            _action = value
+        End Set
+    End Property
+
+    Public Overrides Function ToString() As String
+        Return _ev.Name
+    End Function
+
+    Public ReadOnly Property Description As String Implements WIA.IDeviceEvent.Description
+        Get
+            Return _ev.Description
+        End Get
+    End Property
+
+    Public ReadOnly Property EventID As String Implements WIA.IDeviceEvent.EventID
+        Get
+            Return _ev.EventID
+        End Get
+    End Property
+
+    Public ReadOnly Property Name As String Implements WIA.IDeviceEvent.Name
+        Get
+            Return _ev.Name
+        End Get
+    End Property
+
+    Public ReadOnly Property Type As WIA.WiaEventFlag Implements WIA.IDeviceEvent.Type
+        Get
+            Return _ev.Type
+        End Get
+    End Property
+End Class
+
+Class Action
+    Public Sub New(Description As String, Arguments As String)
+        _description = Description
+        _arguments = Arguments
+    End Sub
+
+    Private _description As String
+    Public Property Description() As String
+        Get
+            Return _description
+        End Get
+        Set(ByVal value As String)
+            _description = value
+        End Set
+    End Property
+
+    Private _arguments As String
+    Public Property Arguments() As String
+        Get
+            Return _arguments
+        End Get
+        Set(ByVal value As String)
+            _arguments = value
+        End Set
+    End Property
+
 End Class

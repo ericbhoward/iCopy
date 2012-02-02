@@ -618,6 +618,10 @@ retry:
 
     End Sub
 
+    Shared Function GetScannerEvents() As WIA.DeviceEvents
+        Return _scanner.Events
+    End Function
+
     Shared ReadOnly Property ScannerDescription()
         Get
             Return _scanner.Description
@@ -644,6 +648,10 @@ retry:
             Return _availableCultures
         End Get
     End Property
+
+    Private Shared Sub manager_OnEvent(EventID As String, DeviceID As String, ItemID As String) Handles manager.OnEvent
+        MsgBox("Device " + DeviceID + " triggered the event " + EventID)
+    End Sub
 
 End Class
 
