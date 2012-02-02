@@ -35,9 +35,16 @@ Partial Class dlgOptions
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.chkRememberScanSettings = New System.Windows.Forms.CheckBox()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
+        Me.ComboBox1 = New System.Windows.Forms.ComboBox()
+        Me.lblScanner = New System.Windows.Forms.Label()
+        Me.lblAvailableEvents = New System.Windows.Forms.Label()
+        Me.ListBox1 = New System.Windows.Forms.ListBox()
+        Me.btnRegister = New System.Windows.Forms.Button()
         Me.btnDefaultSettings = New System.Windows.Forms.Button()
+        Me.Button1 = New System.Windows.Forms.Button()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
+        Me.TabPage2.SuspendLayout()
         Me.SuspendLayout()
         '
         'btnOk
@@ -147,6 +154,12 @@ Partial Class dlgOptions
         '
         'TabPage2
         '
+        Me.TabPage2.Controls.Add(Me.Button1)
+        Me.TabPage2.Controls.Add(Me.ComboBox1)
+        Me.TabPage2.Controls.Add(Me.lblScanner)
+        Me.TabPage2.Controls.Add(Me.lblAvailableEvents)
+        Me.TabPage2.Controls.Add(Me.ListBox1)
+        Me.TabPage2.Controls.Add(Me.btnRegister)
         Me.TabPage2.Location = New System.Drawing.Point(4, 22)
         Me.TabPage2.Name = "TabPage2"
         Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
@@ -154,6 +167,49 @@ Partial Class dlgOptions
         Me.TabPage2.TabIndex = 1
         Me.TabPage2.Text = "Scanner Buttons"
         Me.TabPage2.UseVisualStyleBackColor = True
+        '
+        'ComboBox1
+        '
+        Me.ComboBox1.FormattingEnabled = True
+        Me.ComboBox1.Location = New System.Drawing.Point(6, 161)
+        Me.ComboBox1.Name = "ComboBox1"
+        Me.ComboBox1.Size = New System.Drawing.Size(121, 21)
+        Me.ComboBox1.TabIndex = 7
+        '
+        'lblScanner
+        '
+        Me.lblScanner.AutoSize = True
+        Me.lblScanner.Location = New System.Drawing.Point(6, 3)
+        Me.lblScanner.Name = "lblScanner"
+        Me.lblScanner.Size = New System.Drawing.Size(53, 13)
+        Me.lblScanner.TabIndex = 6
+        Me.lblScanner.Text = "Scanner: "
+        '
+        'lblAvailableEvents
+        '
+        Me.lblAvailableEvents.AutoSize = True
+        Me.lblAvailableEvents.Location = New System.Drawing.Point(3, 25)
+        Me.lblAvailableEvents.Name = "lblAvailableEvents"
+        Me.lblAvailableEvents.Size = New System.Drawing.Size(86, 13)
+        Me.lblAvailableEvents.TabIndex = 5
+        Me.lblAvailableEvents.Text = "Available Events"
+        '
+        'ListBox1
+        '
+        Me.ListBox1.FormattingEnabled = True
+        Me.ListBox1.Location = New System.Drawing.Point(6, 50)
+        Me.ListBox1.Name = "ListBox1"
+        Me.ListBox1.Size = New System.Drawing.Size(270, 95)
+        Me.ListBox1.TabIndex = 1
+        '
+        'btnRegister
+        '
+        Me.btnRegister.Location = New System.Drawing.Point(146, 159)
+        Me.btnRegister.Name = "btnRegister"
+        Me.btnRegister.Size = New System.Drawing.Size(75, 23)
+        Me.btnRegister.TabIndex = 0
+        Me.btnRegister.Text = "Register"
+        Me.btnRegister.UseVisualStyleBackColor = True
         '
         'btnDefaultSettings
         '
@@ -163,6 +219,15 @@ Partial Class dlgOptions
         Me.btnDefaultSettings.TabIndex = 9
         Me.btnDefaultSettings.Text = "&Default"
         Me.btnDefaultSettings.UseVisualStyleBackColor = True
+        '
+        'Button1
+        '
+        Me.Button1.Location = New System.Drawing.Point(227, 159)
+        Me.Button1.Name = "Button1"
+        Me.Button1.Size = New System.Drawing.Size(75, 23)
+        Me.Button1.TabIndex = 8
+        Me.Button1.Text = "Unregister"
+        Me.Button1.UseVisualStyleBackColor = True
         '
         'dlgOptions
         '
@@ -185,6 +250,8 @@ Partial Class dlgOptions
         Me.TabControl1.ResumeLayout(False)
         Me.TabPage1.ResumeLayout(False)
         Me.TabPage1.PerformLayout()
+        Me.TabPage2.ResumeLayout(False)
+        Me.TabPage2.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -201,5 +268,11 @@ Partial Class dlgOptions
     Friend WithEvents chkRememberScanSettings As System.Windows.Forms.CheckBox
     Friend WithEvents TabPage2 As System.Windows.Forms.TabPage
     Friend WithEvents btnDefaultSettings As System.Windows.Forms.Button
+    Friend WithEvents btnRegister As System.Windows.Forms.Button
+    Friend WithEvents ListBox1 As System.Windows.Forms.ListBox
+    Friend WithEvents lblScanner As System.Windows.Forms.Label
+    Friend WithEvents lblAvailableEvents As System.Windows.Forms.Label
+    Friend WithEvents ComboBox1 As System.Windows.Forms.ComboBox
+    Friend WithEvents Button1 As System.Windows.Forms.Button
 
 End Class

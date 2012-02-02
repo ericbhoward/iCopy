@@ -349,6 +349,14 @@ Public Class Scanner
         End If
     End Function
 
+    Public ReadOnly Property Events As WIA.DeviceEvents
+        Get
+            Dim _device As Device = manager.DeviceInfos.Item(DeviceId).Connect
+            Return _device.Events
+        End Get
+    End Property
+
+
     Function ScanADFBrother(ByVal options As ScanSettings) As List(Of Image)
 
         Trace.WriteLine(String.Format("Starting acquisition"))
