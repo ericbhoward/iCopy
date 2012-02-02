@@ -218,8 +218,8 @@ copy the folder xx-XX to iCopy folder</comment>
     <comment>Enter the scaling percentage. Value must be between 1 and 200</comment>
   </data>
   <data name="mainFrm_btnCopyToolTip" xml:space="preserve">
-    <value>Start copy process (CTRL+C)</value>
-    <comment>Start copy process (CTRL+C)</comment>
+    <value>Start copy process (CTRL+S)</value>
+    <comment>Start copy process (CTRL+S)</comment>
   </data>
   <data name="mainFrm_btnImageSettings" xml:space="preserve">
     <value>Image Settings &gt;&gt;</value>
@@ -333,7 +333,7 @@ TEXT - Acquired image will be black &amp; white. This is the fasted method, usef
     <value>No printer selected</value>
     <comment>No printer selected</comment>
   </data>
-  <data name="mainFrm_PrinterStatusLabelToolTipText" xml:space="preserve">
+  <data name="mainFrm_PrinterStatusLabelToolTip" xml:space="preserve">
     <value>Click to change printer settings</value>
     <comment>Click to change printer settings</comment>
   </data>
@@ -341,7 +341,7 @@ TEXT - Acquired image will be black &amp; white. This is the fasted method, usef
     <value>No scanner selected</value>
     <comment>No scanner selected</comment>
   </data>
-  <data name="mainFrm_ScannerstatusLabelToolTipText" xml:space="preserve">
+  <data name="mainFrm_ScannerstatusLabelToolTip" xml:space="preserve">
     <value>Click to select a different scanner</value>
     <comment>Click to select a different scanner</comment>
   </data>
@@ -601,17 +601,20 @@ ADVANCED PARAMETERS
     <value>New version available!</value>
     <comment>New version available!</comment>
   </data>
-  <data name="mainFrm_VersionStatusLabelToolTipText" xml:space="preserve">
+  <data name="mainFrm_VersionStatusLabelToolTip" xml:space="preserve">
     <value>Click here to go to iCopy website and download the latest version</value>
     <comment>Click here to go to iCopy website and download the latest version</comment>
   </data>
-  <data name="mainFrm_ScanADF" xml:space="preserve">
-    <value>Scan Using ADF (beta)</value>
-    <comment>Scan Using ADF (beta)</comment>
+  <data name="frmImageSettings_tbCompressionToolTip" xml:space="preserve">
+    <value>Set JPEG compression (Save to File only)</value>
+    <comment>Set JPEG compression (Save to File only)</comment>
   </data>
-  <data name="mainFrom_ScanADFToolTipText" xml:space="preserve">
-    <value>Scan using your scanner Auto Document Feeder (if supported).
-This is an experimental feature.</value>
-    <comment>Scan using your scanner Auto Document Feeder (if supported).</comment>
+  <data name="mainFrm_chkADF" xml:space="preserve">
+    <value>Use Document Feeder (ADF)</value>
+    <comment>Use Document Feeder (ADF)</comment>
+  </data>
+  <data name="mainFrm_chkADFToolTip" xml:space="preserve">
+    <value>Acquire the pages using the Automatic Document Feeder.</value>
+    <comment>Acquire the pages using the Automatic Document Feeder.</comment>
   </data>
 </root>

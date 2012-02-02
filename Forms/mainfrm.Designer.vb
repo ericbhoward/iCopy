@@ -119,7 +119,7 @@ Partial Class mainFrm
         'nudNCopie
         '
         Me.nudNCopie.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.nudNCopie.Location = New System.Drawing.Point(284, 114)
+        Me.nudNCopie.Location = New System.Drawing.Point(303, 106)
         Me.nudNCopie.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.nudNCopie.Name = "nudNCopie"
         Me.nudNCopie.Size = New System.Drawing.Size(55, 26)
@@ -130,7 +130,7 @@ Partial Class mainFrm
         '
         Me.Label1.Cursor = System.Windows.Forms.Cursors.Default
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(167, 118)
+        Me.Label1.Location = New System.Drawing.Point(186, 110)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(111, 19)
         Me.Label1.TabIndex = 12
@@ -165,7 +165,7 @@ Partial Class mainFrm
         '
         Me.VersionStatusLabel.IsLink = True
         Me.VersionStatusLabel.Name = "VersionStatusLabel"
-        Me.VersionStatusLabel.Size = New System.Drawing.Size(232, 17)
+        Me.VersionStatusLabel.Size = New System.Drawing.Size(243, 17)
         Me.VersionStatusLabel.Spring = True
         Me.VersionStatusLabel.Text = "New Version Available!"
         Me.VersionStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -174,7 +174,7 @@ Partial Class mainFrm
         'chkPreview
         '
         Me.chkPreview.AutoSize = True
-        Me.chkPreview.Location = New System.Drawing.Point(181, 157)
+        Me.chkPreview.Location = New System.Drawing.Point(163, 141)
         Me.chkPreview.Name = "chkPreview"
         Me.chkPreview.Size = New System.Drawing.Size(64, 17)
         Me.chkPreview.TabIndex = 4
@@ -192,7 +192,7 @@ Partial Class mainFrm
         '
         'llblAbout
         '
-        Me.llblAbout.Location = New System.Drawing.Point(371, 164)
+        Me.llblAbout.Location = New System.Drawing.Point(371, 167)
         Me.llblAbout.Name = "llblAbout"
         Me.llblAbout.Size = New System.Drawing.Size(149, 13)
         Me.llblAbout.TabIndex = 10
@@ -263,11 +263,11 @@ Partial Class mainFrm
         '
         'chkADF
         '
-        Me.chkADF.Location = New System.Drawing.Point(262, 150)
+        Me.chkADF.Location = New System.Drawing.Point(163, 159)
         Me.chkADF.Name = "chkADF"
-        Me.chkADF.Size = New System.Drawing.Size(141, 31)
+        Me.chkADF.Size = New System.Drawing.Size(207, 21)
         Me.chkADF.TabIndex = 23
-        Me.chkADF.Text = "Use Document Feeder (beta)"
+        Me.chkADF.Text = "Use Document Feeder"
         Me.chkADF.UseVisualStyleBackColor = True
         '
         'mainFrm
@@ -277,7 +277,6 @@ Partial Class mainFrm
         Me.ClientSize = New System.Drawing.Size(532, 210)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label8)
-        Me.Controls.Add(Me.chkADF)
         Me.Controls.Add(Me.cboPrintMode)
         Me.Controls.Add(Me.btnScanModes)
         Me.Controls.Add(Me.cboPaperSize)
@@ -285,14 +284,15 @@ Partial Class mainFrm
         Me.Controls.Add(Me.Label7)
         Me.Controls.Add(Me.StatusStrip1)
         Me.Controls.Add(Me.llblSettings)
+        Me.Controls.Add(Me.chkADF)
         Me.Controls.Add(Me.btnCopy)
-        Me.Controls.Add(Me.nudNCopie)
-        Me.Controls.Add(Me.chkPreview)
-        Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.btnImageSettings)
         Me.Controls.Add(Me.btnSelScanner)
         Me.Controls.Add(Me.btnPrintSetup)
+        Me.Controls.Add(Me.nudNCopie)
         Me.Controls.Add(Me.llblAbout)
+        Me.Controls.Add(Me.Label1)
+        Me.Controls.Add(Me.chkPreview)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.KeyPreview = True
         Me.MaximizeBox = False

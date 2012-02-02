@@ -155,7 +155,6 @@ Public Class Scanner
                 MsgBox("There was an exception while setting the property " + prop_name + " to " + value.ToString() + ". Please report this information to iCopy bug tracker on Sourceforge:" + vbCrLf + _
                        "property type: " + temp.Type.ToString() + vbCrLf + _
                        "property subtype: " + temp.SubType.ToString(), MsgBoxStyle.Critical, "iCopy")
-
             End Try
         End If
     End Sub
@@ -437,10 +436,10 @@ Public Class Scanner
 
                 If options.Preview Then
                     img = DirectCast(dialog.ShowAcquireImage(WiaDeviceType.ScannerDeviceType, options.Intent, , WIA.FormatID.wiaFormatTIFF, False, False, False), ImageFile)
-
                 Else
                     img = DirectCast(dialog.ShowTransfer(_scanner, WIA.FormatID.wiaFormatTIFF, False), ImageFile)
                 End If
+
                 Trace.WriteLine("Image acquired")
                 Trace.WriteLine(String.Format("Subitems count: {0}", _scanner.Items.Count))
 
@@ -608,6 +607,7 @@ Public Class Scanner
                         Trace.WriteLine(String.Format("The ADF is empty"))
                         Exit While                          'The acquisition is complete
                     Case WIA_ERRORS.WIA_ERROR_PAPER_JAM
+                        Trace.WriteLine("Paper jammed.")
                         Dim result As MsgBoxResult = MsgBox("The paper in the document feeder is jammed." + _
                                                              "Please check the feeder and click Ok to resume the acquisition, Cancel to abort", vbOKCancel + vbExclamation, "iCopy")
                         If result = MsgBoxResult.Ok Then Continue While
@@ -693,7 +693,6 @@ Public Class Scanner
                 Trace.WriteLine(String.Format(vbTab + vbTab + "Min {0}, Max {1}, Step {2}", prop.SubTypeMin, prop.SubTypeMax, prop.SubTypeStep))
             Case Else 'UnspecifiedSubType
         End Select
-
     End Sub
 
     Public Sub WritePropertiesLog()
@@ -706,12 +705,21 @@ Public Class Scanner
         _scanner = _device.Items(1)
 
         For Each p As WIA.Property In _device.Properties
-            TraceProp(p)
+            Try
+                TraceProp(p)
+            Catch ex As Exception
+                Trace.TraceError("Couldn't read property {0}", p.ToString())
+            End Try
         Next
 
-        For Each p In _scanner.Properties
-            TraceProp(p)
+        For Each p As WIA.Property In _scanner.Properties
+            Try
+                TraceProp(p)
+            Catch ex As Exception
+                Trace.TraceError("Couldn't read property {0}", p.PropertyID)
+            End Try
         Next
+
         Trace.Unindent()
         _scanner = Nothing
     End Sub

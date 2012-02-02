@@ -441,6 +441,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized string similar to Set JPEG compression (Save to File only).
+        '''</summary>
+        Friend Shared ReadOnly Property frmImageSettings_tbCompressionToolTip() As String
+            Get
+                Return ResourceManager.GetString("frmImageSettings_tbCompressionToolTip", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized string similar to Set contrast value..
         '''</summary>
         Friend Shared ReadOnly Property frmImageSettings_tbContrastToolTip() As String
@@ -486,7 +495,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Looks up a localized string similar to Start copy process (CTRL+C).
+        '''  Looks up a localized string similar to Start copy process (CTRL+S).
         '''</summary>
         Friend Shared ReadOnly Property mainFrm_btnCopyToolTip() As String
             Get
@@ -652,6 +661,24 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized string similar to Use Document Feeder (ADF).
+        '''</summary>
+        Friend Shared ReadOnly Property mainFrm_chkADF() As String
+            Get
+                Return ResourceManager.GetString("mainFrm_chkADF", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to Acquire the pages using the Automatic Document Feeder..
+        '''</summary>
+        Friend Shared ReadOnly Property mainFrm_chkADFToolTip() As String
+            Get
+                Return ResourceManager.GetString("mainFrm_chkADFToolTip", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized string similar to Preview.
         '''</summary>
         Friend Shared ReadOnly Property mainFrm_chkPreview() As String
@@ -744,18 +771,9 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized string similar to Click to change printer settings.
         '''</summary>
-        Friend Shared ReadOnly Property mainFrm_PrinterStatusLabelToolTipText() As String
+        Friend Shared ReadOnly Property mainFrm_PrinterStatusLabelToolTip() As String
             Get
-                Return ResourceManager.GetString("mainFrm_PrinterStatusLabelToolTipText", resourceCulture)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized string similar to Scan Using ADF (beta).
-        '''</summary>
-        Friend Shared ReadOnly Property mainFrm_ScanADF() As String
-            Get
-                Return ResourceManager.GetString("mainFrm_ScanADF", resourceCulture)
+                Return ResourceManager.GetString("mainFrm_PrinterStatusLabelToolTip", resourceCulture)
             End Get
         End Property
         
@@ -780,9 +798,9 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized string similar to Click to select a different scanner.
         '''</summary>
-        Friend Shared ReadOnly Property mainFrm_ScannerstatusLabelToolTipText() As String
+        Friend Shared ReadOnly Property mainFrm_ScannerstatusLabelToolTip() As String
             Get
-                Return ResourceManager.GetString("mainFrm_ScannerstatusLabelToolTipText", resourceCulture)
+                Return ResourceManager.GetString("mainFrm_ScannerstatusLabelToolTip", resourceCulture)
             End Get
         End Property
         
@@ -816,19 +834,9 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized string similar to Click here to go to iCopy website and download the latest version.
         '''</summary>
-        Friend Shared ReadOnly Property mainFrm_VersionStatusLabelToolTipText() As String
+        Friend Shared ReadOnly Property mainFrm_VersionStatusLabelToolTip() As String
             Get
-                Return ResourceManager.GetString("mainFrm_VersionStatusLabelToolTipText", resourceCulture)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized string similar to Scan using your scanner Auto Document Feeder (if supported).
-        '''This is an experimental feature..
-        '''</summary>
-        Friend Shared ReadOnly Property mainFrom_ScanADFToolTipText() As String
-            Get
-                Return ResourceManager.GetString("mainFrom_ScanADFToolTipText", resourceCulture)
+                Return ResourceManager.GetString("mainFrm_VersionStatusLabelToolTip", resourceCulture)
             End Get
         End Property
         

@@ -332,7 +332,7 @@ TEXT - Acquired image will be black &amp; white. This is the fasted method, usef
     <value>未選擇印表機</value>
     <comment>No printer selected</comment>
   </data>
-  <data name="mainFrm_PrinterStatusLabelToolTipText" xml:space="preserve">
+  <data name="mainFrm_PrinterStatusLabelToolTip" xml:space="preserve">
     <value>點選來變更印表機設定</value>
     <comment>Click to change printer settings</comment>
   </data>
@@ -340,7 +340,7 @@ TEXT - Acquired image will be black &amp; white. This is the fasted method, usef
     <value>未選擇掃描器</value>
     <comment>No scanner selected</comment>
   </data>
-  <data name="mainFrm_ScannerstatusLabelToolTipText" xml:space="preserve">
+  <data name="mainFrm_ScannerstatusLabelToolTip" xml:space="preserve">
     <value>點選來選擇不同的掃描器</value>
     <comment>Click to select a different scanner</comment>
   </data>

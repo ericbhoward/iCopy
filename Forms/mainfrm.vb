@@ -144,7 +144,7 @@ Class mainFrm
         If e.Control Then 'If CTRL is pressed
             Dim ea As New EventArgs()
             Select Case e.KeyCode
-                Case Keys.C 'Copy
+                Case Keys.S 'Copy
                     btnCopy_Click(btnCopy, ea)
                 Case Keys.M 'Copy Multiple Pages
                     ScanMultiplePages_Click(ScanMultiplePages, ea)
@@ -330,4 +330,7 @@ Class mainFrm
         Process.Start(weburl)
     End Sub
 
+    Private Sub chkADF_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles chkADF.CheckedChanged
+        chkPreview.Enabled = Not chkADF.Checked
+    End Sub
 End Class
