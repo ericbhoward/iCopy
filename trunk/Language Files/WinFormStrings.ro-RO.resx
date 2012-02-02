@@ -332,7 +332,7 @@ TEXT - Acquired image will be black &amp; white. This is the fasted method, usef
     <value>Impimanta nu a fost selectata</value>
     <comment>No printer selected</comment>
   </data>
-  <data name="mainFrm_PrinterStatusLabelToolTipText" xml:space="preserve">
+  <data name="mainFrm_PrinterStatusLabelToolTip" xml:space="preserve">
     <value>Click pentru a schimba setari imprimanta</value>
     <comment>Click to change printer settings</comment>
   </data>
@@ -340,7 +340,7 @@ TEXT - Acquired image will be black &amp; white. This is the fasted method, usef
     <value>Scaner nu a fost selectat</value>
     <comment>No scanner selected</comment>
   </data>
-  <data name="mainFrm_ScannerstatusLabelToolTipText" xml:space="preserve">
+  <data name="mainFrm_ScannerstatusLabelToolTip" xml:space="preserve">
     <value>Click pentru a selecta un scaner</value>
     <comment>Click to select a different scanner</comment>
   </data>

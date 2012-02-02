@@ -335,7 +335,7 @@ TEXT - Acquired image will be black &amp; white. This is the fasted method, usef
     <value>Kein Drucker ausgewählt</value>
     <comment>No printer selected</comment>
   </data>
-  <data name="mainFrm_PrinterStatusLabelToolTipText" xml:space="preserve">
+  <data name="mainFrm_PrinterStatusLabelToolTip" xml:space="preserve">
     <value>Klicken Sie hier, um die Druckereinstellungen zu ändern</value>
     <comment>Click to change printer settings</comment>
   </data>
@@ -343,7 +343,7 @@ TEXT - Acquired image will be black &amp; white. This is the fasted method, usef
     <value>Kein Scanner ausgewählt</value>
     <comment>No scanner selected</comment>
   </data>
-  <data name="mainFrm_ScannerstatusLabelToolTipText" xml:space="preserve">
+  <data name="mainFrm_ScannerstatusLabelToolTip" xml:space="preserve">
     <value>Klicken Sie hier, um einen anderen Scanner auszuwählen</value>
     <comment>Click to select a different scanner</comment>
   </data>

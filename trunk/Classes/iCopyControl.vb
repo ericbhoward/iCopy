@@ -69,6 +69,7 @@ Class appControl
         End If
 
         Dim logPath As String = GetWritablePath() + "iCopy.log"
+
         Try
             Dim MyFile As New FileInfo(logPath)
             Dim FileSize As Long = MyFile.Length
@@ -77,16 +78,16 @@ Class appControl
                 File.Delete(logPath)
  
             End If
-
         Catch ex As Exception
 
         End Try
-
+        Trace.AutoFlush = True
+        Trace.Listeners.Add(New ConsoleTraceListener())
+        Trace.WriteLine("Log will be saved to " + logPath + "\iCopy.log")
         Dim logListener As New TextWriterTraceListener(logPath, "log")
 
         Trace.Listeners.Add(logListener)
 
-        Trace.Listeners.Add(New ConsoleTraceListener())
         Trace.WriteLine("")
         Trace.WriteLine(DateTime.Now)
         Trace.WriteLine(String.Format("iCopy Version: {0}", Application.ProductVersion))
@@ -95,7 +96,6 @@ Class appControl
         Trace.WriteLine(String.Format("-----------------"))
 
         Trace.Indent()
-        Trace.AutoFlush = True
 
         Try
             If sArgs.Length = 0 Then 'If there are no arguments, run app normally

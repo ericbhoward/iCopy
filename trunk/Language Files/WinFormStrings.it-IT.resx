@@ -253,7 +253,7 @@ copy the folder xx-XX to iCopy folder</comment>
     <comment>Enter the enlargement percentage. Value must be between 1 and 200</comment>
   </data>
   <data name="mainFrm_btnCopyToolTip" xml:space="preserve">
-    <value>Avvia il processo di copia (CTRL+C)</value>
+    <value>Avvia il processo di copia (CTRL+S)</value>
     <comment>Start copy process</comment>
   </data>
   <data name="mainFrm_btnImageSettings" xml:space="preserve">
@@ -366,7 +366,7 @@ TEXT - Acquired image will be black &amp; white. This is the fasted method, usef
     <value>Nessuna stampante selezionata</value>
     <comment>No printer selected</comment>
   </data>
-  <data name="mainFrm_PrinterStatusLabelToolTipText" xml:space="preserve">
+  <data name="mainFrm_PrinterStatusLabelToolTip" xml:space="preserve">
     <value>Clicca per cambiare le impostazioni di stampa</value>
     <comment>Click to change printer settings</comment>
   </data>
@@ -378,7 +378,7 @@ TEXT - Acquired image will be black &amp; white. This is the fasted method, usef
     <value>Nessuno scanner selezionato</value>
     <comment>No scanner selected</comment>
   </data>
-  <data name="mainFrm_ScannerstatusLabelToolTipText" xml:space="preserve">
+  <data name="mainFrm_ScannerstatusLabelToolTip" xml:space="preserve">
     <value>Clicca per scegliere un altro scanner</value>
     <comment>Click to select a different scanner</comment>
   </data>
@@ -522,5 +522,20 @@ impostazioni dell'immagine</value>
   <data name="mainFrm_Label2" xml:space="preserve">
     <value>Formato carta</value>
     <comment>Paper size</comment>
+  </data>
+  <data name="frmImageSettings_tbCompressionToolTip" xml:space="preserve">
+    <value>Imposta la compressione JPEG (solo per il salvataggio su File)</value>
+  </data>
+  <data name="mainFrm_chkADF" xml:space="preserve">
+    <value>Usa Caricatore Documenti (ADF)</value>
+    <comment>Usa Caricatore Documenti (ADF)</comment>
+  </data>
+  <data name="mainFrm_chkADFToolTip" xml:space="preserve">
+    <value>Acquisisce le pagine dal caricatore automatico dei documenti (ADF)</value>
+    <comment>Acquisisce le pagine dal caricatore automatico dei documenti (ADF)</comment>
+  </data>
+  <data name="frmImageSettings_tbScalingToolTip" xml:space="preserve">
+    <value>Ridimensiona l'immagine alla percentuale selezionata</value>
+    <comment>Scale the image to the selected percentage</comment>
   </data>
 </root>
