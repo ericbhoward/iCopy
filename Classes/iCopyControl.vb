@@ -517,6 +517,9 @@ retry:
         Catch ex As System.Runtime.InteropServices.COMException
             If ex.ErrorCode = -2145320860 Then       'If acquisition is cancelled
                 Exit Sub
+            ElseIf ex.ErrorCode = WIA_ERRORS.WIA_ERROR_WARMING_UP Then
+                MsgBox(LocRM.GetString("Msg_ScannerWarmingUp"), MsgBoxStyle.Exclamation, "iCopy")
+                Return
             ElseIf ex.ErrorCode = Convert.ToInt32("0x80004005", 16) Then
                 MsgBox("An error occured while processing the acquired image. Please try again with a lower resolution." & vbCrLf & "If the problem persists please report it (http://icopy.sourceforge.net/reportabug.html).", MsgBoxStyle.Critical, "iCopy")
                 Exit Sub
@@ -524,9 +527,10 @@ retry:
                 Throw
             End If
         End Try
+
         If images.Count = 1 Then
             images(0).Save(options.Path, format)
-        Else
+        ElseIf images.Count > 1 Then
             For i = 0 To images.Count - 1
                 Dim path As String = pathWoExt + i.ToString("000") + "." + ext
                 images(i).Save(path, format)
@@ -605,6 +609,9 @@ retry:
         Catch ex As System.Runtime.InteropServices.COMException
             If ex.ErrorCode = -2145320860 Then       'If acquisition is cancelled
                 Exit Sub
+            ElseIf ex.ErrorCode = WIA_ERRORS.WIA_ERROR_WARMING_UP Then
+                MsgBox(LocRM.GetString("Msg_ScannerWarmingUp"), MsgBoxStyle.Exclamation, "iCopy")
+                Return
             ElseIf ex.ErrorCode = Convert.ToInt32("0x80004005", 16) Then
                 MsgBox("An error occured while processing the acquired image. Please try again with a lower resolution." & vbCrLf & "If the problem persists please report it (http://icopy.sourceforge.net/reportabug.html).", MsgBoxStyle.Critical, "iCopy")
                 Exit Sub
