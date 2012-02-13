@@ -35,7 +35,7 @@ Public Class dlgOptions
         If Not (My.Settings.Culture.LCID = appControl.AvailableLanguages(cboLanguage.SelectedIndex).LCID) Then
             My.Settings.Culture = appControl.AvailableLanguages(cboLanguage.SelectedIndex)
             My.Settings.CustomCulture = True
-            MsgBox(appControl.GetLocalizedString("Msg_Language"), MsgBoxStyle.Information, "iCopy")
+            MsgBoxWrap(appControl.GetLocalizedString("Msg_Language"), MsgBoxStyle.Information, "iCopy")
         End If
 
         If cboBitDepth.Text = "Auto" Then

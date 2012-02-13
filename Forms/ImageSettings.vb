@@ -96,12 +96,12 @@ Class frmImageSettings
             If value <= tb.Maximum And value >= tb.Minimum Then
                 tb.Value = value
             Else
-                MsgBox(String.Format(appControl.GetLocalizedString("Msg_InsertNumber"), tb.Minimum, tb.Maximum), MsgBoxStyle.Information, "iCopy")
+                MsgBoxWrap(String.Format(appControl.GetLocalizedString("Msg_InsertNumber"), tb.Minimum, tb.Maximum), MsgBoxStyle.Information, "iCopy")
                 textBox.Text = tb.Value
                 textBox.Focus()
             End If
         Catch ex As InvalidCastException
-            MsgBox(String.Format(appControl.GetLocalizedString("Msg_InsertNumber"), tb.Minimum, tb.Maximum), MsgBoxStyle.Information, "iCopy")
+            MsgBoxWrap(String.Format(appControl.GetLocalizedString("Msg_InsertNumber"), tb.Minimum, tb.Maximum), MsgBoxStyle.Information, "iCopy")
             textBox.Text = tb.Value
             textBox.Focus()
         End Try

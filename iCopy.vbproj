@@ -127,6 +127,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\ExitException.vb" />
+    <Compile Include="Classes\msgBoxWrap.vb" />
     <Compile Include="Classes\ScanSettings.vb" />
     <Compile Include="Forms\AboutBox1.Designer.vb">
       <DependentUpon>AboutBox1.vb</DependentUpon>
@@ -211,7 +212,9 @@
     <EmbeddedResource Include="Language Files\WinFormStrings.bg-BG.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>
-    <EmbeddedResource Include="Language Files\WinFormStrings.de-DE.resx" />
+    <EmbeddedResource Include="Language Files\WinFormStrings.de-DE.resx">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="Language Files\WinFormStrings.es-ES.resx">
       <SubType>Designer</SubType>
     </EmbeddedResource>

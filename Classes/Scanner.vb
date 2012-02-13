@@ -15,7 +15,7 @@
 'along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Imports WIA
-Imports System.Xml
+Imports System.IO
 Imports System.Runtime.InteropServices
 
 Public Class Scanner
@@ -102,7 +102,7 @@ Public Class Scanner
             Try
                 temp.Value = value
             Catch ex As Exception
-                MsgBox("There was an exception while setting the property " + prop_name + " to " + value.ToString() + ". Please report this information to iCopy bug tracker on Sourceforge:" + vbCrLf + _
+                MsgBoxWrap("There was an exception while setting the property " + prop_name + " to " + value.ToString() + ". Please report this information to iCopy bug tracker on Sourceforge:" + vbCrLf + _
                        "property type: " + temp.Type.ToString() + vbCrLf + _
                        "property subtype: " + temp.SubType.ToString(), MsgBoxStyle.Critical, "iCopy")
             End Try
@@ -152,7 +152,7 @@ Public Class Scanner
             Try
                 temp.Value = value
             Catch ex As Exception
-                MsgBox("There was an exception while setting the property " + prop_name + " to " + value.ToString() + ". Please report this information to iCopy bug tracker on Sourceforge:" + vbCrLf + _
+                MsgBoxWrap("There was an exception while setting the property " + prop_name + " to " + value.ToString() + ". Please report this information to iCopy bug tracker on Sourceforge:" + vbCrLf + _
                        "property type: " + temp.Type.ToString() + vbCrLf + _
                        "property subtype: " + temp.SubType.ToString(), MsgBoxStyle.Critical, "iCopy")
             End Try
@@ -341,7 +341,7 @@ Public Class Scanner
         End Get
     End Property
 
-    Function ScanADF(ByVal options As ScanSettings) As List(Of Image)
+    Function ScanADF(ByVal options As ScanSettings) As List(Of String)
         If _description.ToLower().Contains("brother") Then
             Return ScanADFBrother(options)
         Else
@@ -357,11 +357,11 @@ Public Class Scanner
     End Property
 
 
-    Function ScanADFBrother(ByVal options As ScanSettings) As List(Of Image)
+    Function ScanADFBrother(ByVal options As ScanSettings) As List(Of String)
 
         Trace.WriteLine(String.Format("Starting acquisition"))
         Trace.Indent()
-        Dim imageList As New List(Of Image)()
+        Dim imageList As New List(Of String)()
         Dim dialog As New WIA.CommonDialog
         Dim _device As Device
         Dim hasMorePages As Boolean = True
@@ -452,12 +452,20 @@ Public Class Scanner
                 Trace.WriteLine(String.Format("Subitems count: {0}", _scanner.Items.Count))
 
                 If img IsNot Nothing Then
-                    Dim stream As IO.MemoryStream
-                    stream = New IO.MemoryStream(CType(img.FileData.BinaryData, Byte()))
-                    Trace.WriteLine(String.Format("Saving image to memory stream"))
-                    Dim tmpImage As Image = Image.FromStream(stream)
-                    imageList.Add(tmpImage)
-                    AcquiredPages += 1
+                    Dim tpath As String = Path.GetTempFileName()
+                    Try
+                        File.Delete(tpath)
+                    Catch ex As Exception
+
+                    End Try
+                    Try
+                        img.SaveFile(tpath)
+                        imageList.Add(tpath)
+                        AcquiredPages += 1
+                    Catch ex As Exception
+                        Throw
+                    End Try
+
                     img = Nothing
                 Else 'Acquisition canceled
                     Trace.WriteLine("Acquisition canceled by the user")
@@ -469,7 +477,7 @@ Public Class Scanner
                         Trace.WriteLine(String.Format("The ADF is empty"))
                         Exit While                          'The acquisition is complete
                     Case WIA_ERRORS.WIA_ERROR_PAPER_JAM
-                        Dim result As MsgBoxResult = MsgBox("The paper in the document feeder is jammed." + _
+                        Dim result As MsgBoxResult = MsgBoxWrap("The paper in the document feeder is jammed." + _
                                                              "Please check the feeder and click Ok to resume the acquisition, Cancel to abort", vbOKCancel + vbExclamation, "iCopy")
                         If result = MsgBoxResult.Ok Then Continue While
                         If result = MsgBoxResult.Cancel Then Exit While
@@ -512,10 +520,10 @@ Public Class Scanner
         Return imageList
     End Function
 
-    Function ScanADFNormal(ByVal options As ScanSettings) As List(Of Image)
+    Function ScanADFNormal(ByVal settings As ScanSettings) As List(Of String)
         Trace.WriteLine(String.Format("Starting acquisition"))
         Trace.Indent()
-        Dim imageList As New List(Of Image)()
+        Dim imageList As New List(Of String)()
         Dim dialog As New WIA.CommonDialog
         Dim _device As Device
         Dim hasMorePages As Boolean = True
@@ -530,7 +538,7 @@ Public Class Scanner
                 _deviceID = DeviceId
 
                 Try 'Some scanner need this property to be set to feeder
-                    If options.UseADF Then
+                    If settings.UseADF Then
                         _device.Properties("Document Handling Select").Value = WIA_DPS_DOCUMENT_HANDLING_SELECT.FEEDER
                         Trace.WriteLine(String.Format("WIA_DPS_DOCUMENT_HANDLING_SELECT set to {0}", WIA_DPS_DOCUMENT_HANDLING_SELECT.FEEDER))
                     Else
@@ -559,25 +567,25 @@ Public Class Scanner
 
             'Set all properties
             Trace.WriteLine(String.Format("Setting scan properties"))
-            Trace.WriteLine(options)
+            Trace.WriteLine(settings)
 
-            SetBrightess(options.Brightness)
-            SetContrast(options.Contrast)
-            SetIntent(options.Intent)
+            SetBrightess(settings.Brightness)
+            SetContrast(settings.Contrast)
+            SetIntent(settings.Intent)
 
             Try
-                SetResolution(options.Resolution)
+                SetResolution(settings.Resolution)
             Catch ex As Exception
-                Trace.WriteLine(String.Format("Couldn't set resolution to {0}.", options.Resolution))
+                Trace.WriteLine(String.Format("Couldn't set resolution to {0}.", settings.Resolution))
                 Trace.WriteLine(String.Format("\tError: {0}", ex.ToString()))
             End Try
 
             SetMaxExtent() 'After setting resolution, maximize the extent
 
             Try
-                SetBitDepth(options.BitDepth)
+                SetBitDepth(settings.BitDepth)
             Catch ex As Exception
-                Trace.WriteLine(String.Format("Couldn't set BitDepth to {0}.", options.BitDepth))
+                Trace.WriteLine(String.Format("Couldn't set BitDepth to {0}.", settings.BitDepth))
             End Try
 
             Try
@@ -589,8 +597,8 @@ Public Class Scanner
                 End Try
                 Trace.WriteLine(String.Format("Subitems count: {0}", _scanner.Items.Count))
 
-                If options.Preview Then
-                    img = DirectCast(dialog.ShowAcquireImage(WiaDeviceType.ScannerDeviceType, options.Intent, , WIA.FormatID.wiaFormatTIFF, False, False, False), ImageFile)
+                If settings.Preview Then
+                    img = DirectCast(dialog.ShowAcquireImage(WiaDeviceType.ScannerDeviceType, settings.Intent, , WIA.FormatID.wiaFormatTIFF, False, False, False), ImageFile)
                 Else
                     img = DirectCast(dialog.ShowTransfer(_scanner, WIA.FormatID.wiaFormatTIFF, False), ImageFile)
                 End If
@@ -598,13 +606,21 @@ Public Class Scanner
                 Trace.WriteLine("Image acquired")
 
                 If img IsNot Nothing Then
-                    Dim stream As IO.MemoryStream
-                    stream = New IO.MemoryStream(CType(img.FileData.BinaryData, Byte()))
-                    Trace.WriteLine(String.Format("Saving image to memory stream"))
-                    Dim tmpImage As Image = Image.FromStream(stream)
-                    imageList.Add(tmpImage)
-                    AcquiredPages += 1
+                    If settings.Path.EndsWith("jpg") Then 'If this is a ScanToFile to jpg, apply compression
+                        img = Compress(settings.Quality, img)
+                    End If
+
+                    Dim tpath As String = Path.GetTempFileName()
+                    Try
+                        File.Delete(tpath)
+                    Catch ex As Exception
+                    End Try
+
+                    img.SaveFile(tpath)
+                    imageList.Add(tpath)
                     img = Nothing
+
+                    AcquiredPages += 1
                 Else 'Acquisition canceled
                     Trace.WriteLine("Acquisition canceled by the user")
                     Exit While
@@ -616,7 +632,7 @@ Public Class Scanner
                         Exit While                          'The acquisition is complete
                     Case WIA_ERRORS.WIA_ERROR_PAPER_JAM
                         Trace.WriteLine("Paper jammed.")
-                        Dim result As MsgBoxResult = MsgBox("The paper in the document feeder is jammed." + _
+                        Dim result As MsgBoxResult = MsgBoxWrap("The paper in the document feeder is jammed." + _
                                                              "Please check the feeder and click Ok to resume the acquisition, Cancel to abort", vbOKCancel + vbExclamation, "iCopy")
                         If result = MsgBoxResult.Ok Then Continue While
                         If result = MsgBoxResult.Cancel Then Exit While
@@ -632,7 +648,7 @@ Public Class Scanner
             Catch ex As Exception
                 Throw 'TODO: Error handling
             End Try
-            If Not options.UseADF Then Exit While
+            If Not settings.UseADF Then Exit While
             'determine if there are any more pages waiting
             Trace.WriteLine(String.Format("Checking if there are more pages..."))
 
