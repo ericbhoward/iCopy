@@ -967,6 +967,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized string similar to The scanner is warming up. Please wait a minute, then try again..
+        '''</summary>
+        Friend Shared ReadOnly Property Msg_ScannerWarmingUp() As String
+            Get
+                Return ResourceManager.GetString("Msg_ScannerWarmingUp", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized string similar to iCopy encountered an unhandled exception:
         '''
         '''{0}  

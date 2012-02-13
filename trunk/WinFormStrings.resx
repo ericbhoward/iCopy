@@ -617,4 +617,8 @@ ADVANCED PARAMETERS
     <value>Acquire the pages using the Automatic Document Feeder.</value>
     <comment>Acquire the pages using the Automatic Document Feeder.</comment>
   </data>
+  <data name="Msg_ScannerWarmingUp" xml:space="preserve">
+    <value>The scanner is warming up. Please wait a minute, then try again.</value>
+    <comment>The scanner is warming up. Please wait a minute, then try again.</comment>
+  </data>
 </root>
