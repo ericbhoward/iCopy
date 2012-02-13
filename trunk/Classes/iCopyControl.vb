@@ -62,6 +62,7 @@ Class appControl
     End Function
 
     Shared Sub Main(ByVal sArgs() As String)
+        My.Settings.Silent = False
 
         Application.EnableVisualStyles()
         If My.Settings.LastScanSettings Is Nothing Then
@@ -76,7 +77,7 @@ Class appControl
             If FileSize > 50 * 1024 Then 'Clear the log if it is more than 50 KB
 
                 File.Delete(logPath)
- 
+
             End If
         Catch ex As Exception
 
@@ -102,7 +103,7 @@ Class appControl
                 CommandLine = False
                 'Avoids that two processes run simultaneously
                 If Process.GetProcessesByName("icopy").Length > 1 Then
-                    MsgBox(LocRM.GetString("Msg_AlreadyRunning"), MsgBoxStyle.Information, "iCopy")
+                    MsgBoxWrap(LocRM.GetString("Msg_AlreadyRunning"), MsgBoxStyle.Information, "iCopy")
                     Throw New ExitException
                 End If
 
@@ -112,7 +113,7 @@ Class appControl
                         GetCulturesThread.Start()
                     End If
                 Catch ex As Threading.ThreadStateException
-                    MsgBox(ex.ToString)
+                    MsgBoxWrap(ex.ToString)
                 End Try
 
                 'Initializes new scanning interface
@@ -164,18 +165,20 @@ Class appControl
                                 Try
                                     _printer.Name = sArgs(i + 1)
                                 Catch ex As ArgumentException
-                                    MsgBox("The provided printer name is not valid. Using default printer.")
+                                    MsgBoxWrap("The provided printer name is not valid. Using default printer.")
                                 End Try
                             Case "/path"
                                 settings.Path = sArgs(i + 1)
                         End Select
                     Catch ex As InvalidCastException
-                        MsgBox("Command line parsing failed. See README for correct sintax")
+                        MsgBoxWrap("Command line parsing failed. See README for correct sintax")
                         Exit Sub
                     End Try
 
                     'STEP 2 Parameters without an argument
                     Select Case sArgs(i)
+                        Case "/silent"
+                            My.Settings.Silent = "True"
                         Case "/color", "/colour", "/col"
                             settings.Intent = WiaImageIntent.ColorIntent
                         Case "/grayscale", "/gray"
@@ -219,7 +222,7 @@ Class appControl
                             Try
                                 SaveToFile(settings)
                             Catch ex As ArgumentException
-                                MsgBox(ex.Message, vbExclamation, "iCopy")
+                                MsgBoxWrap(ex.Message, vbExclamation, "iCopy")
                             End Try
                         Case "/copymultiplepages", "/multiplepages"
                             CopyMultiplePages(settings)
@@ -227,15 +230,15 @@ Class appControl
                             Try
                                 manager.RegisterPersistentEvent(Application.ExecutablePath + " /StiDevice:%1 /StiEvent:%2 /copy", "iCopy", "Directly print using iCopy", Application.ExecutablePath + ",0", WIA.EventID.wiaEventScanImage)
                             Catch ex As UnauthorizedAccessException
-                                MsgBox("iCopy must be executed with administrative privileges in order to complete the operation.", vbInformation, "iCopy")
+                                MsgBoxWrap("iCopy must be executed with administrative privileges in order to complete the operation.", vbInformation, "iCopy")
                             End Try
                         Case "/unregister", "/unreg"
                             Try
                                 manager.UnregisterPersistentEvent(Application.ExecutablePath + " /StiDevice:%1 /StiEvent:%2 /copy", "iCopy", "Directly print using iCopy", Application.ExecutablePath & ",0", WIA.EventID.wiaEventScanImage)
                             Catch ex As UnauthorizedAccessException
-                                MsgBox("iCopy must be executed with administrative privileges in order to complete the operation.", vbInformation, "iCopy")
+                                MsgBoxWrap("iCopy must be executed with administrative privileges in order to complete the operation.", vbInformation, "iCopy")
                             Catch ex As ArgumentException 'Thrown if the event is not found. Either wrong sintax or has already been removed
-                                MsgBox("Couldn't find the correct entry in the registry. Maybe it has already been removed?")
+                                MsgBoxWrap("Couldn't find the correct entry in the registry. Maybe it has already been removed?")
                             End Try
                     End Select
                 Next
@@ -250,7 +253,7 @@ Class appControl
                 Trace.WriteLine("Need wiaaut registration")
                 RegisterWiaautdll(False)
             ElseIf ex.ErrorCode = WIA_ERRORS.WIA_ERROR_UNKNOWN_ERROR Or ex.ErrorCode = WIA_ERRORS.WIA_ERROR_NO_SCANNER_CONNECTED Then
-                MsgBox("There is a problem with your scanner connection. Please try to reconnect your scanner and restart iCopy. If this doesn't solve the problem, please report it on iCopy website", MsgBoxStyle.Critical, "iCopy")
+                MsgBoxWrap("There is a problem with your scanner connection. Please try to reconnect your scanner and restart iCopy. If this doesn't solve the problem, please report it on iCopy website", MsgBoxStyle.Critical, "iCopy")
             End If
         Catch ex As Exception
             HandleException(ex) 'Overrides .NET message box to include error reporting
@@ -266,7 +269,7 @@ Class appControl
         Trace.TraceError(ex.ToString())
 
         'If the exception is unhandled, prepare error report and send info
-        Dim sendReport As MsgBoxResult = MsgBox(String.Format(appControl.GetLocalizedString("Msg_SendErrorReport2"), ex.GetType().ToString() + " in " + ex.TargetSite.ToString()), MsgBoxStyle.Critical + MsgBoxStyle.OkCancel, "iCopy")
+        Dim sendReport As MsgBoxResult = MsgBoxWrap(String.Format(appControl.GetLocalizedString("Msg_SendErrorReport2"), ex.GetType().ToString() + " in " + ex.TargetSite.ToString()), MsgBoxStyle.Critical + MsgBoxStyle.OkCancel, "iCopy")
         If sendReport = MsgBoxResult.Cancel Then
             Exit Sub
         End If
@@ -287,7 +290,7 @@ Class appControl
 
     Private Shared Sub RegisterWiaautdll(ByVal suppressMessage As Boolean)
 
-        MsgBox("iCopy will now try to register WIA Automation layer.")
+        MsgBoxWrap("iCopy will now try to register WIA Automation layer.")
 
         'Check if iCopy is run as administrator
         Dim isElevated As Boolean
@@ -299,16 +302,16 @@ Class appControl
             'Copy wiaaut.dll to system32
             Dim proceed As Boolean = True
             If Not suppressMessage Then
-                If MsgBox(LocRM.GetString("Msg_WIAUnregistered"), MsgBoxStyle.OkCancel + MsgBoxStyle.Information, "iCopy") = MsgBoxResult.Cancel Then proceed = False
+                If MsgBoxWrap(LocRM.GetString("Msg_WIAUnregistered"), MsgBoxStyle.OkCancel + MsgBoxStyle.Information, "iCopy") = MsgBoxResult.Cancel Then proceed = False
             End If
             If proceed Then
                 Try
                     System.IO.File.Copy("wiaaut.dll", "C:\WINDOWS\system32\wiaaut.dll", False)
                 Catch authEx As UnauthorizedAccessException 'iCopy has not administrator privileges
-                    MsgBox(LocRM.GetString("Msg_UnauthorizedAccess"), MsgBoxStyle.Exclamation, "iCopy")
+                    MsgBoxWrap(LocRM.GetString("Msg_UnauthorizedAccess"), MsgBoxStyle.Exclamation, "iCopy")
                     Exit Sub
                 Catch fileEx As IO.FileNotFoundException 'File is missing from iCopy directory
-                    MsgBox(LocRM.GetString("Msg_WiaautMissing"), MsgBoxStyle.Exclamation, "iCopy")
+                    MsgBoxWrap(LocRM.GetString("Msg_WiaautMissing"), MsgBoxStyle.Exclamation, "iCopy")
                     Exit Sub
                 Catch ex As IO.IOException
                     'The file is already in system32
@@ -320,7 +323,7 @@ Class appControl
                 psi.Arguments = "C:\WINDOWS\system32\wiaaut.dll /s"
                 Process.Start(psi)
 
-                MsgBox(LocRM.GetString("Msg_WIARegistrationSuccessful"), MsgBoxStyle.Information + MsgBoxStyle.OkOnly, "iCopy")
+                MsgBoxWrap(LocRM.GetString("Msg_WIARegistrationSuccessful"), MsgBoxStyle.Information + MsgBoxStyle.OkOnly, "iCopy")
             End If
         Else
             If Environment.OSVersion.Version.Major >= 6 Then
@@ -337,7 +340,7 @@ Class appControl
                     Exit Sub
                 End If
             Else
-                Dim msg As MsgBoxResult = MsgBox(LocRM.GetString("Msg_WIAUnregistered"), MsgBoxStyle.Exclamation + MsgBoxStyle.YesNo, "iCopy")
+                Dim msg As MsgBoxResult = MsgBoxWrap(LocRM.GetString("Msg_WIAUnregistered"), MsgBoxStyle.Exclamation + MsgBoxStyle.YesNo, "iCopy")
                 If msg = MsgBoxResult.Yes Then
                     Dim psi As System.Diagnostics.ProcessStartInfo = New ProcessStartInfo()
                     psi.FileName = Application.ExecutablePath
@@ -387,7 +390,7 @@ Class appControl
 
             '**************Exception handling*************
         Catch ex As ArgumentException
-            Dim msg As MsgBoxResult = MsgBox(LocRM.GetString("Msg_NoScannerConnected"), MsgBoxStyle.RetryCancel + MsgBoxStyle.Information, "iCopy")
+            Dim msg As MsgBoxResult = MsgBoxWrap(LocRM.GetString("Msg_NoScannerConnected"), MsgBoxStyle.RetryCancel + MsgBoxStyle.Information, "iCopy")
             If msg = MsgBoxResult.Retry Then
                 Return changescanner(deviceID)
             Else
@@ -401,7 +404,7 @@ Class appControl
                     Return Nothing
 
                 Case WIA_ERRORS.WIA_ERROR_NO_SCANNER_CONNECTED 'No scanner is connected
-                    Dim msg As MsgBoxResult = MsgBox(LocRM.GetString("Msg_NoScannerConnected"), MsgBoxStyle.RetryCancel + MsgBoxStyle.Information, "iCopy")
+                    Dim msg As MsgBoxResult = MsgBoxWrap(LocRM.GetString("Msg_NoScannerConnected"), MsgBoxStyle.RetryCancel + MsgBoxStyle.Information, "iCopy")
                     If msg = MsgBoxResult.Retry Then
                         Return changescanner(deviceID)
                     Else
@@ -409,7 +412,7 @@ Class appControl
                     End If
 
                 Case WIA_ERRORS.WIA_ERROR_CONNECTION_ERROR  'Can't establish connection with the scanner
-                    Dim msg As MsgBoxResult = MsgBox(LocRM.GetString("Msg_ConnectionError"), MsgBoxStyle.RetryCancel + MsgBoxStyle.Exclamation, "iCopy")
+                    Dim msg As MsgBoxResult = MsgBoxWrap(LocRM.GetString("Msg_ConnectionError"), MsgBoxStyle.RetryCancel + MsgBoxStyle.Exclamation, "iCopy")
                     If msg = MsgBoxResult.Retry Then
                         Return changescanner(deviceID)
                     Else
@@ -417,7 +420,7 @@ Class appControl
                     End If
 
                 Case WIA_ERRORS.WIA_ERROR_OFFLINE
-                    Dim msg As MsgBoxResult = MsgBox(LocRM.GetString("Msg_ScannerOffline"), MsgBoxStyle.RetryCancel + MsgBoxStyle.Information, "iCopy")
+                    Dim msg As MsgBoxResult = MsgBoxWrap(LocRM.GetString("Msg_ScannerOffline"), MsgBoxStyle.RetryCancel + MsgBoxStyle.Information, "iCopy")
                     If msg = MsgBoxResult.Retry Then
                         Return changescanner(deviceID)
                     Else
@@ -425,11 +428,11 @@ Class appControl
                     End If
 
                 Case WIA_ERRORS.WIA_ERROR_EXCEPTION_IN_DRIVER
-                    MsgBox(My.Resources.WinFormStrings.Msg_DriverException, MsgBoxStyle.Critical, "iCopy")
+                    MsgBoxWrap(My.Resources.WinFormStrings.Msg_DriverException, MsgBoxStyle.Critical, "iCopy")
                     Throw New ExitException
 
                 Case WIA_ERRORS.WIA_ERROR_BUSY 'Scanner in use
-                    Dim msg As MsgBoxResult = MsgBox(LocRM.GetString("Msg_ScannerInUse"), MsgBoxStyle.Exclamation + MsgBoxStyle.RetryCancel)
+                    Dim msg As MsgBoxResult = MsgBoxWrap(LocRM.GetString("Msg_ScannerInUse"), MsgBoxStyle.Exclamation + MsgBoxStyle.RetryCancel)
                     If msg = MsgBoxResult.Retry Then
                         Return changescanner(deviceID)
                     Else
@@ -451,7 +454,7 @@ retry:
         If deviceID = Nothing Or deviceID = "" Then
             Dim newscannerID As String = changescanner()
             If newscannerID Is Nothing Then
-                Dim msg As MsgBoxResult = MsgBox(LocRM.GetString("Msg_ChooseAScanner"), MsgBoxStyle.YesNo + MsgBoxStyle.Information, "iCopy")
+                Dim msg As MsgBoxResult = MsgBoxWrap(LocRM.GetString("Msg_ChooseAScanner"), MsgBoxStyle.YesNo + MsgBoxStyle.Information, "iCopy")
                 If msg = MsgBoxResult.Yes Then
                     GoTo retry
                 Else
@@ -518,10 +521,10 @@ retry:
             If ex.ErrorCode = -2145320860 Then       'If acquisition is cancelled
                 Exit Sub
             ElseIf ex.ErrorCode = WIA_ERRORS.WIA_ERROR_WARMING_UP Then
-                MsgBox(LocRM.GetString("Msg_ScannerWarmingUp"), MsgBoxStyle.Exclamation, "iCopy")
+                MsgBoxWrap(LocRM.GetString("Msg_ScannerWarmingUp"), MsgBoxStyle.Exclamation, "iCopy")
                 Return
             ElseIf ex.ErrorCode = Convert.ToInt32("0x80004005", 16) Then
-                MsgBox("An error occured while processing the acquired image. Please try again with a lower resolution." & vbCrLf & "If the problem persists please report it (http://icopy.sourceforge.net/reportabug.html).", MsgBoxStyle.Critical, "iCopy")
+                MsgBoxWrap("An error occured while processing the acquired image. Please try again with a lower resolution." & vbCrLf & "If the problem persists please report it (http://icopy.sourceforge.net/reportabug.html).", MsgBoxStyle.Critical, "iCopy")
                 Exit Sub
             Else
                 Throw
@@ -571,7 +574,7 @@ retry:
                 If ex.ErrorCode = -2145320860 Then       'If acquisition is cancelled
                     Exit Do
                 ElseIf ex.ErrorCode = Convert.ToInt32("0x80004005", 16) Then
-                    MsgBox("An error occured while processing the acquired image. Please try again with a lower resolution." & vbCrLf & "If the problem persists please report it (http://icopy.sourceforge.net/reportabug.html).", MsgBoxStyle.Critical, "iCopy")
+                    MsgBoxWrap("An error occured while processing the acquired image. Please try again with a lower resolution." & vbCrLf & "If the problem persists please report it (http://icopy.sourceforge.net/reportabug.html).", MsgBoxStyle.Critical, "iCopy")
                 Else
                     Throw
                 End If
@@ -588,7 +591,7 @@ retry:
             End Try
 
         Else 'If the process is canceled by closing the dialog
-            Dim res As MsgBoxResult = MsgBox("Are you sure you want to cancel the operation? Click Yes if you are sure to proceed.", MsgBoxStyle.Question + MsgBoxStyle.YesNo, "iCopy")
+            Dim res As MsgBoxResult = MsgBoxWrap("Are you sure you want to cancel the operation? Click Yes if you are sure to proceed.", MsgBoxStyle.Question + MsgBoxStyle.YesNo, "iCopy")
             If res = MsgBoxResult.Yes Then
                 _printer.ClearBuffer()
             Else
@@ -610,10 +613,10 @@ retry:
             If ex.ErrorCode = -2145320860 Then       'If acquisition is cancelled
                 Exit Sub
             ElseIf ex.ErrorCode = WIA_ERRORS.WIA_ERROR_WARMING_UP Then
-                MsgBox(LocRM.GetString("Msg_ScannerWarmingUp"), MsgBoxStyle.Exclamation, "iCopy")
+                MsgBoxWrap(LocRM.GetString("Msg_ScannerWarmingUp"), MsgBoxStyle.Exclamation, "iCopy")
                 Return
             ElseIf ex.ErrorCode = Convert.ToInt32("0x80004005", 16) Then
-                MsgBox("An error occured while processing the acquired image. Please try again with a lower resolution." & vbCrLf & "If the problem persists please report it (http://icopy.sourceforge.net/reportabug.html).", MsgBoxStyle.Critical, "iCopy")
+                MsgBoxWrap("An error occured while processing the acquired image. Please try again with a lower resolution." & vbCrLf & "If the problem persists please report it (http://icopy.sourceforge.net/reportabug.html).", MsgBoxStyle.Critical, "iCopy")
                 Exit Sub
             Else
                 Throw
@@ -657,7 +660,7 @@ retry:
     End Property
 
     Private Shared Sub manager_OnEvent(EventID As String, DeviceID As String, ItemID As String) Handles manager.OnEvent
-        MsgBox("Device " + DeviceID + " triggered the event " + EventID)
+        MsgBoxWrap("Device " + DeviceID + " triggered the event " + EventID)
     End Sub
 
 End Class

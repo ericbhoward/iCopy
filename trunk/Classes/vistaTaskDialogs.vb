@@ -42,7 +42,7 @@ Class WIARegisterDialog
         Try
             td.Show()
         Catch ex As NotSupportedException
-            Dim msg As MsgBoxResult = MsgBox(text, MsgBoxStyle.Exclamation + MsgBoxStyle.OkCancel, title)
+            Dim msg As MsgBoxResult = MsgBoxWrap(text, MsgBoxStyle.Exclamation + MsgBoxStyle.OkCancel, title)
             If msg = MsgBoxResult.Ok Then Return TaskDialogResult.Ok Else Return TaskDialogResult.Cancel
         End Try
 
