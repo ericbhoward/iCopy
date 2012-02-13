@@ -30,7 +30,6 @@ Class mainFrm
     Dim LocalizedRootStr As String
 
     Sub VersionCheck()
-        If True Then '(My.Settings.LastVersionCheck = Nothing) Or diff > 2 Then
             Dim reader As Xml.XmlTextReader
             Dim newVersion As Version
             Try
@@ -49,7 +48,7 @@ Class mainFrm
                             Case "version"
                                 newVersion = New Version(reader.Value)
                             Case "url"
-                                webURL = reader.Value
+                                weburl = reader.Value
                         End Select
                     End If
                 End While
@@ -59,7 +58,6 @@ Class mainFrm
                 VersionStatusLabel.Visible = True
             End If
             My.Settings.LastVersionCheck = Today
-        End If
     End Sub
 
     Sub LoadSettings()
