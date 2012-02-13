@@ -113,15 +113,16 @@ retry:
         My.Settings.Reset()
     End Sub
 
-    Private Sub ListBox1_SelectedIndexChanged(sender As System.Object, e As System.EventArgs) Handles ListBox1.SelectedIndexChanged
-
-    End Sub
-
     Private Sub btnRegister_Click(sender As System.Object, e As System.EventArgs) Handles btnRegister.Click
 
         Dim manager As New DeviceManager()
         Dim ev = DirectCast(ListBox1.SelectedItem, WIAEventWrapper)
         Dim command As String = String.Format("{0} {1} {2}", Application.ExecutablePath, ComboBox1.SelectedValue.ToString(), "/StiDevice:%1")
+
+        'Affects registry keys
+        'HKEY_LOCAL_MACHINE\SYSTEM\ControlSet001\Control\StillImage\Events\EVENT_ID
+        'HKEY_LOCAL_MACHINE\SYSTEM\ControlSet002\Control\StillImage\Events\EVENT_ID
+        'HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\StillImage\Events\EVENT_ID
         manager.RegisterPersistentEvent(command, "iCopy", "Whatever", "", ev.EventID) ', appControl.Scanner.DeviceId)
 
     End Sub
