@@ -22,7 +22,7 @@ Friend Class Printer
 
     Dim _scaleperc As Short
 
-    Dim _images As New ImageBuffer 'The buffer of images to be printed
+    Dim _images As New Queue(Of String) 'The buffer of images to be printed
 
     Public Event BeginPrint As PrintEventHandler
     Public Event EndPrint As PrintEventHandler
@@ -69,10 +69,10 @@ Friend Class Printer
         pd.DefaultPageSettings = dlg.Document.DefaultPageSettings
     End Sub
 
-    Sub AddImages(ByVal images As List(Of Image), Optional ByVal scaleperc As Short = 100)
+    Sub AddImages(ByVal images As List(Of String), Optional ByVal scaleperc As Short = 100)
         If images IsNot Nothing Then
-            For Each img As Image In images
-                _images.Add(img)
+            For Each img As String In images
+                _images.Enqueue(img)
             Next
             _scaleperc = scaleperc
         End If
@@ -93,14 +93,22 @@ Friend Class Printer
     Private Sub pd_Print(ByVal sender As Object, ByVal e As PrintPageEventArgs) Handles pd.PrintPage
         'Print the current image in the image buffer
 
-        'Resize the images, then draw it 
-        e.Graphics.ScaleTransform(_scaleperc / 100, _scaleperc / 100)
-        e.Graphics.DrawImage(_images.Item(_images.Counter), 0, 0)
+        'Loads the image from the temporary file
+        Dim imgPath As String = _images.Dequeue()
+        Dim img As Image = Image.FromFile(imgPath)
 
+        'Resize the image, then draw it 
+        e.Graphics.ScaleTransform(_scaleperc / 100, _scaleperc / 100)
+        e.Graphics.DrawImage(img, 0, 0)
+        img.Dispose()
+        Try
+            IO.File.Delete(imgPath)
+        Catch ex As Exception
+            Throw
+        End Try
         'Check if other pages have to be printed
-        If _images.Counter < _images.Count - 1 Then
+        If _images.Count > 0 Then
             e.HasMorePages = True
-            _images.Counter += 1
         End If
     End Sub
 
@@ -113,7 +121,6 @@ Friend Class Printer
 
         'Empty image buffer
         _images.Clear()
-        _images = New ImageBuffer
     End Sub
 
     Sub ClearBuffer()

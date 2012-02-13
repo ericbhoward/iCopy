@@ -498,7 +498,7 @@ retry:
         'Determines the extension of the file
         Dim ext As String = Right(options.Path, 3)
         Dim pathWoExt = Left(options.Path, options.Path.Length - 4)
-        Dim images As List(Of Image)
+        Dim images As List(Of String)
 
         Select Case ext
             Case "jpg"
@@ -532,11 +532,17 @@ retry:
         End Try
 
         If images.Count = 1 Then
-            images(0).Save(options.Path, format)
+            Dim img As Image = Image.FromFile(images(0))
+            img.Save(options.Path, format)
+            img.Dispose()
+            File.Delete(images(0))
         ElseIf images.Count > 1 Then
             For i = 0 To images.Count - 1
                 Dim path As String = pathWoExt + i.ToString("000") + "." + ext
-                images(i).Save(path, format)
+                Dim img As Image = Image.FromFile(images(i))
+                img.Save(path, format)
+                img.Dispose()
+                File.Delete(images(i))
             Next
         End If
 
@@ -625,7 +631,6 @@ retry:
 
         'Prints images
         _printer.Print(options.Copies)
-
     End Sub
 
     Shared Function GetScannerEvents() As WIA.DeviceEvents
@@ -661,61 +666,6 @@ retry:
 
     Private Shared Sub manager_OnEvent(EventID As String, DeviceID As String, ItemID As String) Handles manager.OnEvent
         MsgBoxWrap("Device " + DeviceID + " triggered the event " + EventID)
-    End Sub
-
-End Class
-
-Public Class ImageBuffer
-    Inherits CollectionBase
-    Dim _counter As Short
-
-    Property Counter() As Short 'Used to check the position in the buffer
-        Get
-            Counter = _counter
-        End Get
-        Set(ByVal value As Short)
-            If value >= 0 And value < List.Count Then
-                _counter = value
-            Else
-                Throw New ArgumentOutOfRangeException("value", "Value must be positive and fall within the upper index")
-            End If
-        End Set
-    End Property
-
-    Overloads Sub Clear()
-        _counter = 0
-        List.Clear()
-    End Sub
-
-    Default Public Property Item(ByVal index As Integer) As Image
-        Get
-            Return CType(List(index), Image)
-        End Get
-        Set(ByVal value As Image)
-            List(index) = value
-        End Set
-    End Property
-
-    Public Function Add(ByVal value As Image) As Integer
-        Return List.Add(value)
-    End Function 'Add
-
-    Protected Overrides Sub OnInsert(ByVal index As Integer, ByVal value As Object)
-        ' Insert additional code to be run only when inserting values.
-    End Sub 'OnInsert
-
-    Protected Overrides Sub OnRemove(ByVal index As Integer, ByVal value As Object)
-        ' Insert additional code to be run only when removing values.
-    End Sub 'OnRemove
-
-    Protected Overrides Sub OnSet(ByVal index As Integer, ByVal oldValue As Object, ByVal newValue As Object)
-        ' Insert additional code to be run only when setting values.
-    End Sub 'OnSet
-
-    Protected Overrides Sub OnValidate(ByVal value As Object)
-        If Not GetType(Image).IsAssignableFrom(value.GetType()) Then
-            Throw New ArgumentException("value must be of type image.", "value")
-        End If
     End Sub
 
 End Class

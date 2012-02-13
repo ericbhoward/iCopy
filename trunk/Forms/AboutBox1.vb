@@ -50,7 +50,7 @@ Public NotInheritable Class AboutBox1
             Process.Start("Notepad.exe", licenseFilePath)
             Me.Hide()
         Else
-            MsgBox(appControl.GetLocalizedString("Msg_LicenseFileNotFound"), MsgBoxStyle.Information, "iCopy")
+            MsgBoxWrap(appControl.GetLocalizedString("Msg_LicenseFileNotFound"), MsgBoxStyle.Information, "iCopy")
         End If
     End Sub
 
