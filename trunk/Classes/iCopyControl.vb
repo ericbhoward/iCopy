@@ -63,14 +63,13 @@ Class appControl
 
     Shared Sub Main(ByVal sArgs() As String)
         My.Settings.Silent = False
-
         Application.EnableVisualStyles()
         If My.Settings.LastScanSettings Is Nothing Then
             My.Settings.LastScanSettings = New ScanSettings()
         End If
 
+        'Deletes log file if it is more than 50 KB long
         Dim logPath As String = GetWritablePath() + "iCopy.log"
-
         Try
             Dim MyFile As New FileInfo(logPath)
             Dim FileSize As Long = MyFile.Length
@@ -82,9 +81,9 @@ Class appControl
         Catch ex As Exception
 
         End Try
+
+        'Sets trace output to console and log file
         Trace.AutoFlush = True
-        Trace.Listeners.Add(New ConsoleTraceListener())
-        Trace.WriteLine("Log will be saved to " + logPath + "\iCopy.log")
         Dim logListener As New TextWriterTraceListener(logPath, "log")
 
         Trace.Listeners.Add(logListener)
@@ -177,6 +176,8 @@ Class appControl
 
                     'STEP 2 Parameters without an argument
                     Select Case sArgs(i)
+                        Case "/log"
+                            Trace.Listeners.Add(New ConsoleTraceListener())
                         Case "/silent"
                             My.Settings.Silent = "True"
                         Case "/color", "/colour", "/col"
@@ -187,6 +188,8 @@ Class appControl
                             settings.Intent = WiaImageIntent.TextIntent
                         Case "/preview", "/p"
                             settings.Preview = True
+                        Case "/adf"
+                            settings.UseADF = True
                     End Select
 
                     If sArgs(i).StartsWith("/StiDevice:") Then
@@ -195,6 +198,34 @@ Class appControl
                     If sArgs(i).StartsWith("/StiEvent:") Then
                         'TODO: Implement
                     End If
+                Next
+
+                For i = 0 To sArgs.GetUpperBound(0)
+                    Select Case sArgs(i).ToLower()
+                        Case "/?", "/help"
+                            Console.Write(LocRM.GetString("Console_Help"))
+                            Return
+                        Case "/wiareg", "/wr"
+                            RegisterWiaautdll(True)
+                            Return
+                        Case "/register", "/reg"
+                            Try
+                                manager.RegisterPersistentEvent(Application.ExecutablePath + " /StiDevice:%1 /StiEvent:%2 /copy", "iCopy", "Directly print using iCopy", Application.ExecutablePath + ",0", WIA.EventID.wiaEventScanImage)
+                            Catch ex As UnauthorizedAccessException
+                                MsgBoxWrap("iCopy must be executed with administrative privileges in order to complete the operation.", vbInformation, "iCopy")
+                            End Try
+                            Return
+                        Case "/unregister", "/unreg"
+                            Try
+                                manager.UnregisterPersistentEvent(Application.ExecutablePath + " /StiDevice:%1 /StiEvent:%2 /copy", "iCopy", "Directly print using iCopy", Application.ExecutablePath & ",0", WIA.EventID.wiaEventScanImage)
+                            Catch ex As UnauthorizedAccessException
+                                MsgBoxWrap("iCopy must be executed with administrative privileges in order to complete the operation.", vbInformation, "iCopy")
+                            Catch ex As ArgumentException 'Thrown if the event is not found. Either wrong sintax or has already been removed
+                                MsgBoxWrap("Couldn't find the correct entry in the registry. Maybe it has already been removed?")
+                            End Try
+                            Return
+                    End Select
+
                 Next
 
                 If _deviceID = "" Then
@@ -207,15 +238,9 @@ Class appControl
                 Trace.WriteLine(String.Format("DeviceID = {0}", _deviceID))
                 _wscanner = _device.Items(1)
 
-                'STEP 3 Action parameters
+                'STEP 3 Scanner action parameters
                 For i = 0 To sArgs.GetUpperBound(0)
                     Select Case sArgs(i).ToLower()
-                        Case "/?"
-                            Console.Write(LocRM.GetString("Console_Help"))
-                        Case "/wiareg", "/wr"
-                            RegisterWiaautdll(True)
-                        Case "/adf"
-                            settings.UseADF = True
                         Case "/copy", "/c"
                             Copy(settings)
                         Case "/file", "/tofile", "/Scantofile", "/f"
@@ -226,20 +251,6 @@ Class appControl
                             End Try
                         Case "/copymultiplepages", "/multiplepages"
                             CopyMultiplePages(settings)
-                        Case "/register", "/reg"
-                            Try
-                                manager.RegisterPersistentEvent(Application.ExecutablePath + " /StiDevice:%1 /StiEvent:%2 /copy", "iCopy", "Directly print using iCopy", Application.ExecutablePath + ",0", WIA.EventID.wiaEventScanImage)
-                            Catch ex As UnauthorizedAccessException
-                                MsgBoxWrap("iCopy must be executed with administrative privileges in order to complete the operation.", vbInformation, "iCopy")
-                            End Try
-                        Case "/unregister", "/unreg"
-                            Try
-                                manager.UnregisterPersistentEvent(Application.ExecutablePath + " /StiDevice:%1 /StiEvent:%2 /copy", "iCopy", "Directly print using iCopy", Application.ExecutablePath & ",0", WIA.EventID.wiaEventScanImage)
-                            Catch ex As UnauthorizedAccessException
-                                MsgBoxWrap("iCopy must be executed with administrative privileges in order to complete the operation.", vbInformation, "iCopy")
-                            Catch ex As ArgumentException 'Thrown if the event is not found. Either wrong sintax or has already been removed
-                                MsgBoxWrap("Couldn't find the correct entry in the registry. Maybe it has already been removed?")
-                            End Try
                     End Select
                 Next
             End If

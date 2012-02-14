@@ -334,7 +334,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="mysql.data.dll" />
     <None Include="Resources\scanner_large.bmp" />
     <None Include="Resources\printer_large copy.gif" />
     <None Include="Resources\scanner_lare.gif" />
@@ -342,12 +341,10 @@
     <Content Include="Changelog.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Instrumentation.dll" />
     <Content Include="License.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Microsoft.WindowsAPICodePack.dll" />
-    <Content Include="Monitor.dll" />
     <Content Include="openTwain.dll" />
     <Content Include="README.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

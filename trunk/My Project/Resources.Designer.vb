@@ -109,13 +109,6 @@ Namespace My.Resources
             End Get
         End Property
         
-        Friend ReadOnly Property printer_large_copy23() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("printer_large_copy23", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
         Friend ReadOnly Property scanner() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("scanner", resourceCulture)
@@ -126,13 +119,6 @@ Namespace My.Resources
         Friend ReadOnly Property scanner_big() As System.Drawing.Bitmap
             Get
                 Dim obj As Object = ResourceManager.GetObject("scanner_big", resourceCulture)
-                Return CType(obj,System.Drawing.Bitmap)
-            End Get
-        End Property
-        
-        Friend ReadOnly Property scanner_lare2() As System.Drawing.Bitmap
-            Get
-                Dim obj As Object = ResourceManager.GetObject("scanner_lare2", resourceCulture)
                 Return CType(obj,System.Drawing.Bitmap)
             End Get
         End Property

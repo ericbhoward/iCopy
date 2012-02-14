@@ -569,12 +569,12 @@ If it isn't, please download iCopy again.</comment>
 /copymultiplepages
 
 /resolution -or- /r	[value]		Specify a valid scanning resolution in DPI (eg /resolution 100, /r 500)
-/color -or- /col				Color acquisition
+/color -or- /col			Color acquisition
 /grayscale -or- /gray			Grayscale acquisition
-/text -or- /bw					Black and white (text) acquisition
+/text -or- /bw				Black and white (text) acquisition
 /copies -or- /nc [value]		The number of copies to be printed (default one copy)
-/scaling -or- /s				The scaling percentage (eg /s 150) default value: 100
-/brightness	-or- /b [value]		Value from -100 to 100 for brightness
+/scaling -or- /s			The scaling percentage (eg /s 150) default value: 100
+/brightness	-or- /b [value]	Value from -100 to 100 for brightness
 /contrast -or -	/cnt [value]	Value from -100 to 100 for constrast
 /preview -or- /p				Enables preview mode
 /path "path"					Specify the path for file acquisition. Paths containing spaces must be put between inverted commas 

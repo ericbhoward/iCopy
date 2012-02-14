@@ -162,9 +162,13 @@ Class mainFrm
     Private Sub mainFrm_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         If My.Settings.CustomCulture Then Threading.Thread.CurrentThread.CurrentUICulture = My.Settings.Culture
 
+        Me.BringToFront()
+        Me.Focus()
+
         LocalizedRootStr = Me.Name & "_"
         Dim SplashThread As New Threading.Thread(AddressOf StartSplash)
         SplashThread.Start()
+
         LoadSettings() 'Loads stored settings
 
         splash.Invoke(New EventHandler(AddressOf splash.KillMe))

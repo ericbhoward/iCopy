@@ -46,8 +46,7 @@ No parameters: standard mode with windows
 
 /copy /c				Directly copy from scanner to printer, using settings provided or default settings
 /file /ScanToFile /f	Scan to a file. If file path is not provided a dialog will let you choose where to save the acquired image
-/multiplePages			Scan a multipage document.
-/copymultiplepages
+/multiplePages			Scan a multipage document. Also /copymultiplepages
 
 Parameters:
 
@@ -64,9 +63,9 @@ Parameters:
 /path "path"					Specify the path for file acquisition. Paths containing spaces must be put between inverted commas 
 								(eg. /path "C:\my folder\file.jpg"). Valid file estensions are .jpg, .bmp, .gif, .png
 /printer "printer name"			Specify the name of the printer between inverted commas. If not provided, the system default printer is used
-				
+
 NOTE: Parameters are not case sensitive
-				
+
 Examples:
 > icopy.exe /copy /r 200 /text
 	Copy with 200 DPI resolution in text mode, with default brightness and contrast
@@ -76,6 +75,7 @@ Examples:
 	Prints the file to PDF using Adobe Acrobat (if installed)
 
 ADVANCED PARAMETERS
+/silent				No message boxes.
 /wiareg /wr			Registers WIA components. Use if WIA errors are thrown during execution
 /debug /d			Creates an XML file containing scanner information. Should be included in any bug report
 /register /reg		Registers iCopy to the scanner buttons.
