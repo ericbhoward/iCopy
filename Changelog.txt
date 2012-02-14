@@ -1,4 +1,13 @@
-﻿==1.5 beta3==
+﻿== 1.5 ==
+- FIX: Improvements in ADF support.
+- FIX: Less memory consumption. Images are saved to temporary files, which are deleted as long as they are not needed.
+- FIX: JPEG quality now works as expected.
+- ADD: /silent parameter to suppress message boxes.
+- FIX: Shrinked executable file.
+- FIX: Sometimes, the main window doesn't get focus at startup
+- FIX: Other fixes.
+
+==1.5 beta3==
 - FIX: Improved ADF with a bunch of scanners
 - FIX: Improvements in logging feature
 - FIX: ArgumentException during acquisition with some scanners
