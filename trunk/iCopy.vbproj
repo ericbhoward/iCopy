@@ -22,7 +22,6 @@
     <ManifestKeyFile>iCopy_TemporaryKey.pfx</ManifestKeyFile>
     <GenerateManifests>false</GenerateManifests>
     <TargetZone>LocalIntranet</TargetZone>
-    <ApplicationManifest>app.manifest</ApplicationManifest>
     <SignManifests>false</SignManifests>
     <IsWebBootstrapper>true</IsWebBootstrapper>
     <SignAssembly>false</SignAssembly>
@@ -293,7 +292,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <BaseApplicationManifest Include="app.manifest" />
     <None Include="Resources\iCopy.jpg" />
     <None Include="Resources\iCopy.gif" />
     <None Include="Resources\Untitled-1.png" />
@@ -345,7 +343,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Microsoft.WindowsAPICodePack.dll" />
-    <Content Include="openTwain.dll" />
     <Content Include="README.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
