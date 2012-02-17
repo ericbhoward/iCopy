@@ -538,4 +538,24 @@ impostazioni dell'immagine</value>
     <value>Ridimensiona l'immagine alla percentuale selezionata</value>
     <comment>Scale the image to the selected percentage</comment>
   </data>
+  <data name="dlgOptions_chkUpdates" xml:space="preserve">
+    <value>Controlla aggiornamenti</value>
+    <comment>Check for updates</comment>
+  </data>
+  <data name="dlgOptions_chkUpdatesToolTip" xml:space="preserve">
+    <value>iCopy controllerà all'avvio se è disponibile una nuova versione. Richiede una connessione a Internet. Non vengono inviate informazioni.</value>
+    <comment>iCopy will check if a newer version is available for download, and will report it to the user. No information is sent. Requires an internet connection.</comment>
+  </data>
+  <data name="dlgOptions_lblNote" xml:space="preserve">
+    <value>NB Non cambiare l'impostazione seguente a meno che non ci siano problemi con le immagini acquisite</value>
+    <comment>NOTE Don't change the following setting unless you have problems with the acquired images</comment>
+  </data>
+  <data name="dlgOptions_tabGeneral" xml:space="preserve">
+    <value>Generale</value>
+    <comment>General</comment>
+  </data>
+  <data name="dlgOptions_tabScannerButtons" xml:space="preserve">
+    <value>Bottoni dello scanner</value>
+    <comment>Scanner Buttons</comment>
+  </data>
 </root>

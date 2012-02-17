@@ -621,4 +621,24 @@ ADVANCED PARAMETERS
     <value>The scanner is warming up. Please wait a minute, then try again.</value>
     <comment>The scanner is warming up. Please wait a minute, then try again.</comment>
   </data>
+  <data name="dlgOptions_chkUpdates" xml:space="preserve">
+    <value>Check for updates</value>
+    <comment>Check for updates</comment>
+  </data>
+  <data name="dlgOptions_chkUpdatesToolTip" xml:space="preserve">
+    <value>iCopy will check if a newer version is available for download, and will report it to the user. No information is sent. Requires an internet connection.</value>
+    <comment>iCopy will check if a newer version is available for download, and will report it to the user. No information is sent. Requires an internet connection.</comment>
+  </data>
+  <data name="dlgOptions_lblNote" xml:space="preserve">
+    <value>NOTE Don't change the following setting unless you have problems with the acquired images</value>
+    <comment>NOTE Don't change the following setting unless you have problems with the acquired images</comment>
+  </data>
+  <data name="dlgOptions_tabGeneral" xml:space="preserve">
+    <value>General</value>
+    <comment>General</comment>
+  </data>
+  <data name="dlgOptions_tabScannerButtons" xml:space="preserve">
+    <value>Scanner Buttons</value>
+    <comment>Scanner Buttons</comment>
+  </data>
 </root>

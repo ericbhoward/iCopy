@@ -212,6 +212,24 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized string similar to Check for updates.
+        '''</summary>
+        Friend Shared ReadOnly Property dlgOptions_chkUpdates() As String
+            Get
+                Return ResourceManager.GetString("dlgOptions_chkUpdates", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to iCopy will check if a newer version is available for download, and will report it to the user. No information is sent. Requires an internet connection..
+        '''</summary>
+        Friend Shared ReadOnly Property dlgOptions_chkUpdatesToolTip() As String
+            Get
+                Return ResourceManager.GetString("dlgOptions_chkUpdatesToolTip", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized string similar to Force Bit Depth for Color Mode.
         '''</summary>
         Friend Shared ReadOnly Property dlgOptions_lblBitDepth() As String
@@ -237,6 +255,33 @@ Namespace My.Resources
         Friend Shared ReadOnly Property dlgOptions_lblLanguageToolTip() As String
             Get
                 Return ResourceManager.GetString("dlgOptions_lblLanguageToolTip", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to NOTE Don&apos;t change the following setting unless you have problems with the acquired images.
+        '''</summary>
+        Friend Shared ReadOnly Property dlgOptions_lblNote() As String
+            Get
+                Return ResourceManager.GetString("dlgOptions_lblNote", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to General.
+        '''</summary>
+        Friend Shared ReadOnly Property dlgOptions_tabGeneral() As String
+            Get
+                Return ResourceManager.GetString("dlgOptions_tabGeneral", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to Scanner Buttons.
+        '''</summary>
+        Friend Shared ReadOnly Property dlgOptions_tabScannerButtons() As String
+            Get
+                Return ResourceManager.GetString("dlgOptions_tabScannerButtons", resourceCulture)
             End Get
         End Property
         
