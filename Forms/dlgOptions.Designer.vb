@@ -32,9 +32,11 @@ Partial Class dlgOptions
         Me.lblBitDepth = New System.Windows.Forms.Label()
         Me.cboBitDepth = New System.Windows.Forms.ComboBox()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
-        Me.TabPage1 = New System.Windows.Forms.TabPage()
+        Me.tabGeneral = New System.Windows.Forms.TabPage()
+        Me.lblNote = New System.Windows.Forms.Label()
+        Me.chkUpdates = New System.Windows.Forms.CheckBox()
         Me.chkRememberScanSettings = New System.Windows.Forms.CheckBox()
-        Me.TabPage2 = New System.Windows.Forms.TabPage()
+        Me.tabScannerButtons = New System.Windows.Forms.TabPage()
         Me.Button1 = New System.Windows.Forms.Button()
         Me.ComboBox1 = New System.Windows.Forms.ComboBox()
         Me.lblScanner = New System.Windows.Forms.Label()
@@ -43,8 +45,8 @@ Partial Class dlgOptions
         Me.btnRegister = New System.Windows.Forms.Button()
         Me.btnDefaultSettings = New System.Windows.Forms.Button()
         Me.TabControl1.SuspendLayout()
-        Me.TabPage1.SuspendLayout()
-        Me.TabPage2.SuspendLayout()
+        Me.tabGeneral.SuspendLayout()
+        Me.tabScannerButtons.SuspendLayout()
         Me.SuspendLayout()
         '
         'btnOk
@@ -86,8 +88,8 @@ Partial Class dlgOptions
         '
         'chkRememberWindowPos
         '
-        Me.chkRememberWindowPos.Checked = Global.iCopy.My.MySettings.Default.StoreLocation
-        Me.chkRememberWindowPos.DataBindings.Add(New System.Windows.Forms.Binding("Checked", Global.iCopy.My.MySettings.Default, "StoreLocation", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+        Me.chkRememberWindowPos.Checked = True
+        Me.chkRememberWindowPos.CheckState = System.Windows.Forms.CheckState.Checked
         Me.chkRememberWindowPos.Location = New System.Drawing.Point(12, 87)
         Me.chkRememberWindowPos.Name = "chkRememberWindowPos"
         Me.chkRememberWindowPos.Size = New System.Drawing.Size(293, 17)
@@ -115,36 +117,58 @@ Partial Class dlgOptions
         '
         'TabControl1
         '
-        Me.TabControl1.Controls.Add(Me.TabPage1)
-        Me.TabControl1.Controls.Add(Me.TabPage2)
+        Me.TabControl1.Controls.Add(Me.tabGeneral)
+        Me.TabControl1.Controls.Add(Me.tabScannerButtons)
         Me.TabControl1.Location = New System.Drawing.Point(12, 12)
         Me.TabControl1.Name = "TabControl1"
         Me.TabControl1.SelectedIndex = 0
         Me.TabControl1.Size = New System.Drawing.Size(330, 241)
         Me.TabControl1.TabIndex = 8
         '
-        'TabPage1
+        'tabGeneral
         '
-        Me.TabPage1.Controls.Add(Me.chkRememberScanSettings)
-        Me.TabPage1.Controls.Add(Me.cboLanguage)
-        Me.TabPage1.Controls.Add(Me.lblLanguage)
-        Me.TabPage1.Controls.Add(Me.cboBitDepth)
-        Me.TabPage1.Controls.Add(Me.chkRememberWindowPos)
-        Me.TabPage1.Controls.Add(Me.lblBitDepth)
-        Me.TabPage1.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage1.Name = "TabPage1"
-        Me.TabPage1.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage1.Size = New System.Drawing.Size(322, 215)
-        Me.TabPage1.TabIndex = 0
-        Me.TabPage1.Text = "General"
-        Me.TabPage1.UseVisualStyleBackColor = True
+        Me.tabGeneral.Controls.Add(Me.lblNote)
+        Me.tabGeneral.Controls.Add(Me.chkUpdates)
+        Me.tabGeneral.Controls.Add(Me.chkRememberScanSettings)
+        Me.tabGeneral.Controls.Add(Me.cboLanguage)
+        Me.tabGeneral.Controls.Add(Me.lblLanguage)
+        Me.tabGeneral.Controls.Add(Me.cboBitDepth)
+        Me.tabGeneral.Controls.Add(Me.chkRememberWindowPos)
+        Me.tabGeneral.Controls.Add(Me.lblBitDepth)
+        Me.tabGeneral.Location = New System.Drawing.Point(4, 22)
+        Me.tabGeneral.Name = "tabGeneral"
+        Me.tabGeneral.Padding = New System.Windows.Forms.Padding(3)
+        Me.tabGeneral.Size = New System.Drawing.Size(322, 215)
+        Me.tabGeneral.TabIndex = 0
+        Me.tabGeneral.Text = "General"
+        Me.tabGeneral.UseVisualStyleBackColor = True
+        '
+        'lblNote
+        '
+        Me.lblNote.AutoSize = True
+        Me.lblNote.Location = New System.Drawing.Point(9, 150)
+        Me.lblNote.MaximumSize = New System.Drawing.Size(310, 0)
+        Me.lblNote.Name = "lblNote"
+        Me.lblNote.Size = New System.Drawing.Size(283, 26)
+        Me.lblNote.TabIndex = 10
+        Me.lblNote.Text = "NOTE Don't change the following setting unless you have problems with the acquire" & _
+    "d images"
+        '
+        'chkUpdates
+        '
+        Me.chkUpdates.AutoSize = True
+        Me.chkUpdates.Location = New System.Drawing.Point(12, 123)
+        Me.chkUpdates.Name = "chkUpdates"
+        Me.chkUpdates.Size = New System.Drawing.Size(115, 17)
+        Me.chkUpdates.TabIndex = 9
+        Me.chkUpdates.Text = "Check for Updates"
+        Me.chkUpdates.UseVisualStyleBackColor = True
         '
         'chkRememberScanSettings
         '
         Me.chkRememberScanSettings.AutoSize = True
-        Me.chkRememberScanSettings.Checked = Global.iCopy.My.MySettings.Default.RememberSettings
+        Me.chkRememberScanSettings.Checked = True
         Me.chkRememberScanSettings.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkRememberScanSettings.DataBindings.Add(New System.Windows.Forms.Binding("Checked", Global.iCopy.My.MySettings.Default, "RememberSettings", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
         Me.chkRememberScanSettings.Location = New System.Drawing.Point(12, 64)
         Me.chkRememberScanSettings.Name = "chkRememberScanSettings"
         Me.chkRememberScanSettings.Size = New System.Drawing.Size(138, 17)
@@ -152,21 +176,21 @@ Partial Class dlgOptions
         Me.chkRememberScanSettings.Text = "Remeber Scan Settings"
         Me.chkRememberScanSettings.UseVisualStyleBackColor = True
         '
-        'TabPage2
+        'tabScannerButtons
         '
-        Me.TabPage2.Controls.Add(Me.Button1)
-        Me.TabPage2.Controls.Add(Me.ComboBox1)
-        Me.TabPage2.Controls.Add(Me.lblScanner)
-        Me.TabPage2.Controls.Add(Me.lblAvailableEvents)
-        Me.TabPage2.Controls.Add(Me.ListBox1)
-        Me.TabPage2.Controls.Add(Me.btnRegister)
-        Me.TabPage2.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage2.Name = "TabPage2"
-        Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2.Size = New System.Drawing.Size(322, 215)
-        Me.TabPage2.TabIndex = 1
-        Me.TabPage2.Text = "Scanner Buttons"
-        Me.TabPage2.UseVisualStyleBackColor = True
+        Me.tabScannerButtons.Controls.Add(Me.Button1)
+        Me.tabScannerButtons.Controls.Add(Me.ComboBox1)
+        Me.tabScannerButtons.Controls.Add(Me.lblScanner)
+        Me.tabScannerButtons.Controls.Add(Me.lblAvailableEvents)
+        Me.tabScannerButtons.Controls.Add(Me.ListBox1)
+        Me.tabScannerButtons.Controls.Add(Me.btnRegister)
+        Me.tabScannerButtons.Location = New System.Drawing.Point(4, 22)
+        Me.tabScannerButtons.Name = "tabScannerButtons"
+        Me.tabScannerButtons.Padding = New System.Windows.Forms.Padding(3)
+        Me.tabScannerButtons.Size = New System.Drawing.Size(322, 215)
+        Me.tabScannerButtons.TabIndex = 1
+        Me.tabScannerButtons.Text = "Scanner Buttons"
+        Me.tabScannerButtons.UseVisualStyleBackColor = True
         '
         'Button1
         '
@@ -254,10 +278,10 @@ Partial Class dlgOptions
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent
         Me.Text = "Options"
         Me.TabControl1.ResumeLayout(False)
-        Me.TabPage1.ResumeLayout(False)
-        Me.TabPage1.PerformLayout()
-        Me.TabPage2.ResumeLayout(False)
-        Me.TabPage2.PerformLayout()
+        Me.tabGeneral.ResumeLayout(False)
+        Me.tabGeneral.PerformLayout()
+        Me.tabScannerButtons.ResumeLayout(False)
+        Me.tabScannerButtons.PerformLayout()
         Me.ResumeLayout(False)
 
     End Sub
@@ -270,9 +294,9 @@ Partial Class dlgOptions
     Friend WithEvents lblBitDepth As System.Windows.Forms.Label
     Friend WithEvents cboBitDepth As System.Windows.Forms.ComboBox
     Friend WithEvents TabControl1 As System.Windows.Forms.TabControl
-    Friend WithEvents TabPage1 As System.Windows.Forms.TabPage
+    Friend WithEvents tabGeneral As System.Windows.Forms.TabPage
     Friend WithEvents chkRememberScanSettings As System.Windows.Forms.CheckBox
-    Friend WithEvents TabPage2 As System.Windows.Forms.TabPage
+    Friend WithEvents tabScannerButtons As System.Windows.Forms.TabPage
     Friend WithEvents btnDefaultSettings As System.Windows.Forms.Button
     Friend WithEvents btnRegister As System.Windows.Forms.Button
     Friend WithEvents ListBox1 As System.Windows.Forms.ListBox
@@ -280,5 +304,7 @@ Partial Class dlgOptions
     Friend WithEvents lblAvailableEvents As System.Windows.Forms.Label
     Friend WithEvents ComboBox1 As System.Windows.Forms.ComboBox
     Friend WithEvents Button1 As System.Windows.Forms.Button
+    Friend WithEvents lblNote As System.Windows.Forms.Label
+    Friend WithEvents chkUpdates As System.Windows.Forms.CheckBox
 
 End Class

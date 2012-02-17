@@ -57,7 +57,7 @@ Class frmImageSettings
             cboResolution.Items.Add(res)
         Next
 
-        If My.Settings.LastScanSettings.Resolution <> 0 Then 'TODO: Remove?
+        If My.Settings.LastScanSettings.Resolution <> 0 Then
             cboResolution.Text = My.Settings.LastScanSettings.Resolution
         Else
             cboResolution.Text = "100"
