@@ -652,7 +652,7 @@ retry:
         Return _scanner.Events
     End Function
 
-    Shared ReadOnly Property ScannerDescription()
+    Shared ReadOnly Property ScannerDescription() As String
         Get
             Return _scanner.Description
         End Get

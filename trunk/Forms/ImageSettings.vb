@@ -89,20 +89,21 @@ Class frmImageSettings
         End If
     End Sub
 
-    Shared Sub CheckValue(ByVal textBox As TextBox, ByVal tb As TrackBar, ByVal value As String)
-        'Checks that values inserted in brightness and contrast textboxes are correct
+    Shared Sub CheckValue(ByVal textBox As TextBox, ByVal tb As TrackBar, ByVal strvalue As String)
+        'Chcks that values inserted in brightness and contrast textboxes are correct
+        Dim value As Short
         Try
-            value = CShort(value) 'Converts text into a short
+            value = CShort(strvalue) 'Converts text into a short
             If value <= tb.Maximum And value >= tb.Minimum Then
                 tb.Value = value
             Else
                 MsgBoxWrap(String.Format(appControl.GetLocalizedString("Msg_InsertNumber"), tb.Minimum, tb.Maximum), MsgBoxStyle.Information, "iCopy")
-                textBox.Text = tb.Value
+                textBox.Text = tb.Value.ToString()
                 textBox.Focus()
             End If
         Catch ex As InvalidCastException
             MsgBoxWrap(String.Format(appControl.GetLocalizedString("Msg_InsertNumber"), tb.Minimum, tb.Maximum), MsgBoxStyle.Information, "iCopy")
-            textBox.Text = tb.Value
+            textBox.Text = tb.Value.ToString()
             textBox.Focus()
         End Try
 
