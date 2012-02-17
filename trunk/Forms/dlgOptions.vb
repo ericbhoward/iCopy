@@ -37,6 +37,9 @@ Public Class dlgOptions
             My.Settings.CustomCulture = True
             MsgBoxWrap(appControl.GetLocalizedString("Msg_Language"), MsgBoxStyle.Information, "iCopy")
         End If
+        My.Settings.RememberSettings = chkRememberScanSettings.Checked
+        My.Settings.StoreLocation = chkRememberWindowPos.Checked
+        My.Settings.CheckForUpdates = chkUpdates.Checked
 
         If cboBitDepth.Text = "Auto" Then
             My.Settings.LastScanSettings.BitDepth = 0
@@ -49,9 +52,20 @@ Public Class dlgOptions
         localeRootStr = Me.Name & "_"
         'Applies localized strings to the controls
         For Each control As System.Windows.Forms.Control In Me.Controls
+
             Dim text As String = appControl.GetLocalizedString(localeRootStr & control.Name)
             If text <> "" Then control.Text = text
             ToolTip1.SetToolTip(control, appControl.GetLocalizedString(localeRootStr & control.Name & "ToolTip"))
+            For Each subcontrol As System.Windows.Forms.Control In control.Controls
+                text = appControl.GetLocalizedString(localeRootStr & subcontrol.Name)
+                If text <> "" Then subcontrol.Text = text
+                ToolTip1.SetToolTip(subcontrol, appControl.GetLocalizedString(localeRootStr & subcontrol.Name & "ToolTip"))
+                For Each subsubcontrol As System.Windows.Forms.Control In subcontrol.Controls
+                    text = appControl.GetLocalizedString(localeRootStr & subsubcontrol.Name)
+                    If text <> "" Then subsubcontrol.Text = text
+                    ToolTip1.SetToolTip(subsubcontrol, appControl.GetLocalizedString(localeRootStr & subsubcontrol.Name & "ToolTip"))
+                Next
+            Next
         Next
 
         'Populates language combobox
@@ -103,6 +117,9 @@ retry:
             End If
         Next
 
+        chkRememberScanSettings.Checked = My.Settings.RememberSettings
+        chkRememberWindowPos.Checked = My.Settings.StoreLocation
+        chkUpdates.Checked = My.Settings.CheckForUpdates
     End Sub
 
     Private Sub dlgOptions_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
