@@ -30,13 +30,10 @@ Class mainFrm
     Dim LocalizedRootStr As String
 
     Sub VersionCheck()
-            Dim reader As Xml.XmlTextReader
-            Dim newVersion As Version
-            Try
-                reader = New Xml.XmlTextReader(My.Resources.VersionCheckURL)
-            Catch ex As Exception 'File is not available, or internet access missing. Just die without any output
-                Exit Sub
-            End Try
+        Dim reader As Xml.XmlTextReader
+        Dim newVersion As Version
+        Try
+            reader = New Xml.XmlTextReader(My.Resources.VersionCheckURL)
             reader.MoveToContent()
             If reader.NodeType = Xml.XmlNodeType.Element And reader.Name = Application.ProductName Then
                 Dim elementName As String
@@ -58,6 +55,9 @@ Class mainFrm
                 VersionStatusLabel.Visible = True
             End If
             My.Settings.LastVersionCheck = Today
+        Catch ex As Exception 'File is not available, or internet access missing. Just die without any output
+            Exit Sub
+        End Try
     End Sub
 
     Sub LoadSettings()
@@ -274,6 +274,7 @@ Class mainFrm
             Else
                 frmImageSettings.Location = tempLocation
             End If
+
             frmImageSettings.Show()
             btnImageSettings.Text = appControl.GetLocalizedString(LocalizedRootStr & "btnImageSettingsHide")
         Else
