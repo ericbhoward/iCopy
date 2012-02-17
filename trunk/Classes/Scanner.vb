@@ -184,8 +184,7 @@ Public Class Scanner
 
     End Sub
 
-    Public Sub SetIntent(ByVal value As WiaImageIntent) 'TODO: Set channels per pixel if intent is not supported
-
+    Public Sub SetIntent(ByVal value As WiaImageIntent)
         If value = WiaImageIntent.ColorIntent Then
             Try
                 _scanner.Properties("Current Intent").Value = value
