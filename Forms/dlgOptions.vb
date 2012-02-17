@@ -44,7 +44,7 @@ Public Class dlgOptions
         If cboBitDepth.Text = "Auto" Then
             My.Settings.LastScanSettings.BitDepth = 0
         Else
-            My.Settings.LastScanSettings.BitDepth = cboBitDepth.Text
+            My.Settings.LastScanSettings.BitDepth = CInt(cboBitDepth.Text)
         End If
     End Sub
 

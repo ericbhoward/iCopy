@@ -8,14 +8,15 @@ RequestExecutionLevel admin
 !include LogicLib.nsh
 
 # Defines
+VIProductVersion     	;Completed by PowershellScript
 !define REGKEY "SOFTWARE\$(^Name)"
-!define VERSION 1.5
+!define VERSION  		;Completed by PowershellScript
 !define COMPANY "Matteo Rossi"
 !define URL http://icopy.sourceforge.net
 
 # MUI defines
 ;!define MUI_ICON "${NSISDIR}\Contrib\Graphics\Icons\modern-install.ico"
-!define MUI_ICON "Resources\icopy2.ico"
+!define MUI_ICON "..\Resources\icopy2.ico"
 !define MUI_FINISHPAGE_NOAUTOCLOSE
 !define MUI_LICENSEPAGE_RADIOBUTTONS
 !define MUI_STARTMENUPAGE_REGISTRY_ROOT HKLM
@@ -23,17 +24,17 @@ RequestExecutionLevel admin
 !define MUI_STARTMENUPAGE_REGISTRY_VALUENAME StartMenuGroup
 !define MUI_STARTMENUPAGE_DEFAULTFOLDER iCopy
 ;!define MUI_UNICON "${NSISDIR}\Contrib\Graphics\Icons\modern-uninstall.ico"
-!define MUI_UNICON "Resources\icopy2.ico"
+!define MUI_UNICON "..\Resources\icopy2.ico"
 !define MUI_UNFINISHPAGE_NOAUTOCLOSE
 
 !define MUI_HEADERIMAGE
 !define MUI_HEADERIMAGE_RIGHT
 !define MUI_HEADERIMAGE_NOSTRETCH
-!define MUI_HEADERIMAGE_BITMAP "Resources\InstBann.bmp" ; optional
-!define MUI_HEADERIMAGE_UNBITMAP "Resources\InstBann.bmp"
+!define MUI_HEADERIMAGE_BITMAP "..\Resources\InstBann.bmp" ; optional
+!define MUI_HEADERIMAGE_UNBITMAP "..\Resources\InstBann.bmp"
 
-!define MUI_WELCOMEFINISHPAGE_BITMAP "Resources\welcome.bmp"
-!define MUI_UNWELCOMEFINISHPAGE_BITMAP "Resources\welcome.bmp"
+!define MUI_WELCOMEFINISHPAGE_BITMAP "..\Resources\welcome.bmp"
+!define MUI_UNWELCOMEFINISHPAGE_BITMAP "..\Resources\welcome.bmp"
 
 # Reserved Files
 ReserveFile "${NSISDIR}\Plugins\System.dll"
@@ -74,7 +75,7 @@ FunctionEnd
 
 # Installer pages
 !insertmacro MUI_PAGE_WELCOME
-!insertmacro MUI_PAGE_LICENSE "Resources\license.rtf"
+!insertmacro MUI_PAGE_LICENSE "..\Resources\license.rtf"
 Page custom nsDialogsPage nsDialogsPageLeave
 #!insertmacro MUI_PAGE_COMPONENTS
 !insertmacro MUI_PAGE_DIRECTORY
@@ -92,14 +93,13 @@ Page custom nsDialogsPage nsDialogsPageLeave
 !insertmacro MUI_LANGUAGE Spanish
 
 # Installer attributes
-OutFile "bin\iCopy${VERSION}setup.exe"
+OutFile "..\bin\iCopy${VERSION}setup.exe"
 InstallDir $PROGRAMFILES\iCopy
 CRCCheck on
 XPStyle on
 ShowInstDetails show
 ;TargetMinimalOS 5.1    ; target Windows XP or more recent    / make a Unicode installer
 
-VIProductVersion 1.5.0.52
 VIAddVersionKey ProductName iCopy
 VIAddVersionKey ProductVersion "${VERSION}"
 VIAddVersionKey CompanyName "${COMPANY}"
@@ -116,11 +116,11 @@ Section -Main SEC0000
     SetOutPath $INSTDIR
     SetOverwrite on
 	
-	File /r bin\Release\*-*
-	File /r bin\Release\*.exe
-	File /r bin\Release\*.dll
-	File /r bin\Release\*.txt
-    File bin\Release\iCopy.exe.config
+	File /r ..\bin\Release\*-*
+	File /r ..\bin\Release\*.exe
+	File /r ..\bin\Release\*.dll
+	File /r ..\bin\Release\*.txt
+    File ..\bin\Release\iCopy.exe.config
 	
     WriteRegStr HKLM "${REGKEY}\Components" Main 1
 SectionEnd
