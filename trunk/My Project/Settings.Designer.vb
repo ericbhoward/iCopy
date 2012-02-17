@@ -228,8 +228,10 @@ Namespace My
         End Property
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Configuration.SettingsProviderAttribute(GetType(iCopy.PortableSettingsProvider)),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("False")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("False"),  _
+         Global.System.Configuration.SettingsManageabilityAttribute(Global.System.Configuration.SettingsManageability.Roaming)>  _
         Public Property Silent() As Boolean
             Get
                 Return CType(Me("Silent"),Boolean)
