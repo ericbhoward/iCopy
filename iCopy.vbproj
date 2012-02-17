@@ -34,6 +34,10 @@
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
     <UpgradeBackupLocation />
+    <SccProjectName>Svn</SccProjectName>
+    <SccLocalPath>Svn</SccLocalPath>
+    <SccAuxPath>Svn</SccAuxPath>
+    <SccProvider>SubversionScc</SccProvider>
     <PublishUrl>ftp://web.sourceforge.net:22/home/groups/i/ic/icopy/htdocs/</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Web</InstallFrom>
@@ -57,10 +61,6 @@
     <UseApplicationTrust>false</UseApplicationTrust>
     <PublishWizardCompleted>true</PublishWizardCompleted>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <SccProjectName>Svn</SccProjectName>
-    <SccLocalPath>Svn</SccLocalPath>
-    <SccAuxPath>Svn</SccAuxPath>
-    <SccProvider>SubversionScc</SccProvider>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -104,6 +104,9 @@
     <PlatformTarget>x64</PlatformTarget>
     <OutputPath>bin\x64\Release\</OutputPath>
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnOutputUpdated</RunPostBuildEvent>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.WindowsAPICodePack, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="System" />
@@ -134,12 +137,8 @@
     <Compile Include="Forms\AboutBox1.vb">
       <SubType>Form</SubType>
     </Compile>
+    <None Include="app.config" />
     <None Include="Classes\DLLRegistration.vb" />
-    <Compile Include="Language Files\WinFormStrings.it-IT.Designer.vb">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>WinFormStrings.it-IT.resx</DependentUpon>
-    </Compile>
     <Compile Include="Forms\MorePagesDialog.Designer.vb">
       <DependentUpon>MorePagesDialog.vb</DependentUpon>
     </Compile>
@@ -202,6 +201,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>WinFormStrings.resx</DependentUpon>
     </Compile>
+    <None Include="setup.nsi" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Forms\AboutBox1.resx">
@@ -280,7 +280,6 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application1.Designer.vb</LastGenOutput>
@@ -332,6 +331,10 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\iCopy192.png" />
+    <Content Include="wiaaut.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="Resources\scanner_large.bmp" />
     <None Include="Resources\printer_large copy.gif" />
     <None Include="Resources\scanner_lare.gif" />
@@ -352,9 +355,6 @@
     <None Include="Resources\Printer-icon.png" />
     <None Include="Resources\pdf_icon.gif" />
     <None Include="Scanner Logs\brother ADF.log" />
-    <Content Include="wiaaut.dll">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <None Include="Resources\printer.bmp" />
     <None Include="Resources\scanner.bmp" />
     <None Include="Resources\Aboutbgr.jpg" />
@@ -372,6 +372,14 @@
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>"C:\Program Files (x86)\UTILITIES\NSIS Installer\makensis.exe" "$(ProjectDir)setup.nsi"
+"$(ProjectDir)7za.exe" a -tzip -mx9 -r "$(ProjectDir)bin\prova.zip" -x!*log -x!*settings -x!*vshost* "$(ProjectDir)$(OutDir)*"</PostBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PreBuildEvent>del "$(ProjectDir)bin\*exe"
+del "$(ProjectDir)bin\*zip"</PreBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

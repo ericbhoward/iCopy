@@ -31,12 +31,13 @@ Class mainFrm
 
     Sub VersionCheck()
         Dim reader As Xml.XmlTextReader
-        Dim newVersion As Version
+        Dim curVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version
+        Dim newVersion = curVersion
         Try
             reader = New Xml.XmlTextReader(My.Resources.VersionCheckURL)
             reader.MoveToContent()
             If reader.NodeType = Xml.XmlNodeType.Element And reader.Name = Application.ProductName Then
-                Dim elementName As String
+                Dim elementName As String = ""
                 While reader.Read()
                     If reader.NodeType = Xml.XmlNodeType.Element Then
                         elementName = reader.Name
@@ -50,7 +51,6 @@ Class mainFrm
                     End If
                 End While
             End If
-            Dim curVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version
             If curVersion.CompareTo(newVersion) < 0 Then
                 VersionStatusLabel.Visible = True
             End If
