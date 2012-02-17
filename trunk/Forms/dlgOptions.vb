@@ -37,6 +37,7 @@ Public Class dlgOptions
             My.Settings.CustomCulture = True
             MsgBoxWrap(appControl.GetLocalizedString("Msg_Language"), MsgBoxStyle.Information, "iCopy")
         End If
+
         My.Settings.RememberSettings = chkRememberScanSettings.Checked
         My.Settings.StoreLocation = chkRememberWindowPos.Checked
         My.Settings.CheckForUpdates = chkUpdates.Checked

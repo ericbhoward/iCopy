@@ -439,7 +439,6 @@ Public Class Scanner
                 Catch ex As Exception
                     Trace.WriteLine("Couldn't evaluate DOCUMENT_HANDLING_STATUS")
                 End Try
-                Trace.WriteLine(String.Format("Subitems count: {0}", _scanner.Items.Count))
 
                 If options.Preview Then
                     img = DirectCast(dialog.ShowAcquireImage(WiaDeviceType.ScannerDeviceType, options.Intent, , WIA.FormatID.wiaFormatTIFF, False, False, False), ImageFile)

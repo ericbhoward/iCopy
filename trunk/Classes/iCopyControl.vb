@@ -41,10 +41,13 @@ Class appControl
 
     Shared Function GetWritablePath() As String
         Try
-            Dim fs As FileStream = File.Create("writable")
+            Dim fi As New System.IO.FileInfo(Application.ExecutablePath)
+            Dim path As String = fi.DirectoryName
+
+            Dim fs As FileStream = File.Create(path + "\writable")
             fs.Close()
-            File.Delete("writable")
-            Return ""
+            File.Delete(path + "\writable")
+            Return path + "\"
         Catch ex As Exception
             Dim path As String = Application.LocalUserAppDataPath
 
@@ -126,11 +129,11 @@ Class appControl
 
                 MainForm = New mainFrm()
                 Application.Run(MainForm)
-                If My.Settings.RememberSettings Then
-                    My.Settings.Save()
-                Else
-                    My.Settings.Reset()
+                If Not My.Settings.RememberSettings Then
+                    My.Settings.LastScanSettings = New ScanSettings() 'Scan settings are restored to the default
                 End If
+
+                My.Settings.Save()
 
             Else    'Handle Command line arguments
                 CommandLine = True 'To inform the program that it is running in command line mode
