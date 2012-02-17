@@ -211,13 +211,17 @@ Class appControl
                         Case "/register", "/reg"
                             Try
                                 manager.RegisterPersistentEvent(Application.ExecutablePath + " /StiDevice:%1 /StiEvent:%2 /copy", "iCopy", "Directly print using iCopy", Application.ExecutablePath + ",0", WIA.EventID.wiaEventScanImage)
+                                manager.RegisterPersistentEvent(Application.ExecutablePath + " /StiDevice:%1 /StiEvent:%2 /copy", "iCopy", "Directly print using iCopy", Application.ExecutablePath + ",0", WIA.EventID.wiaEventScanImage2)
+                                manager.RegisterPersistentEvent(Application.ExecutablePath + " /StiDevice:%1 /StiEvent:%2 /file", "iCopy", "Save to file using iCopy", Application.ExecutablePath + ",0", WIA.EventID.wiaEventScanImage4)
                             Catch ex As UnauthorizedAccessException
                                 MsgBoxWrap("iCopy must be executed with administrative privileges in order to complete the operation.", vbInformation, "iCopy")
                             End Try
                             Return
                         Case "/unregister", "/unreg"
                             Try
-                                manager.UnregisterPersistentEvent(Application.ExecutablePath + " /StiDevice:%1 /StiEvent:%2 /copy", "iCopy", "Directly print using iCopy", Application.ExecutablePath & ",0", WIA.EventID.wiaEventScanImage)
+                                manager.UnregisterPersistentEvent(Application.ExecutablePath + " /StiDevice:%1 /StiEvent:%2 /copy", "iCopy", "Directly print using iCopy", Application.ExecutablePath + ",0", WIA.EventID.wiaEventScanImage)
+                                manager.UnregisterPersistentEvent(Application.ExecutablePath + " /StiDevice:%1 /StiEvent:%2 /copy", "iCopy", "Directly print using iCopy", Application.ExecutablePath + ",0", WIA.EventID.wiaEventScanImage2)
+                                manager.UnregisterPersistentEvent(Application.ExecutablePath + " /StiDevice:%1 /StiEvent:%2 /file", "iCopy", "Save to file using iCopy", Application.ExecutablePath + ",0", WIA.EventID.wiaEventScanImage4)
                             Catch ex As UnauthorizedAccessException
                                 MsgBoxWrap("iCopy must be executed with administrative privileges in order to complete the operation.", vbInformation, "iCopy")
                             Catch ex As ArgumentException 'Thrown if the event is not found. Either wrong sintax or has already been removed

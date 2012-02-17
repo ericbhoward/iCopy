@@ -86,7 +86,6 @@ Friend Class Printer
         pd.DocumentName = "iCopy " + Date.Now.ToString("yyyy-MM-dd hh-mm")
         'Starts printing process
         pd.Print()
-        'TODO:Check Win32Exception
 
     End Sub
 
