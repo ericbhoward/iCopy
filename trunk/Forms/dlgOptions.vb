@@ -51,6 +51,7 @@ Public Class dlgOptions
 
     Sub LoadSettings()
         localeRootStr = Me.Name & "_"
+        Me.Text = appControl.GetLocalizedString(Me.Name)
         'Applies localized strings to the controls
         For Each control As System.Windows.Forms.Control In Me.Controls
 
@@ -127,8 +128,12 @@ retry:
         LoadSettings()
     End Sub
 
-    Private Sub btnResetSettings_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnDefaultSettings.Click
+    Private Sub btnResetSettings_Click(ByVal sender As System.Object, ByVal e As System.EventArgs)
         My.Settings.Reset()
+        chkRememberScanSettings.Checked = My.Settings.RememberSettings
+        chkRememberWindowPos.Checked = My.Settings.StoreLocation
+        chkUpdates.Checked = My.Settings.CheckForUpdates
+        My.Settings.LastScanSettings = My.Settings.Default.LastScanSettings
     End Sub
 
     Private Sub btnRegister_Click(sender As System.Object, e As System.EventArgs) Handles btnRegister.Click
@@ -151,6 +156,10 @@ retry:
         Dim ev = DirectCast(ListBox1.SelectedItem, WIAEventWrapper)
         Dim command As String = String.Format("{0} {1}", Application.ExecutablePath, ComboBox1.SelectedValue.ToString())
         manager.UnregisterPersistentEvent(Command, "iCopy", "Whatever", "", ev.EventID) ', appControl.Scanner.DeviceId)
+    End Sub
+
+    Private Sub btnResetScanSettings_Click(sender As System.Object, e As System.EventArgs) Handles btnResetScanSettings.Click
+        My.Settings.LastScanSettings = New ScanSettings()
     End Sub
 End Class
 

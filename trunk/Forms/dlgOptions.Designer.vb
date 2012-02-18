@@ -43,7 +43,7 @@ Partial Class dlgOptions
         Me.lblAvailableEvents = New System.Windows.Forms.Label()
         Me.ListBox1 = New System.Windows.Forms.ListBox()
         Me.btnRegister = New System.Windows.Forms.Button()
-        Me.btnDefaultSettings = New System.Windows.Forms.Button()
+        Me.btnResetScanSettings = New System.Windows.Forms.Button()
         Me.TabControl1.SuspendLayout()
         Me.tabGeneral.SuspendLayout()
         Me.tabScannerButtons.SuspendLayout()
@@ -90,7 +90,7 @@ Partial Class dlgOptions
         '
         Me.chkRememberWindowPos.Checked = True
         Me.chkRememberWindowPos.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.chkRememberWindowPos.Location = New System.Drawing.Point(12, 87)
+        Me.chkRememberWindowPos.Location = New System.Drawing.Point(12, 95)
         Me.chkRememberWindowPos.Name = "chkRememberWindowPos"
         Me.chkRememberWindowPos.Size = New System.Drawing.Size(293, 17)
         Me.chkRememberWindowPos.TabIndex = 3
@@ -127,6 +127,7 @@ Partial Class dlgOptions
         '
         'tabGeneral
         '
+        Me.tabGeneral.Controls.Add(Me.btnResetScanSettings)
         Me.tabGeneral.Controls.Add(Me.lblNote)
         Me.tabGeneral.Controls.Add(Me.chkUpdates)
         Me.tabGeneral.Controls.Add(Me.chkRememberScanSettings)
@@ -157,7 +158,7 @@ Partial Class dlgOptions
         'chkUpdates
         '
         Me.chkUpdates.AutoSize = True
-        Me.chkUpdates.Location = New System.Drawing.Point(12, 123)
+        Me.chkUpdates.Location = New System.Drawing.Point(12, 118)
         Me.chkUpdates.Name = "chkUpdates"
         Me.chkUpdates.Size = New System.Drawing.Size(115, 17)
         Me.chkUpdates.TabIndex = 9
@@ -250,14 +251,14 @@ Partial Class dlgOptions
         Me.btnRegister.Text = "Register"
         Me.btnRegister.UseVisualStyleBackColor = True
         '
-        'btnDefaultSettings
+        'btnResetScanSettings
         '
-        Me.btnDefaultSettings.Location = New System.Drawing.Point(16, 259)
-        Me.btnDefaultSettings.Name = "btnDefaultSettings"
-        Me.btnDefaultSettings.Size = New System.Drawing.Size(75, 23)
-        Me.btnDefaultSettings.TabIndex = 9
-        Me.btnDefaultSettings.Text = "&Default"
-        Me.btnDefaultSettings.UseVisualStyleBackColor = True
+        Me.btnResetScanSettings.Location = New System.Drawing.Point(211, 60)
+        Me.btnResetScanSettings.Name = "btnResetScanSettings"
+        Me.btnResetScanSettings.Size = New System.Drawing.Size(94, 23)
+        Me.btnResetScanSettings.TabIndex = 11
+        Me.btnResetScanSettings.Text = "Reset to default"
+        Me.btnResetScanSettings.UseVisualStyleBackColor = True
         '
         'dlgOptions
         '
@@ -266,7 +267,6 @@ Partial Class dlgOptions
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.CancelButton = Me.btnCancel
         Me.ClientSize = New System.Drawing.Size(354, 294)
-        Me.Controls.Add(Me.btnDefaultSettings)
         Me.Controls.Add(Me.TabControl1)
         Me.Controls.Add(Me.btnCancel)
         Me.Controls.Add(Me.btnOk)
@@ -297,7 +297,6 @@ Partial Class dlgOptions
     Friend WithEvents tabGeneral As System.Windows.Forms.TabPage
     Friend WithEvents chkRememberScanSettings As System.Windows.Forms.CheckBox
     Friend WithEvents tabScannerButtons As System.Windows.Forms.TabPage
-    Friend WithEvents btnDefaultSettings As System.Windows.Forms.Button
     Friend WithEvents btnRegister As System.Windows.Forms.Button
     Friend WithEvents ListBox1 As System.Windows.Forms.ListBox
     Friend WithEvents lblScanner As System.Windows.Forms.Label
@@ -306,5 +305,6 @@ Partial Class dlgOptions
     Friend WithEvents Button1 As System.Windows.Forms.Button
     Friend WithEvents lblNote As System.Windows.Forms.Label
     Friend WithEvents chkUpdates As System.Windows.Forms.CheckBox
+    Friend WithEvents btnResetScanSettings As System.Windows.Forms.Button
 
 End Class

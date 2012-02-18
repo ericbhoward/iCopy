@@ -285,6 +285,7 @@ Class mainFrm
 
     Private Sub llblSettings_LinkClicked(ByVal sender As System.Object, ByVal e As System.Windows.Forms.LinkLabelLinkClickedEventArgs) Handles llblSettings.LinkClicked
         frmOptions.ShowDialog()
+        frmImageSettings.RefreshSettings()
     End Sub
 
     Private Sub llblAbout_LinkClicked(ByVal sender As System.Object, ByVal e As System.Windows.Forms.LinkLabelLinkClickedEventArgs) Handles llblAbout.LinkClicked

@@ -389,13 +389,11 @@ Click OK if you want iCopy to register wiaaut.dll for you, otherwise click Cance
     <value>Reset settings to their default values on next program restart</value>
     <comment>Reset settings to their default values on next program restart</comment>
   </data>
-  <data name="dlgOptions_chkRememberSettings" xml:space="preserve">
-    <value>Remember image settings 
-on program restart</value>
-    <comment>Remember image settings 
-on program restart</comment>
+  <data name="dlgOptions_chkRememberScanSettings" xml:space="preserve">
+    <value>Remember image settings</value>
+    <comment>Remember image settings</comment>
   </data>
-  <data name="dlgOptions_chkRememberSettingsToolTip" xml:space="preserve">
+  <data name="dlgOptions_chkRememberScanSettingsToolTip" xml:space="preserve">
     <value>If selected, iCopy will maintain image settings on next restart.</value>
     <comment>If selected, iCopy will maintain image settings on next restart.</comment>
   </data>
@@ -640,5 +638,9 @@ ADVANCED PARAMETERS
   <data name="dlgOptions_tabScannerButtons" xml:space="preserve">
     <value>Scanner Buttons</value>
     <comment>Scanner Buttons</comment>
+  </data>
+  <data name="dlgOptions_btnResetScanSettings" xml:space="preserve">
+    <value>Reset to default</value>
+    <comment>Reset to default</comment>
   </data>
 </root>
