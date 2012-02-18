@@ -28,15 +28,6 @@ Public Class ScanSettings
         _Path = ""
     End Sub
 
-    Public Property BitDepth() As Integer
-        Get
-            Return _BitDepth
-        End Get
-        Set(ByVal value As Integer)
-            _BitDepth = value
-        End Set
-    End Property
-
     Public Property Brightness() As Integer
         Get
             Return _Brightness
@@ -124,6 +115,15 @@ Public Class ScanSettings
         End Get
         Set(ByVal value As Boolean)
             _UseADF = value
+        End Set
+    End Property
+
+    Public Property BitDepth() As Integer
+        Get
+            Return _BitDepth
+        End Get
+        Set(ByVal value As Integer)
+            _BitDepth = value
         End Set
     End Property
 

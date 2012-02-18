@@ -296,9 +296,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Build\post-build.ps1" />
-    <None Include="Resources\iCopy.jpg" />
     <None Include="Resources\iCopy.gif" />
-    <None Include="Resources\Untitled-1.png" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
@@ -340,10 +338,6 @@
     <Content Include="wiaaut.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Resources\scanner_large.bmp" />
-    <None Include="Resources\printer_large copy.gif" />
-    <None Include="Resources\scanner_lare.gif" />
-    <None Include="Resources\printer_large copy2.gif" />
     <Content Include="Changelog.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -378,7 +372,7 @@
   <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
-    <PostBuildEvent>call "$(ProjectDir)Build\post.bat"</PostBuildEvent>
+    <PostBuildEvent>powershell.exe -File "$(ProjectDir)Build\post-build.ps1"</PostBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
     <PreBuildEvent>
