@@ -113,7 +113,6 @@ Public Class PortableSettingsProvider
 
         'Iterate through the settings to be retrieved
         For Each setting As SettingsProperty In props
-
             Dim value As SettingsPropertyValue = New SettingsPropertyValue(setting)
             value.IsDirty = False
             value.SerializedValue = GetValue(setting)
@@ -157,12 +156,18 @@ Public Class PortableSettingsProvider
 
     Private Function GetValue(ByVal setting As SettingsProperty) As String
         Dim ret As String = ""
-
+        Dim node As XmlNode
         Try
             If IsRoaming(setting) Then
-                ret = SettingsXML.SelectSingleNode(SETTINGSROOT & "/" & setting.Name).InnerText
+                node = SettingsXML.SelectSingleNode(SETTINGSROOT & "/" & setting.Name)
             Else
-                ret = SettingsXML.SelectSingleNode(SETTINGSROOT & "/" & My.Computer.Name & "/" & setting.Name).InnerText
+                node = SettingsXML.SelectSingleNode(SETTINGSROOT & "/" & My.Computer.Name & "/" & setting.Name)
+            End If
+
+            If setting.SerializeAs = SettingsSerializeAs.Xml Then
+                ret = node.InnerXml
+            Else
+                ret = node.InnerText
             End If
 
         Catch ex As Exception
@@ -196,12 +201,20 @@ Public Class PortableSettingsProvider
 
         'Check to see if the node exists, if so then set its new value
         If Not SettingNode Is Nothing Then
-            SettingNode.InnerText = propVal.SerializedValue.ToString
+            If propVal.Property.SerializeAs = SettingsSerializeAs.Xml Then
+                SettingNode.InnerXml = propVal.SerializedValue.ToString().Replace("<?xml version=""1.0"" encoding=""utf-16""?>", "")
+            Else
+                SettingNode.InnerText = propVal.SerializedValue.ToString()
+            End If
         Else
             If IsRoaming(propVal.Property) Then
                 'Store the value as an element of the Settings Root Node
                 SettingNode = SettingsXML.CreateElement(propVal.Name)
-                SettingNode.InnerText = propVal.SerializedValue.ToString
+                If propVal.Property.SerializeAs = SettingsSerializeAs.Xml Then
+                    SettingNode.InnerXml = propVal.SerializedValue.ToString().Replace("<?xml version=""1.0"" encoding=""utf-16""?>", "")
+                Else
+                    SettingNode.InnerText = propVal.SerializedValue.ToString()
+                End If
                 SettingsXML.SelectSingleNode(SETTINGSROOT).AppendChild(SettingNode)
             Else
                 'Its machine specific, store as an element of the machine name node,
@@ -219,7 +232,11 @@ Public Class PortableSettingsProvider
                 End If
 
                 SettingNode = SettingsXML.CreateElement(propVal.Name)
-                SettingNode.InnerText = propVal.SerializedValue.ToString
+                If propVal.Property.SerializeAs = SettingsSerializeAs.Xml Then
+                    SettingNode.InnerXml = propVal.SerializedValue.ToString().Replace("<?xml version=""1.0"" encoding=""utf-16""?>", "")
+                Else
+                    SettingNode.InnerText = propVal.SerializedValue.ToString()
+                End If
                 MachineNode.AppendChild(SettingNode)
             End If
         End If

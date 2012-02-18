@@ -69,6 +69,7 @@ Class appControl
         Application.EnableVisualStyles()
         If My.Settings.LastScanSettings Is Nothing Then
             My.Settings.LastScanSettings = New ScanSettings()
+            My.Settings.Save()
         End If
 
         'Deletes log file if it is more than 50 KB long
