@@ -75,7 +75,7 @@ Partial Class mainFrm
         '
         Me.cboPrintMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboPrintMode.FormattingEnabled = True
-        Me.cboPrintMode.Location = New System.Drawing.Point(251, 45)
+        Me.cboPrintMode.Location = New System.Drawing.Point(261, 45)
         Me.cboPrintMode.Name = "cboPrintMode"
         Me.cboPrintMode.Size = New System.Drawing.Size(107, 21)
         Me.cboPrintMode.TabIndex = 3
@@ -84,7 +84,7 @@ Partial Class mainFrm
         '
         Me.Label8.Location = New System.Drawing.Point(160, 46)
         Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(85, 18)
+        Me.Label8.Size = New System.Drawing.Size(95, 18)
         Me.Label8.TabIndex = 2
         Me.Label8.Text = "Printer"
         Me.Label8.TextAlign = System.Drawing.ContentAlignment.TopRight
@@ -93,7 +93,7 @@ Partial Class mainFrm
         '
         Me.Label7.Location = New System.Drawing.Point(160, 17)
         Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(85, 18)
+        Me.Label7.Size = New System.Drawing.Size(95, 18)
         Me.Label7.TabIndex = 1
         Me.Label7.Text = "Scanner"
         Me.Label7.TextAlign = System.Drawing.ContentAlignment.TopRight
@@ -102,7 +102,7 @@ Partial Class mainFrm
         '
         Me.cboScanMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboScanMode.FormattingEnabled = True
-        Me.cboScanMode.Location = New System.Drawing.Point(251, 14)
+        Me.cboScanMode.Location = New System.Drawing.Point(261, 14)
         Me.cboScanMode.Name = "cboScanMode"
         Me.cboScanMode.Size = New System.Drawing.Size(107, 21)
         Me.cboScanMode.TabIndex = 2
@@ -119,7 +119,7 @@ Partial Class mainFrm
         'nudNCopie
         '
         Me.nudNCopie.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.nudNCopie.Location = New System.Drawing.Point(303, 106)
+        Me.nudNCopie.Location = New System.Drawing.Point(313, 106)
         Me.nudNCopie.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.nudNCopie.Name = "nudNCopie"
         Me.nudNCopie.Size = New System.Drawing.Size(55, 26)
@@ -130,7 +130,7 @@ Partial Class mainFrm
         '
         Me.Label1.Cursor = System.Windows.Forms.Cursors.Default
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(186, 110)
+        Me.Label1.Location = New System.Drawing.Point(196, 110)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(111, 19)
         Me.Label1.TabIndex = 12
@@ -247,16 +247,16 @@ Partial Class mainFrm
         Me.cboPaperSize.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
         Me.cboPaperSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboPaperSize.FormattingEnabled = True
-        Me.cboPaperSize.Location = New System.Drawing.Point(251, 75)
+        Me.cboPaperSize.Location = New System.Drawing.Point(261, 75)
         Me.cboPaperSize.Name = "cboPaperSize"
         Me.cboPaperSize.Size = New System.Drawing.Size(107, 21)
         Me.cboPaperSize.TabIndex = 21
         '
         'Label2
         '
-        Me.Label2.Location = New System.Drawing.Point(156, 76)
+        Me.Label2.Location = New System.Drawing.Point(150, 76)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(89, 23)
+        Me.Label2.Size = New System.Drawing.Size(105, 23)
         Me.Label2.TabIndex = 22
         Me.Label2.Text = "Paper Size"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.TopRight
@@ -291,8 +291,8 @@ Partial Class mainFrm
         Me.Controls.Add(Me.btnPrintSetup)
         Me.Controls.Add(Me.nudNCopie)
         Me.Controls.Add(Me.llblAbout)
-        Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.chkPreview)
+        Me.Controls.Add(Me.Label1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.KeyPreview = True
         Me.MaximizeBox = False

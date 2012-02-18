@@ -39,31 +39,6 @@ Class appControl
 
     Public Shared MainForm As mainFrm
 
-    Shared Function GetWritablePath() As String
-        Try
-            Dim fi As New System.IO.FileInfo(Application.ExecutablePath)
-            Dim path As String = fi.DirectoryName
-
-            Dim fs As FileStream = File.Create(path + "\writable")
-            fs.Close()
-            File.Delete(path + "\writable")
-            Return path + "\"
-        Catch ex As Exception
-            Dim path As String = Application.LocalUserAppDataPath
-
-            path = path.Replace(Application.CompanyName + "\", "")
-            path = path.Replace(Application.ProductVersion, "")
-            Try
-                IO.Directory.CreateDirectory(path)
-                Return path
-            Catch e As Exception
-
-            End Try
-        End Try
-
-        Return Application.LocalUserAppDataPath
-    End Function
-
     Shared Sub Main(ByVal sArgs() As String)
         My.Settings.Silent = False
         Application.EnableVisualStyles()
@@ -73,7 +48,7 @@ Class appControl
         End If
 
         'Deletes log file if it is more than 50 KB long
-        Dim logPath As String = GetWritablePath() + "iCopy.log"
+        Dim logPath As String = Path.Combine(GetWritablePath(), "iCopy.log")
         Try
             Dim MyFile As New FileInfo(logPath)
             Dim FileSize As Long = MyFile.Length
@@ -295,7 +270,7 @@ Class appControl
 
         Trace.Close()
 
-        Dim rd As New StreamReader(GetWritablePath() + "iCopy.log")
+        Dim rd As New StreamReader(Path.Combine(GetWritablePath(), "iCopy.log"))
         Clipboard.SetText(rd.ReadToEnd())
 
         Process.Start("https://sourceforge.net/tracker/?func=add&group_id=201245&atid=976783")

@@ -64,26 +64,8 @@ Public Class PortableSettingsProvider
         Return Security.SecurityManager.IsGranted(oFp)
     End Function
 
-    Public Function GetUserAppDataPath() As String
-        Dim path As String = Application.LocalUserAppDataPath
-
-        path = path.Replace(Application.CompanyName + "\", "")
-        path = path.Replace(Application.ProductVersion, "")
-        Try
-            IO.Directory.CreateDirectory(path)
-        Catch ex As Exception
-
-        End Try
-        Return IO.Path.Combine(path, GetAppSettingsFileName)
-    End Function
-
     Overridable Function GetAppSettingsPath() As String
-        If settingsPath = "" Then
-            Dim fi As New System.IO.FileInfo(Application.ExecutablePath)
-            Return IO.Path.Combine(fi.DirectoryName, GetAppSettingsFileName)
-        Else
-            Return settingsPath
-        End If
+        Return IO.Path.Combine(GetWritablePath(), GetAppSettingsFileName)
     End Function
 
     Overridable Function GetAppSettingsFileName() As String
@@ -101,7 +83,10 @@ Public Class PortableSettingsProvider
         Try
             SettingsXML.Save(GetAppSettingsPath)
         Catch ex As UnauthorizedAccessException
-            SettingsXML.Save(GetUserAppDataPath)
+            Throw
+        Catch d As IO.DirectoryNotFoundException
+            IO.Directory.CreateDirectory(GetWritablePath())
+            SettingsXML.Save(GetAppSettingsPath)
         Catch e As Exception
             'Ignore other exceptions
         End Try
@@ -135,7 +120,7 @@ Public Class PortableSettingsProvider
                 Catch ex As Exception
                     'Check if the file is in the alternate place
                     Try
-                        m_SettingsXML.Load(GetUserAppDataPath)
+                        m_SettingsXML.Load(GetAppSettingsPath)
                     Catch e As Exception
                         'If both files are absent, create new document
                         Dim dec As XmlDeclaration = m_SettingsXML.CreateXmlDeclaration("1.0", "utf-8", String.Empty)
