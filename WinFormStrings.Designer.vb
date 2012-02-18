@@ -137,6 +137,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized string similar to Reset to default.
+        '''</summary>
+        Friend Shared ReadOnly Property dlgOptions_btnResetScanSettings() As String
+            Get
+                Return ResourceManager.GetString("dlgOptions_btnResetScanSettings", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized string similar to &amp;Default.
         '''</summary>
         Friend Shared ReadOnly Property dlgOptions_btnResetSettings() As String
@@ -175,21 +184,20 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Looks up a localized string similar to Remember image settings 
-        '''on program restart.
+        '''  Looks up a localized string similar to Remember image settings.
         '''</summary>
-        Friend Shared ReadOnly Property dlgOptions_chkRememberSettings() As String
+        Friend Shared ReadOnly Property dlgOptions_chkRememberScanSettings() As String
             Get
-                Return ResourceManager.GetString("dlgOptions_chkRememberSettings", resourceCulture)
+                Return ResourceManager.GetString("dlgOptions_chkRememberScanSettings", resourceCulture)
             End Get
         End Property
         
         '''<summary>
         '''  Looks up a localized string similar to If selected, iCopy will maintain image settings on next restart..
         '''</summary>
-        Friend Shared ReadOnly Property dlgOptions_chkRememberSettingsToolTip() As String
+        Friend Shared ReadOnly Property dlgOptions_chkRememberScanSettingsToolTip() As String
             Get
-                Return ResourceManager.GetString("dlgOptions_chkRememberSettingsToolTip", resourceCulture)
+                Return ResourceManager.GetString("dlgOptions_chkRememberScanSettingsToolTip", resourceCulture)
             End Get
         End Property
         

@@ -558,4 +558,17 @@ impostazioni dell'immagine</value>
     <value>Bottoni dello scanner</value>
     <comment>Scanner Buttons</comment>
   </data>
+  <data name="dlgOptions_btnResetScanSettings" xml:space="preserve">
+    <value>Predefiniti</value>
+    <comment>Reset to default</comment>
+  </data>
+  <data name="dlgOptions_chkRememberScanSettings" xml:space="preserve">
+    <value>Ricorda impostazioni immagine</value>
+    <comment>Remember image settings</comment>
+  </data>
+  <data name="dlgOptions_chkRememberScanSettingsToolTip" xml:space="preserve">
+    <value>Se selezionato, iCopy manterrà le ultime 
+impostazioni immagine utilizzate anche al successivo riavvio</value>
+    <comment>If selected, iCopy will maintain image settings on next restart.</comment>
+  </data>
 </root>

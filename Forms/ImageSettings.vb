@@ -45,6 +45,7 @@ Class frmImageSettings
 
         ' Add any initialization after the InitializeComponent() call.
         locRootStr = Me.Name & "_"
+        Me.Text = appControl.GetLocalizedString(Me.Name)
         'Applies localized strings to the controls
         For Each control As System.Windows.Forms.Control In Me.Controls
             Dim text As String = appControl.GetLocalizedString(locRootStr & control.Name)
@@ -69,10 +70,28 @@ Class frmImageSettings
         tbContrast.Value = My.Settings.LastScanSettings.Contrast
         txtBrightness.Text = My.Settings.LastScanSettings.Brightness
         txtContrast.Text = My.Settings.LastScanSettings.Contrast
-        tbScaling.Value = 100
-        txtScaling.Text = "100"
+        tbScaling.Value = My.Settings.LastScanSettings.Scaling
         tbCompression.Value = My.Settings.LastScanSettings.Quality
         lblCompression.Text = tbCompression.Value
+        txtScaling.Text = tbScaling.Value
+    End Sub
+    Public Sub RefreshSettings()
+        If My.Settings.LastScanSettings.Resolution <> 0 Then
+            cboResolution.Text = My.Settings.LastScanSettings.Resolution
+        Else
+            cboResolution.Text = "100"
+            My.Settings.LastScanSettings.Resolution = 100
+        End If
+
+        'Loads settings
+        tbBrightness.Value = My.Settings.LastScanSettings.Brightness
+        tbContrast.Value = My.Settings.LastScanSettings.Contrast
+        txtBrightness.Text = My.Settings.LastScanSettings.Brightness
+        txtContrast.Text = My.Settings.LastScanSettings.Contrast
+        tbScaling.Value = My.Settings.LastScanSettings.Scaling
+        tbCompression.Value = My.Settings.LastScanSettings.Quality
+        lblCompression.Text = tbCompression.Value
+        txtScaling.Text = tbScaling.Value
     End Sub
 
     Private Sub valid_KeyPress(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyPressEventArgs) Handles txtBrightness.KeyPress, txtContrast.KeyPress, txtScaling.KeyPress
