@@ -42,7 +42,7 @@ No parameters: standard mode with windows
 
 > icopy.exe [/copy /file /multiplePages ..] [params]
 
-[params] are the parameters to be used. If a parameter is not specified, iCopy uses the value stored in settings
+[params] are the parameters to be used. If a parameter is not specified, iCopy uses the values stored in settings
 
 /copy /c				Directly copy from scanner to printer, using settings provided or default settings
 /file /ScanToFile /f	Scan to a file. If file path is not provided a dialog will let you choose where to save the acquired image
@@ -76,12 +76,11 @@ Examples:
 
 ADVANCED PARAMETERS
 /silent				No message boxes.
-/wiareg /wr			Registers WIA components. Use if WIA errors are thrown during execution
-/debug /d			Creates an XML file containing scanner information. Should be included in any bug report
+/wiareg /wr			Registers WIA components. Use if WIA errors are thrown during execution.
 /register /reg		Registers iCopy to the scanner buttons.
 /unregister /unreg	Unregisters iCopy from the scanner button applications.
 
-4) Known bugs & solutions 
+4) Known errors & solutions 
 -------------------------
 * Wiaaut.dll not registered error.
 	iCopy asks if you want to register WIA Automation Layer. If it fails in doing so, you can register it manually:

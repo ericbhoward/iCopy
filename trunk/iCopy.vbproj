@@ -133,7 +133,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Classes\ExitException.vb" />
-    <Compile Include="Classes\msgBoxWrap.vb" />
+    <Compile Include="Classes\Utilities.vb" />
     <Compile Include="Classes\ScanSettings.vb" />
     <Compile Include="Forms\AboutBox1.Designer.vb">
       <DependentUpon>AboutBox1.vb</DependentUpon>
