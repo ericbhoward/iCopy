@@ -2,34 +2,26 @@
 # Project folder
 $ProjDir = "D:\Matteo\Documenti\Visual Studio 2010\Projects\iCopy\iCopy"
 
-Set-Location "$ProjDir"
-
 # NEEDED:
 #	* NSIS Installer
 $NSISPath = "C:\Program Files (x86)\UTILITIES\NSIS Installer"
 #	* 7za.exe in $PWD
 #	* base_setup_script.nsi in $PWD
-$NSISBaseScript = "Build\base_setup_script.nsi"
-$NSISOutScript = "Build\setup.nsi"
+$NSISBaseScript = "$ProjDir\Build\base_setup_script.nsi"
+$NSISOutScript = "$ProjDir\Build\setup.nsi"
 
-del "bin\*.exe"
-del "bin\*.zip"
+del "$ProjDir\bin\*.exe"
+del "$ProjDir\bin\*.zip"
 
 #Gets verison
-$FullVersion = (dir bin\Release\iCopy.exe).VersionInfo.FileVersion
+$FullVersion = (dir "$ProjDir\bin\Release\iCopy.exe").VersionInfo.FileVersion
 $Version = $FullVersion.Substring(0,5)
 
-#Inserts the version in the NSIS File and creates a temporary file
-(gc $NSISBaseScript) -replace "VIProductVersion", "$& $FullVersion" | sc $NSISOutScript
-(gc $NSISOutScript) -replace "!define VERSION", "$& $Version" | sc $NSISOutScript
-
 #Creates the installer
-Set-Location "$NSISPath"
-.\makensis.exe "$ProjDir\$NSISOutScript" 
+#Set-Location "$NSISPath"
+."$NSISPath\makensis.exe" "/DVERSION=$Version" /X"VIProductVersion $FullVersion" "$NSISOutScript" 
 
-Set-Location "$ProjDir"
-
-del $NSISOutScript #Delete temporary script
-Set-Location .\bin\Release
+# del $NSISOutScript #Delete temporary script
+#Set-Location $ProjDir\bin\Release
 #Now creates the zip archive
-..\..\Build\7za.exe a -tzip -mx9 -r "..\iCopy$Version.zip" -x!*log -x!*settings -x!*vshost* *
+."$ProjDir\Build\7za.exe" a -tzip -mx9 -r "$ProjDir\bin\iCopy$Version.zip" -x!*log -x!*settings -x!*vshost* "$ProjDir\bin\Release\*"
