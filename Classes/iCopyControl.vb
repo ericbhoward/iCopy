@@ -169,6 +169,8 @@ Class appControl
                             settings.Preview = True
                         Case "/adf"
                             settings.UseADF = True
+                        Case "/duplex", "/d"
+                            settings.Duplex = True
                     End Select
 
                     If sArgs(i).StartsWith("/StiDevice:") Then
@@ -548,6 +550,10 @@ retry:
 
     Shared Function CanUseADF() As Boolean
         Return _scanner.CanUseADF
+    End Function
+
+    Shared Function CanDoDuplex() As Boolean
+        Return _scanner.CanDoDuplex
     End Function
 
     Shared Sub CopyMultiplePages(ByVal options As ScanSettings)

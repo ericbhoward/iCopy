@@ -56,18 +56,18 @@ End Enum
 
 <Flags()> _
 Enum WIA_DPS_DOCUMENT_HANDLING_CAPABILITIES
-    FEED = &H1
-    FLAT = &H2
-    DUP = &H4
-    DETECT_FLAT = &H8
-    DETECT_SCAN = &H10
-    DETECT_FEED = &H20
-    DETECT_DUP = &H40
-    DETECT_FEED_AVAIL = &H80
-    DETECT_DUP_AVAIL = &H100
-    'Vista and 7 only
-    FILM_TPA = &H200
-    DETECT_FILM_TPA = &H400
+    FEED = &H1                      '1
+    FLAT = &H2                      '2
+    DUP = &H4                       '4
+    DETECT_FLAT = &H8               '8
+    DETECT_SCAN = &H10              '16
+    DETECT_FEED = &H20              '32
+    DETECT_DUP = &H40               '64
+    DETECT_FEED_AVAIL = &H80        '128
+    DETECT_DUP_AVAIL = &H100        '256
+    'Vista and 7 only               '512
+    FILM_TPA = &H200                '1024
+    DETECT_FILM_TPA = &H400         '2048
     STOR = &H800
     DETECT_STOR = &H1000
     ADVANCED_DUP = &H2000
@@ -76,32 +76,32 @@ End Enum
 
 <Flags()> _
 Enum WIA_DPS_DOCUMENT_HANDLING_STATUS
-    FEED_READY = &H1
-    FLAT_READY = &H2
-    DUP_READY = &H4
-    FLAT_COVER_UP = &H8
-    PATH_COVER_UP = &H10
-    PAPER_JAM = &H20
+    FEED_READY = &H1        '1
+    FLAT_READY = &H2        '2
+    DUP_READY = &H4         '4
+    FLAT_COVER_UP = &H8     '8
+    PATH_COVER_UP = &H10    '16
+    PAPER_JAM = &H20        '32
 
-    'Only for Vista and 7
-    FILM_TPA_READY = &H40
-    STORAGE_READY = &H80
-    STORAGE_FULL = &H100
-    MULTIPLE_FEED = &H200
-    DEVICE_ATTENTION = &H400
-    LAMP_ERR = &H800
+    'Only for Vista and 7   
+    FILM_TPA_READY = &H40       '64
+    STORAGE_READY = &H80        '128
+    STORAGE_FULL = &H100        '256
+    MULTIPLE_FEED = &H200       '512
+    DEVICE_ATTENTION = &H400    '1024
+    LAMP_ERR = &H800            '2048
 End Enum
 
 <Flags()> _
 Enum WIA_DPS_DOCUMENT_HANDLING_SELECT
-    FEEDER = &H1
-    FLATBED = &H2
-    DUPLEX = &H4
-    FRONT_FIRST = &H8
-    BACK_FIRST = &H10
-    FRONT_ONLY = &H20
-    BACK_ONLY = &H40
-    NEXT_PAGE = &H80
-    PREFEED = &H100
-    AUTO_ADVANCE = &H200
+    FEEDER = &H1            '1
+    FLATBED = &H2           '2
+    DUPLEX = &H4            '4
+    FRONT_FIRST = &H8       '8
+    BACK_FIRST = &H10       '16
+    FRONT_ONLY = &H20       '32
+    BACK_ONLY = &H40        '64
+    NEXT_PAGE = &H80        '128
+    PREFEED = &H100         '256
+    AUTO_ADVANCE = &H200    '512
 End Enum

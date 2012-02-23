@@ -50,7 +50,7 @@ Partial Class frmImageSettings
         'tbScaling
         '
         Me.tbScaling.LargeChange = 50
-        Me.tbScaling.Location = New System.Drawing.Point(86, 76)
+        Me.tbScaling.Location = New System.Drawing.Point(86, 74)
         Me.tbScaling.Maximum = 200
         Me.tbScaling.Minimum = 1
         Me.tbScaling.Name = "tbScaling"
@@ -62,7 +62,7 @@ Partial Class frmImageSettings
         '
         'Label10
         '
-        Me.Label10.Location = New System.Drawing.Point(7, 81)
+        Me.Label10.Location = New System.Drawing.Point(0, 77)
         Me.Label10.Name = "Label10"
         Me.Label10.Size = New System.Drawing.Size(80, 13)
         Me.Label10.TabIndex = 38
@@ -71,7 +71,7 @@ Partial Class frmImageSettings
         '
         'Label9
         '
-        Me.Label9.Location = New System.Drawing.Point(7, 119)
+        Me.Label9.Location = New System.Drawing.Point(4, 114)
         Me.Label9.Name = "Label9"
         Me.Label9.Size = New System.Drawing.Size(80, 13)
         Me.Label9.TabIndex = 36
@@ -91,7 +91,7 @@ Partial Class frmImageSettings
         '
         'Label2
         '
-        Me.Label2.Location = New System.Drawing.Point(4, 20)
+        Me.Label2.Location = New System.Drawing.Point(1, 15)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(83, 13)
         Me.Label2.TabIndex = 34
@@ -101,7 +101,7 @@ Partial Class frmImageSettings
         'tbBrightness
         '
         Me.tbBrightness.LargeChange = 10
-        Me.tbBrightness.Location = New System.Drawing.Point(86, 14)
+        Me.tbBrightness.Location = New System.Drawing.Point(86, 12)
         Me.tbBrightness.Maximum = 100
         Me.tbBrightness.Minimum = -100
         Me.tbBrightness.Name = "tbBrightness"
@@ -111,7 +111,7 @@ Partial Class frmImageSettings
         '
         'txtContrast
         '
-        Me.txtContrast.Location = New System.Drawing.Point(193, 45)
+        Me.txtContrast.Location = New System.Drawing.Point(193, 43)
         Me.txtContrast.MaxLength = 4
         Me.txtContrast.Name = "txtContrast"
         Me.txtContrast.Size = New System.Drawing.Size(37, 20)
@@ -119,7 +119,7 @@ Partial Class frmImageSettings
         '
         'Label3
         '
-        Me.Label3.Location = New System.Drawing.Point(7, 48)
+        Me.Label3.Location = New System.Drawing.Point(4, 46)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(80, 13)
         Me.Label3.TabIndex = 35
@@ -128,7 +128,7 @@ Partial Class frmImageSettings
         '
         'txtBrightness
         '
-        Me.txtBrightness.Location = New System.Drawing.Point(193, 17)
+        Me.txtBrightness.Location = New System.Drawing.Point(193, 12)
         Me.txtBrightness.MaxLength = 4
         Me.txtBrightness.Name = "txtBrightness"
         Me.txtBrightness.Size = New System.Drawing.Size(37, 20)
@@ -136,7 +136,7 @@ Partial Class frmImageSettings
         '
         'txtScaling
         '
-        Me.txtScaling.Location = New System.Drawing.Point(193, 78)
+        Me.txtScaling.Location = New System.Drawing.Point(193, 74)
         Me.txtScaling.MaxLength = 3
         Me.txtScaling.Name = "txtScaling"
         Me.txtScaling.Size = New System.Drawing.Size(28, 20)
@@ -145,7 +145,7 @@ Partial Class frmImageSettings
         'lblPerc
         '
         Me.lblPerc.AutoSize = True
-        Me.lblPerc.Location = New System.Drawing.Point(221, 81)
+        Me.lblPerc.Location = New System.Drawing.Point(219, 79)
         Me.lblPerc.Name = "lblPerc"
         Me.lblPerc.Size = New System.Drawing.Size(15, 13)
         Me.lblPerc.TabIndex = 44
@@ -155,7 +155,7 @@ Partial Class frmImageSettings
         '
         Me.cboResolution.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboResolution.FormattingEnabled = True
-        Me.cboResolution.Location = New System.Drawing.Point(93, 116)
+        Me.cboResolution.Location = New System.Drawing.Point(105, 111)
         Me.cboResolution.Name = "cboResolution"
         Me.cboResolution.Size = New System.Drawing.Size(82, 21)
         Me.cboResolution.TabIndex = 45
@@ -163,7 +163,7 @@ Partial Class frmImageSettings
         'Label1
         '
         Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(193, 119)
+        Me.Label1.Location = New System.Drawing.Point(193, 114)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(25, 13)
         Me.Label1.TabIndex = 46
@@ -171,7 +171,7 @@ Partial Class frmImageSettings
         '
         'lblCompressionLabel
         '
-        Me.lblCompressionLabel.Location = New System.Drawing.Point(7, 143)
+        Me.lblCompressionLabel.Location = New System.Drawing.Point(0, 138)
         Me.lblCompressionLabel.Name = "lblCompressionLabel"
         Me.lblCompressionLabel.Size = New System.Drawing.Size(80, 33)
         Me.lblCompressionLabel.TabIndex = 47
@@ -180,7 +180,7 @@ Partial Class frmImageSettings
         '
         'tbCompression
         '
-        Me.tbCompression.Location = New System.Drawing.Point(86, 143)
+        Me.tbCompression.Location = New System.Drawing.Point(86, 138)
         Me.tbCompression.Maximum = 100
         Me.tbCompression.Minimum = 1
         Me.tbCompression.Name = "tbCompression"

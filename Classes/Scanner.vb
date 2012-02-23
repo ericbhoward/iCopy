@@ -26,6 +26,7 @@ Public Class Scanner
     Dim _description As String = ""
     Dim _deviceID As String = ""
     Dim _canUseADF As Boolean = False
+    Private _canDoDuplex As Boolean = False
 
     Sub New(ByVal deviceID As String)
         If deviceID Is Nothing Then Throw New ArgumentNullException("deviceID", "No deviceID specified")
@@ -46,6 +47,9 @@ Public Class Scanner
                 If caps And WIA_DPS_DOCUMENT_HANDLING_CAPABILITIES.FEED Then
                     Trace.WriteLine(String.Format("This scanner supports ADF"))
                     _canUseADF = True
+                End If
+                If caps And WIA_DPS_DOCUMENT_HANDLING_CAPABILITIES.DUP Then
+                    _canDoDuplex = True
                 End If
 
             Catch ex As Exception
@@ -340,6 +344,13 @@ Public Class Scanner
         End Get
     End Property
 
+    Public ReadOnly Property CanDoDuplex() As Boolean
+        Get
+            Return _canDoDuplex
+        End Get
+    End Property
+
+
     Function ScanADF(ByVal options As ScanSettings) As List(Of String)
         If _description.ToLower().Contains("brother") Then
             Return ScanADFBrother(options)
@@ -356,9 +367,8 @@ Public Class Scanner
     End Property
 
 
-    Function ScanADFBrother(ByVal options As ScanSettings) As List(Of String)
-
-        Trace.WriteLine(String.Format("Starting acquisition"))
+    Function ScanADFBrother(ByVal settings As ScanSettings) As List(Of String)
+        Trace.WriteLine(String.Format("Starting acquisition (Brother)"))
         Trace.Indent()
         Dim imageList As New List(Of String)()
         Dim dialog As New WIA.CommonDialog
@@ -369,32 +379,42 @@ Public Class Scanner
 
         Dim AcquiredPages As Integer = 0
 
-        Try 'Make connection to the scanner
+        Try 'Make connection to the device
             _device = manager.DeviceInfos.Item(DeviceId).Connect
             _deviceID = DeviceId
+        Catch ex As Exception
+            Trace.WriteLine(String.Format("Couldn't connect to the device. ERROR {0}", ex.Message))
+            Throw
+        End Try
 
-            Try 'Some scanner need this property to be set to feeder
-                If options.UseADF Then
-                    _device.Properties("Document Handling Select").Value = WIA_DPS_DOCUMENT_HANDLING_SELECT.FEEDER
-                    Trace.WriteLine(String.Format("WIA_DPS_DOCUMENT_HANDLING_SELECT set to {0}", WIA_DPS_DOCUMENT_HANDLING_SELECT.FEEDER))
-                Else
-                    _device.Properties("Document Handling Select").Value = WIA_DPS_DOCUMENT_HANDLING_SELECT.FLATBED
-                    Trace.WriteLine(String.Format("WIA_DPS_DOCUMENT_HANDLING_SELECT set to {0}", WIA_DPS_DOCUMENT_HANDLING_SELECT.FLATBED))
-                End If
-                Trace.WriteLine(String.Format("WIA_DPS_DOCUMENT_HANDLING_SELECT value: {0}", _device.Properties("Document Handling Select").Value))
-            Catch ex As COMException
-                Select Case ex.ErrorCode
-                    Case WIA_ERRORS.WIA_ERROR_PROPERTY_DONT_EXIST
-                        Trace.WriteLine(String.Format("WIA_DPS_DOCUMENT_HANDLING_SELECT not supported"))
-                    Case Else
-                        Trace.WriteLine(String.Format("Couldn't set WIA_DPS_DOCUMENT_HANDLING_SELECT. Error code {0}", CType(ex.ErrorCode, WIA_ERRORS)))
-                End Select
-            Catch ex As Exception
-                Trace.WriteLine(String.Format("Exception thrown on WIA_DPS_DOCUMENT_HANDLING_SELECT"))
-                Console.Write(ex.ToString())
-            End Try
+        'Set FEEDER options
+        Dim handling As WIA_DPS_DOCUMENT_HANDLING_SELECT = WIA_DPS_DOCUMENT_HANDLING_SELECT.FLATBED
 
-            'Connects the scanner
+        If settings.UseADF And CanUseADF Then
+            handling = WIA_DPS_DOCUMENT_HANDLING_SELECT.FEEDER
+            If settings.Duplex And CanDoDuplex Then
+                handling = WIA_DPS_DOCUMENT_HANDLING_SELECT.DUPLEX
+            End If
+        End If
+
+        Try
+            _device.Properties("Document Handling Select").Value = handling
+            Trace.WriteLine(String.Format("WIA_DPS_DOCUMENT_HANDLING_SELECT set to {0}", handling))
+            Trace.WriteLine(String.Format("WIA_DPS_DOCUMENT_HANDLING_SELECT value: {0}", _device.Properties("Document Handling Select").Value))
+        Catch ex As COMException
+            Select Case ex.ErrorCode
+                Case WIA_ERRORS.WIA_ERROR_PROPERTY_DONT_EXIST
+                    Trace.WriteLine(String.Format("WIA_DPS_DOCUMENT_HANDLING_SELECT not supported"))
+                Case Else
+                    Trace.WriteLine(String.Format("Couldn't set WIA_DPS_DOCUMENT_HANDLING_SELECT. Error code {0}", CType(ex.ErrorCode, WIA_ERRORS)))
+            End Select
+        Catch ex As Exception
+            Trace.WriteLine(String.Format("Exception thrown on WIA_DPS_DOCUMENT_HANDLING_SELECT"))
+            Console.Write(ex.ToString())
+        End Try
+
+        'Connects the scanner
+        Try
             _scanner = _device.Items(1)
         Catch ex As Exception
             Trace.WriteLine(String.Format("Couldn't connect to the scanner. ERROR {0}", ex.Message))
@@ -403,52 +423,53 @@ Public Class Scanner
 
         'Set all properties
         Trace.WriteLine(String.Format("Setting scan properties"))
-        Trace.WriteLine(options)
+        Trace.WriteLine(settings)
 
-        SetBrightess(options.Brightness)
-        SetContrast(options.Contrast)
-        SetIntent(options.Intent)
+        SetBrightess(settings.Brightness)
+        SetContrast(settings.Contrast)
+        SetIntent(settings.Intent)
 
         Try
-            SetResolution(options.Resolution)
+            SetResolution(settings.Resolution)
         Catch ex As Exception
-            Trace.WriteLine(String.Format("Couldn't set resolution to {0}.", options.Resolution))
+            Trace.WriteLine(String.Format("Couldn't set resolution to {0}.", settings.Resolution))
             Trace.WriteLine(String.Format("\tError: {0}", ex.ToString()))
         End Try
 
         SetMaxExtent() 'After setting resolution, maximize the extent
 
         Try
-            SetBitDepth(options.BitDepth)
+            SetBitDepth(settings.BitDepth)
         Catch ex As Exception
-            Trace.WriteLine(String.Format("Couldn't set BitDepth to {0}.", options.BitDepth))
+            Trace.WriteLine(String.Format("Couldn't set BitDepth to {0}.", settings.BitDepth))
         End Try
 
+        'Acquisition loop
         While hasMorePages
-            Try
-                Trace.WriteLine(String.Format("Image count {0}. Acquiring next image", AcquiredPages))
-                Try
-                    Trace.WriteLine(String.Format("WIA_DPS_PAGES Value: {0}", _device.Properties("Pages").Value))
-                    _device.Properties("Pages").Value = 1
-                Catch ex As COMException
-                    Trace.WriteLine(String.Format("Couldn't read/write WIA_DPS_PAGES. Error {0}", ex.ErrorCode))
-                End Try
+            Trace.WriteLine(String.Format("Image count {0}. Acquiring next image", AcquiredPages))
 
-                Try
-                    Trace.WriteLine(String.Format("DOCUMENT_HANDLING_STATUS: {0}", _device.Properties("Document Handling Status").Value))
-                Catch ex As Exception
-                    Trace.WriteLine("Couldn't evaluate DOCUMENT_HANDLING_STATUS")
-                End Try
+            Try 'Some scanner need WIA_DPS_PAGES to be set to 1, otherwise all pages are acquired but only one is returned as ImageFile
+                Trace.WriteLine(String.Format("WIA_DPS_PAGES Value: {0}", _device.Properties("Pages").Value))
+                _device.Properties("Pages").Value = 1
+            Catch ex As COMException
+                Trace.WriteLine(String.Format("Couldn't read/write WIA_DPS_PAGES. Error {0}", ex.ErrorCode))
+            End Try
 
-                If options.Preview Then
-                    img = DirectCast(dialog.ShowAcquireImage(WiaDeviceType.ScannerDeviceType, options.Intent, , WIA.FormatID.wiaFormatTIFF, False, False, False), ImageFile)
+            Try 'Check DOCUMENT_HANDLING_STATUS for debug purpose
+                Trace.WriteLine(String.Format("DOCUMENT_HANDLING_STATUS: {0}", _device.Properties("Document Handling Status").Value))
+            Catch ex As Exception
+                Trace.WriteLine("Couldn't evaluate DOCUMENT_HANDLING_STATUS")
+            End Try
+
+            Try 'This is the acquisition part.
+                If settings.Preview Then
+                    img = DirectCast(dialog.ShowAcquireImage(WiaDeviceType.ScannerDeviceType, settings.Intent, , WIA.FormatID.wiaFormatTIFF, False, False, False), ImageFile)
                 Else
-                    img = DirectCast(dialog.ShowTransfer(_scanner, WIA.FormatID.wiaFormatTIFF, False), ImageFile)
+                    img = DirectCast(dialog.ShowTransfer(_scanner, WIA.FormatID.wiaFormatTIFF, False), ImageFile) 'This could throw ArgumentException.
                 End If
 
                 Trace.WriteLine("Image acquired")
-                Trace.WriteLine(String.Format("Subitems count: {0}", _scanner.Items.Count))
-
+                'Process the image to temporary file
                 If img IsNot Nothing Then
                     Dim tpath As String = Path.GetTempFileName()
                     Try
@@ -485,16 +506,17 @@ Public Class Scanner
                         Continue While
                     Case Else
                         Trace.WriteLine(String.Format("Acquisition threw the exception {0}", ex.ErrorCode))
+                        Throw
                 End Select
-                Throw
             Catch ex As Exception
                 Throw 'TODO: Error handling
             End Try
-            If Not options.UseADF Then Exit While
-            'determine if there are any more pages waiting
+
+            If Not settings.UseADF Then Exit While
+            'Determine if there are any more pages waiting
             Trace.WriteLine(String.Format("Checking if there are more pages..."))
 
-            hasMorePages = False 'assume there are no more pages
+            hasMorePages = False 'Assume there are no more pages
             Try
                 Dim status As WIA_DPS_DOCUMENT_HANDLING_STATUS = _device.Properties("Document Handling Status").Value
                 Trace.WriteLine(String.Format("WIA_DPS_DOCUMENT_HANDLING_STATUS: {0}", status.ToString()))
@@ -510,8 +532,8 @@ Public Class Scanner
                 Trace.WriteLine(String.Format("Exception thrown on WIA_DPS_DOCUMENT_HANDLING_STATUS"))
                 Console.Write(ex.ToString())
             End Try
-
         End While
+
         If _scanner IsNot Nothing Then _scanner = Nothing
         Console.Write("Acquisition complete, returning {0} images", AcquiredPages)
         Trace.Unindent()
@@ -531,32 +553,42 @@ Public Class Scanner
         Dim AcquiredPages As Integer = 0
 
         While hasMorePages
-            Try 'Make connection to the scanner
+            Try 'Make connection to the device
                 _device = manager.DeviceInfos.Item(DeviceId).Connect
                 _deviceID = DeviceId
+            Catch ex As Exception
+                Trace.WriteLine(String.Format("Couldn't connect to the device. ERROR {0}", ex.Message))
+                Throw
+            End Try
 
-                Try 'Some scanner need this property to be set to feeder
-                    If settings.UseADF Then
-                        _device.Properties("Document Handling Select").Value = WIA_DPS_DOCUMENT_HANDLING_SELECT.FEEDER
-                        Trace.WriteLine(String.Format("WIA_DPS_DOCUMENT_HANDLING_SELECT set to {0}", WIA_DPS_DOCUMENT_HANDLING_SELECT.FEEDER))
-                    Else
-                        _device.Properties("Document Handling Select").Value = WIA_DPS_DOCUMENT_HANDLING_SELECT.FLATBED
-                        Trace.WriteLine(String.Format("WIA_DPS_DOCUMENT_HANDLING_SELECT set to {0}", WIA_DPS_DOCUMENT_HANDLING_SELECT.FLATBED))
-                    End If
-                    Trace.WriteLine(String.Format("WIA_DPS_DOCUMENT_HANDLING_SELECT value: {0}", _device.Properties("Document Handling Select").Value))
-                Catch ex As COMException
-                    Select Case ex.ErrorCode
-                        Case WIA_ERRORS.WIA_ERROR_PROPERTY_DONT_EXIST
-                            Trace.WriteLine(String.Format("WIA_DPS_DOCUMENT_HANDLING_SELECT not supported"))
-                        Case Else
-                            Trace.WriteLine(String.Format("Couldn't set WIA_DPS_DOCUMENT_HANDLING_SELECT. Error code {0}", CType(ex.ErrorCode, WIA_ERRORS)))
-                    End Select
-                Catch ex As Exception
-                    Trace.WriteLine(String.Format("Exception thrown on WIA_DPS_DOCUMENT_HANDLING_SELECT"))
-                    Console.Write(ex.ToString())
-                End Try
+            'Set FEEDER options
+            Dim handling As WIA_DPS_DOCUMENT_HANDLING_SELECT = WIA_DPS_DOCUMENT_HANDLING_SELECT.FLATBED
 
-                'Connects the scanner
+            If settings.UseADF And CanUseADF Then
+                handling = WIA_DPS_DOCUMENT_HANDLING_SELECT.FEEDER
+                If settings.Duplex And CanDoDuplex Then
+                    handling = WIA_DPS_DOCUMENT_HANDLING_SELECT.DUPLEX
+                End If
+            End If
+
+            Try
+                _device.Properties("Document Handling Select").Value = handling
+                Trace.WriteLine(String.Format("WIA_DPS_DOCUMENT_HANDLING_SELECT set to {0}", handling))
+                Trace.WriteLine(String.Format("WIA_DPS_DOCUMENT_HANDLING_SELECT value: {0}", _device.Properties("Document Handling Select").Value))
+            Catch ex As COMException
+                Select Case ex.ErrorCode
+                    Case WIA_ERRORS.WIA_ERROR_PROPERTY_DONT_EXIST
+                        Trace.WriteLine(String.Format("WIA_DPS_DOCUMENT_HANDLING_SELECT not supported"))
+                    Case Else
+                        Trace.WriteLine(String.Format("Couldn't set WIA_DPS_DOCUMENT_HANDLING_SELECT. Error code {0}", CType(ex.ErrorCode, WIA_ERRORS)))
+                End Select
+            Catch ex As Exception
+                Trace.WriteLine(String.Format("Exception thrown on WIA_DPS_DOCUMENT_HANDLING_SELECT"))
+                Console.Write(ex.ToString())
+            End Try
+
+            'Connects to the scanner
+            Try
                 _scanner = _device.Items(1)
             Catch ex As Exception
                 Trace.WriteLine(String.Format("Couldn't connect to the scanner. ERROR {0}", ex.Message))
@@ -686,7 +718,6 @@ Public Class Scanner
         Return imageList
     End Function
 
-    <CLSCompliant(False)> _
     Sub TraceProp(ByVal prop As WIA.IProperty)
         Trace.WriteLine(String.Format("Property {0}: {1}  TYPE {2}", prop.PropertyID, prop.Name, prop.Type))
 

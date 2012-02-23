@@ -13,9 +13,12 @@ Public Class ScanSettings
     Private _Copies As Integer
     Private _Path As String
     Private _UseADF As Boolean
+    Private _duplex As Boolean
 
+    ''' Creates default properties
     Public Sub New()
         _UseADF = False
+        _duplex = False
         _Brightness = 0
         _Contrast = 0
         _Quality = 100
@@ -115,6 +118,15 @@ Public Class ScanSettings
         End Get
         Set(ByVal value As Boolean)
             _UseADF = value
+        End Set
+    End Property
+
+    Public Property Duplex() As Boolean
+        Get
+            Return _duplex
+        End Get
+        Set(ByVal value As Boolean)
+            _duplex = value
         End Set
     End Property
 
