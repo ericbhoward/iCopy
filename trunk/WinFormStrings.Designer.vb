@@ -1072,7 +1072,7 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Looks up a localized string similar to WIA Automation Layer (wiaaut.dll) isn&apos;t registered in your system. iCopy needs WIA Automation to be registered in order to work properly. Wiaaut.dll is a system file provided by Microsoft and doesn&apos;t harm your sistem. 
+        '''  Looks up a localized string similar to WIA Automation Layer (wiaaut.dll) isn&apos;t registered in your system. iCopy needs WIA Automation to be registered in order to work properly. Wiaaut.dll is a system file provided by Microsoft and doesn&apos;t harm your system. 
         '''
         '''Click OK if you want iCopy to register wiaaut.dll for you, otherwise click Cancel to close iCopy. This operation requires administrator privileges..
         '''</summary>

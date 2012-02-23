@@ -48,6 +48,7 @@ Partial Class mainFrm
         Me.cboPaperSize = New System.Windows.Forms.ComboBox()
         Me.Label2 = New System.Windows.Forms.Label()
         Me.chkADF = New System.Windows.Forms.CheckBox()
+        Me.chkDuplex = New System.Windows.Forms.CheckBox()
         CType(Me.nudNCopie, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.StatusStrip1.SuspendLayout()
         Me.ScanMenuStrip.SuspendLayout()
@@ -56,7 +57,7 @@ Partial Class mainFrm
         'btnCopy
         '
         Me.btnCopy.Image = Global.iCopy.My.Resources.Resources.iCopyBig
-        Me.btnCopy.Location = New System.Drawing.Point(12, 12)
+        Me.btnCopy.Location = New System.Drawing.Point(12, 11)
         Me.btnCopy.Name = "btnCopy"
         Me.btnCopy.Size = New System.Drawing.Size(138, 134)
         Me.btnCopy.TabIndex = 0
@@ -64,9 +65,9 @@ Partial Class mainFrm
         '
         'btnSelScanner
         '
-        Me.btnSelScanner.Location = New System.Drawing.Point(383, 13)
+        Me.btnSelScanner.Location = New System.Drawing.Point(383, 11)
         Me.btnSelScanner.Name = "btnSelScanner"
-        Me.btnSelScanner.Size = New System.Drawing.Size(137, 23)
+        Me.btnSelScanner.Size = New System.Drawing.Size(137, 21)
         Me.btnSelScanner.TabIndex = 7
         Me.btnSelScanner.Text = "Choose &scanner..."
         Me.btnSelScanner.UseVisualStyleBackColor = True
@@ -75,25 +76,25 @@ Partial Class mainFrm
         '
         Me.cboPrintMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboPrintMode.FormattingEnabled = True
-        Me.cboPrintMode.Location = New System.Drawing.Point(261, 45)
+        Me.cboPrintMode.Location = New System.Drawing.Point(270, 39)
         Me.cboPrintMode.Name = "cboPrintMode"
         Me.cboPrintMode.Size = New System.Drawing.Size(107, 21)
         Me.cboPrintMode.TabIndex = 3
         '
         'Label8
         '
-        Me.Label8.Location = New System.Drawing.Point(160, 46)
+        Me.Label8.Location = New System.Drawing.Point(163, 42)
         Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(95, 18)
+        Me.Label8.Size = New System.Drawing.Size(101, 18)
         Me.Label8.TabIndex = 2
         Me.Label8.Text = "Printer"
         Me.Label8.TextAlign = System.Drawing.ContentAlignment.TopRight
         '
         'Label7
         '
-        Me.Label7.Location = New System.Drawing.Point(160, 17)
+        Me.Label7.Location = New System.Drawing.Point(163, 15)
         Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(95, 18)
+        Me.Label7.Size = New System.Drawing.Size(101, 18)
         Me.Label7.TabIndex = 1
         Me.Label7.Text = "Scanner"
         Me.Label7.TextAlign = System.Drawing.ContentAlignment.TopRight
@@ -102,16 +103,16 @@ Partial Class mainFrm
         '
         Me.cboScanMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboScanMode.FormattingEnabled = True
-        Me.cboScanMode.Location = New System.Drawing.Point(261, 14)
+        Me.cboScanMode.Location = New System.Drawing.Point(270, 12)
         Me.cboScanMode.Name = "cboScanMode"
         Me.cboScanMode.Size = New System.Drawing.Size(107, 21)
         Me.cboScanMode.TabIndex = 2
         '
         'btnPrintSetup
         '
-        Me.btnPrintSetup.Location = New System.Drawing.Point(383, 44)
+        Me.btnPrintSetup.Location = New System.Drawing.Point(383, 38)
         Me.btnPrintSetup.Name = "btnPrintSetup"
-        Me.btnPrintSetup.Size = New System.Drawing.Size(137, 23)
+        Me.btnPrintSetup.Size = New System.Drawing.Size(137, 21)
         Me.btnPrintSetup.TabIndex = 6
         Me.btnPrintSetup.Text = "&Printer options..."
         Me.btnPrintSetup.UseVisualStyleBackColor = True
@@ -119,7 +120,7 @@ Partial Class mainFrm
         'nudNCopie
         '
         Me.nudNCopie.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.nudNCopie.Location = New System.Drawing.Point(313, 106)
+        Me.nudNCopie.Location = New System.Drawing.Point(322, 96)
         Me.nudNCopie.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.nudNCopie.Name = "nudNCopie"
         Me.nudNCopie.Size = New System.Drawing.Size(55, 26)
@@ -130,7 +131,7 @@ Partial Class mainFrm
         '
         Me.Label1.Cursor = System.Windows.Forms.Cursors.Default
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(196, 110)
+        Me.Label1.Location = New System.Drawing.Point(196, 96)
         Me.Label1.Name = "Label1"
         Me.Label1.Size = New System.Drawing.Size(111, 19)
         Me.Label1.TabIndex = 12
@@ -174,7 +175,7 @@ Partial Class mainFrm
         'chkPreview
         '
         Me.chkPreview.AutoSize = True
-        Me.chkPreview.Location = New System.Drawing.Point(163, 141)
+        Me.chkPreview.Location = New System.Drawing.Point(166, 127)
         Me.chkPreview.Name = "chkPreview"
         Me.chkPreview.Size = New System.Drawing.Size(64, 17)
         Me.chkPreview.TabIndex = 4
@@ -192,7 +193,7 @@ Partial Class mainFrm
         '
         'llblAbout
         '
-        Me.llblAbout.Location = New System.Drawing.Point(371, 167)
+        Me.llblAbout.Location = New System.Drawing.Point(371, 168)
         Me.llblAbout.Name = "llblAbout"
         Me.llblAbout.Size = New System.Drawing.Size(149, 13)
         Me.llblAbout.TabIndex = 10
@@ -212,9 +213,9 @@ Partial Class mainFrm
         '
         'btnImageSettings
         '
-        Me.btnImageSettings.Location = New System.Drawing.Point(386, 98)
+        Me.btnImageSettings.Location = New System.Drawing.Point(383, 66)
         Me.btnImageSettings.Name = "btnImageSettings"
-        Me.btnImageSettings.Size = New System.Drawing.Size(134, 42)
+        Me.btnImageSettings.Size = New System.Drawing.Size(137, 42)
         Me.btnImageSettings.TabIndex = 5
         Me.btnImageSettings.Text = "Image Settings >>"
         Me.btnImageSettings.UseVisualStyleBackColor = True
@@ -247,34 +248,45 @@ Partial Class mainFrm
         Me.cboPaperSize.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
         Me.cboPaperSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboPaperSize.FormattingEnabled = True
-        Me.cboPaperSize.Location = New System.Drawing.Point(261, 75)
+        Me.cboPaperSize.Location = New System.Drawing.Point(270, 66)
         Me.cboPaperSize.Name = "cboPaperSize"
         Me.cboPaperSize.Size = New System.Drawing.Size(107, 21)
         Me.cboPaperSize.TabIndex = 21
         '
         'Label2
         '
-        Me.Label2.Location = New System.Drawing.Point(150, 76)
+        Me.Label2.Location = New System.Drawing.Point(163, 73)
         Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(105, 23)
+        Me.Label2.Size = New System.Drawing.Size(101, 23)
         Me.Label2.TabIndex = 22
         Me.Label2.Text = "Paper Size"
         Me.Label2.TextAlign = System.Drawing.ContentAlignment.TopRight
         '
         'chkADF
         '
-        Me.chkADF.Location = New System.Drawing.Point(163, 159)
+        Me.chkADF.Location = New System.Drawing.Point(166, 145)
         Me.chkADF.Name = "chkADF"
         Me.chkADF.Size = New System.Drawing.Size(207, 21)
         Me.chkADF.TabIndex = 23
         Me.chkADF.Text = "Use Document Feeder"
         Me.chkADF.UseVisualStyleBackColor = True
         '
+        'chkDuplex
+        '
+        Me.chkDuplex.AutoSize = True
+        Me.chkDuplex.Location = New System.Drawing.Point(166, 167)
+        Me.chkDuplex.Name = "chkDuplex"
+        Me.chkDuplex.Size = New System.Drawing.Size(98, 17)
+        Me.chkDuplex.TabIndex = 24
+        Me.chkDuplex.Text = "Acquire Duplex"
+        Me.chkDuplex.UseVisualStyleBackColor = True
+        '
         'mainFrm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(532, 210)
+        Me.Controls.Add(Me.chkDuplex)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label8)
         Me.Controls.Add(Me.cboPrintMode)
@@ -283,15 +295,15 @@ Partial Class mainFrm
         Me.Controls.Add(Me.cboScanMode)
         Me.Controls.Add(Me.Label7)
         Me.Controls.Add(Me.StatusStrip1)
-        Me.Controls.Add(Me.llblSettings)
         Me.Controls.Add(Me.chkADF)
-        Me.Controls.Add(Me.btnCopy)
+        Me.Controls.Add(Me.llblSettings)
         Me.Controls.Add(Me.btnImageSettings)
+        Me.Controls.Add(Me.btnCopy)
         Me.Controls.Add(Me.btnSelScanner)
         Me.Controls.Add(Me.btnPrintSetup)
         Me.Controls.Add(Me.nudNCopie)
-        Me.Controls.Add(Me.llblAbout)
         Me.Controls.Add(Me.chkPreview)
+        Me.Controls.Add(Me.llblAbout)
         Me.Controls.Add(Me.Label1)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.KeyPreview = True
@@ -333,4 +345,5 @@ Partial Class mainFrm
     Friend WithEvents PrinterStatusLabel As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents VersionStatusLabel As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents chkADF As System.Windows.Forms.CheckBox
+    Friend WithEvents chkDuplex As System.Windows.Forms.CheckBox
 End Class
