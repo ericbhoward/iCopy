@@ -350,9 +350,10 @@ Public Class Scanner
         End Get
     End Property
 
-
     Function ScanADF(ByVal options As ScanSettings) As List(Of String)
-        If _description.ToLower().Contains("brother") Then
+        If _description = "Brother MFC-6800" Then
+            Return ScanADFNormal(options)
+        ElseIf _description.ToLower().Contains("brother") Then
             Return ScanADFBrother(options)
         Else
             Return ScanADFNormal(options)
@@ -366,6 +367,178 @@ Public Class Scanner
         End Get
     End Property
 
+    Function ScanADFBrother6800(ByVal settings As ScanSettings) As List(Of String)
+        Trace.WriteLine(String.Format("Starting acquisition (Brother MFC-6800)"))
+        Trace.Indent()
+        Dim imageList As New List(Of String)()
+        Dim dialog As New WIA.CommonDialog
+        Dim _device As Device
+        Dim hasMorePages As Boolean = True
+
+        Dim img As WIA.ImageFile = Nothing
+
+        Dim AcquiredPages As Integer = 0
+
+        Try 'Make connection to the device
+            _device = manager.DeviceInfos.Item(DeviceId).Connect
+            _deviceID = DeviceId
+        Catch ex As Exception
+            Trace.WriteLine(String.Format("Couldn't connect to the device. ERROR {0}", ex.Message))
+            Throw
+        End Try
+
+        'Set FEEDER options
+        Dim handling As WIA_DPS_DOCUMENT_HANDLING_SELECT = WIA_DPS_DOCUMENT_HANDLING_SELECT.FLATBED
+
+        If settings.UseADF And CanUseADF Then
+            handling = WIA_DPS_DOCUMENT_HANDLING_SELECT.FEEDER
+            If settings.Duplex And CanDoDuplex Then
+                handling = WIA_DPS_DOCUMENT_HANDLING_SELECT.DUPLEX
+            End If
+        End If
+
+        Try
+            _device.Properties("Document Handling Select").Value = handling
+            Trace.WriteLine(String.Format("WIA_DPS_DOCUMENT_HANDLING_SELECT set to {0}", handling))
+            Trace.WriteLine(String.Format("WIA_DPS_DOCUMENT_HANDLING_SELECT value: {0}", _device.Properties("Document Handling Select").Value))
+        Catch ex As COMException
+            Select Case ex.ErrorCode
+                Case WIA_ERRORS.WIA_ERROR_PROPERTY_DONT_EXIST
+                    Trace.WriteLine(String.Format("WIA_DPS_DOCUMENT_HANDLING_SELECT not supported"))
+                Case Else
+                    Trace.WriteLine(String.Format("Couldn't set WIA_DPS_DOCUMENT_HANDLING_SELECT. Error code {0}", CType(ex.ErrorCode, WIA_ERRORS)))
+            End Select
+        Catch ex As Exception
+            Trace.WriteLine(String.Format("Exception thrown on WIA_DPS_DOCUMENT_HANDLING_SELECT"))
+            Console.Write(ex.ToString())
+        End Try
+
+        'Connects the scanner
+        Try
+            _scanner = _device.Items(1)
+        Catch ex As Exception
+            Trace.WriteLine(String.Format("Couldn't connect to the scanner. ERROR {0}", ex.Message))
+            Throw
+        End Try
+
+        'Set all properties
+        Trace.WriteLine(String.Format("Setting scan properties"))
+        Trace.WriteLine(settings)
+
+        SetBrightess(settings.Brightness)
+        SetContrast(settings.Contrast)
+        SetIntent(settings.Intent)
+
+        Try
+            SetResolution(settings.Resolution)
+        Catch ex As Exception
+            Trace.WriteLine(String.Format("Couldn't set resolution to {0}.", settings.Resolution))
+            Trace.WriteLine(String.Format("\tError: {0}", ex.ToString()))
+        End Try
+
+        SetMaxExtent() 'After setting resolution, maximize the extent
+
+        Try
+            SetBitDepth(settings.BitDepth)
+        Catch ex As Exception
+            Trace.WriteLine(String.Format("Couldn't set BitDepth to {0}.", settings.BitDepth))
+        End Try
+
+        'Acquisition loop
+        While hasMorePages
+            Trace.WriteLine(String.Format("Image count {0}. Acquiring next image", AcquiredPages))
+
+            Try 'Some scanner need WIA_DPS_PAGES to be set to 1, otherwise all pages are acquired but only one is returned as ImageFile
+                Trace.WriteLine(String.Format("WIA_DPS_PAGES Value: {0}", _device.Properties("Pages").Value))
+                _device.Properties("Pages").Value = 1
+            Catch ex As COMException
+                Trace.WriteLine(String.Format("Couldn't read/write WIA_DPS_PAGES. Error {0}", ex.ErrorCode))
+            End Try
+
+            Try 'Check DOCUMENT_HANDLING_STATUS for debug purpose
+                Trace.WriteLine(String.Format("DOCUMENT_HANDLING_STATUS: {0}", _device.Properties("Document Handling Status").Value))
+            Catch ex As Exception
+                Trace.WriteLine("Couldn't evaluate DOCUMENT_HANDLING_STATUS")
+            End Try
+
+            Try 'This is the acquisition part.
+                If settings.Preview Then
+                    img = DirectCast(dialog.ShowAcquireImage(WiaDeviceType.ScannerDeviceType, settings.Intent, , WIA.FormatID.wiaFormatTIFF, False, False, False), ImageFile)
+                Else
+                    img = DirectCast(dialog.ShowTransfer(_scanner, WIA.FormatID.wiaFormatTIFF, False), ImageFile) 'This could throw ArgumentException.
+                End If
+
+                Trace.WriteLine("Image acquired")
+                'Process the image to temporary file
+                If img IsNot Nothing Then
+                    Dim tpath As String = Path.GetTempFileName()
+                    Try
+                        File.Delete(tpath)
+                    Catch ex As Exception
+
+                    End Try
+                    Try
+                        img.SaveFile(tpath)
+                        imageList.Add(tpath)
+                        AcquiredPages += 1
+                    Catch ex As Exception
+                        Throw
+                    End Try
+
+                    img = Nothing
+                Else 'Acquisition canceled
+                    Trace.WriteLine("Acquisition canceled by the user")
+                    Exit While
+                End If
+            Catch ex As COMException
+                Select Case ex.ErrorCode
+                    Case WIA_ERRORS.WIA_ERROR_PAPER_EMPTY   'This error is reported when ADF is empty
+                        Trace.WriteLine(String.Format("The ADF is empty"))
+                        Exit While                          'The acquisition is complete
+                    Case WIA_ERRORS.WIA_ERROR_PAPER_JAM
+                        Dim result As MsgBoxResult = MsgBoxWrap("The paper in the document feeder is jammed." + _
+                                                             "Please check the feeder and click Ok to resume the acquisition, Cancel to abort", vbOKCancel + vbExclamation, "iCopy")
+                        If result = MsgBoxResult.Ok Then Continue While
+                        If result = MsgBoxResult.Cancel Then Exit While
+                    Case WIA_ERRORS.WIA_ERROR_BUSY
+                        Trace.WriteLine("Device busy, waiting 2 seconds...")
+                        Threading.Thread.Sleep(2000)
+                        Continue While
+                    Case Else
+                        Trace.WriteLine(String.Format("Acquisition threw the exception {0}", ex.ErrorCode))
+                        Throw
+                End Select
+            Catch ex As Exception
+                Throw 'TODO: Error handling
+            End Try
+
+            If Not settings.UseADF Then Exit While
+            'Determine if there are any more pages waiting
+            Trace.WriteLine(String.Format("Checking if there are more pages..."))
+
+            hasMorePages = False 'Assume there are no more pages
+            Try
+                Dim status As WIA_DPS_DOCUMENT_HANDLING_STATUS = _device.Properties("Document Handling Status").Value
+                Trace.WriteLine(String.Format("WIA_DPS_DOCUMENT_HANDLING_STATUS: {0}", status.ToString()))
+                hasMorePages = ((status And WIA_DPS_DOCUMENT_HANDLING_STATUS.FEED_READY) <> 0)
+            Catch ex As COMException
+                Select Case ex.ErrorCode
+                    Case WIA_ERRORS.WIA_ERROR_PROPERTY_DONT_EXIST
+                        Trace.WriteLine(String.Format("WIA_DPS_DOCUMENT_HANDLING_STATUS not supported"))
+                    Case Else
+                        Trace.WriteLine(String.Format("Couldn't get WIA_DPS_DOCUMENT_HANDLING_STATUS. Error code {0}", ex.ErrorCode))
+                End Select
+            Catch ex As Exception
+                Trace.WriteLine(String.Format("Exception thrown on WIA_DPS_DOCUMENT_HANDLING_STATUS"))
+                Console.Write(ex.ToString())
+            End Try
+        End While
+
+        If _scanner IsNot Nothing Then _scanner = Nothing
+        Console.Write("Acquisition complete, returning {0} images", AcquiredPages)
+        Trace.Unindent()
+        Return imageList
+    End Function
 
     Function ScanADFBrother(ByVal settings As ScanSettings) As List(Of String)
         Trace.WriteLine(String.Format("Starting acquisition (Brother)"))
