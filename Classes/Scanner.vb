@@ -169,7 +169,7 @@ Public Class Scanner
         End Get
     End Property
 
-    Public Sub SetBitDepth(ByVal value As Short) 'TODO: Probably useless
+    Private Sub SetBitDepth(ByVal value As Short) 'TODO: Probably useless
         If value <= 32 And value Mod 8 = 0 Then 'La profondità è multipla di 8 e minore o uguale a 32 bit
             Try
                 _scanner.Properties("Bits Per Pixel").Value = value
@@ -350,9 +350,10 @@ Public Class Scanner
         End Get
     End Property
 
+    'This function calls the appropriate acquisition function depending on the scanner name / manufacturer.
     Function ScanADF(ByVal options As ScanSettings) As List(Of String)
         If _description = "Brother MFC-6800" Then
-            Return ScanADFNormal(options)
+            Return ScanADFBrother6800(options)
         ElseIf _description.ToLower().Contains("brother") Then
             Return ScanADFBrother(options)
         Else
@@ -367,7 +368,7 @@ Public Class Scanner
         End Get
     End Property
 
-    Function ScanADFBrother6800(ByVal settings As ScanSettings) As List(Of String)
+    Private Function ScanADFBrother6800(ByVal settings As ScanSettings) As List(Of String)
         Trace.WriteLine(String.Format("Starting acquisition (Brother MFC-6800)"))
         Trace.Indent()
         Dim imageList As New List(Of String)()
@@ -400,7 +401,7 @@ Public Class Scanner
         Try
             _device.Properties("Document Handling Select").Value = handling
             Trace.WriteLine(String.Format("WIA_DPS_DOCUMENT_HANDLING_SELECT set to {0}", handling))
-            Trace.WriteLine(String.Format("WIA_DPS_DOCUMENT_HANDLING_SELECT value: {0}", _device.Properties("Document Handling Select").Value))
+            Trace.WriteLine(String.Format("WIA_DPS_DOCUMENT_HANDLING_SELECT value: {0}", CType(_device.Properties("Document Handling Select").Value, WIA_DPS_DOCUMENT_HANDLING_SELECT)))
         Catch ex As COMException
             Select Case ex.ErrorCode
                 Case WIA_ERRORS.WIA_ERROR_PROPERTY_DONT_EXIST
@@ -409,8 +410,8 @@ Public Class Scanner
                     Trace.WriteLine(String.Format("Couldn't set WIA_DPS_DOCUMENT_HANDLING_SELECT. Error code {0}", CType(ex.ErrorCode, WIA_ERRORS)))
             End Select
         Catch ex As Exception
-            Trace.WriteLine(String.Format("Exception thrown on WIA_DPS_DOCUMENT_HANDLING_SELECT"))
-            Console.Write(ex.ToString())
+            Trace.WriteLine(String.Format("Exception thrown while setting WIA_DPS_DOCUMENT_HANDLING_SELECT"))
+            Trace.WriteLine(ex.ToString())
         End Try
 
         'Connects the scanner
@@ -449,7 +450,7 @@ Public Class Scanner
             Trace.WriteLine(String.Format("Image count {0}. Acquiring next image", AcquiredPages))
 
             Try 'Some scanner need WIA_DPS_PAGES to be set to 1, otherwise all pages are acquired but only one is returned as ImageFile
-                Trace.WriteLine(String.Format("WIA_DPS_PAGES Value: {0}", _device.Properties("Pages").Value))
+                '  Trace.WriteLine(String.Format("WIA_DPS_PAGES Value: {0}", _device.Properties("Pages").Value))
                 _device.Properties("Pages").Value = 1
             Catch ex As COMException
                 Trace.WriteLine(String.Format("Couldn't read/write WIA_DPS_PAGES. Error {0}", ex.ErrorCode))
@@ -463,9 +464,9 @@ Public Class Scanner
 
             Try 'This is the acquisition part.
                 If settings.Preview Then
-                    img = DirectCast(dialog.ShowAcquireImage(WiaDeviceType.ScannerDeviceType, settings.Intent, , WIA.FormatID.wiaFormatTIFF, False, False, False), ImageFile)
+                    img = DirectCast(dialog.ShowAcquireImage(WiaDeviceType.ScannerDeviceType, settings.Intent, , , False, False, False), ImageFile)
                 Else
-                    img = DirectCast(dialog.ShowTransfer(_scanner, WIA.FormatID.wiaFormatTIFF, False), ImageFile) 'This could throw ArgumentException.
+                    img = DirectCast(dialog.ShowTransfer(_scanner, , False), ImageFile) 'This could throw ArgumentException.
                 End If
 
                 Trace.WriteLine("Image acquired")
@@ -509,6 +510,7 @@ Public Class Scanner
                         Throw
                 End Select
             Catch ex As Exception
+                Trace.WriteLine(String.Format("Acquisition threw the exception {0}", ex.ToString()))
                 Throw 'TODO: Error handling
             End Try
 
@@ -519,7 +521,7 @@ Public Class Scanner
             hasMorePages = False 'Assume there are no more pages
             Try
                 Dim status As WIA_DPS_DOCUMENT_HANDLING_STATUS = _device.Properties("Document Handling Status").Value
-                Trace.WriteLine(String.Format("WIA_DPS_DOCUMENT_HANDLING_STATUS: {0}", status.ToString()))
+                Trace.WriteLine(String.Format("WIA_DPS_DOCUMENT_HANDLING_STATUS: {0}", status))
                 hasMorePages = ((status And WIA_DPS_DOCUMENT_HANDLING_STATUS.FEED_READY) <> 0)
             Catch ex As COMException
                 Select Case ex.ErrorCode
@@ -540,7 +542,7 @@ Public Class Scanner
         Return imageList
     End Function
 
-    Function ScanADFBrother(ByVal settings As ScanSettings) As List(Of String)
+    Private Function ScanADFBrother(ByVal settings As ScanSettings) As List(Of String)
         Trace.WriteLine(String.Format("Starting acquisition (Brother)"))
         Trace.Indent()
         Dim imageList As New List(Of String)()
@@ -636,9 +638,9 @@ Public Class Scanner
 
             Try 'This is the acquisition part.
                 If settings.Preview Then
-                    img = DirectCast(dialog.ShowAcquireImage(WiaDeviceType.ScannerDeviceType, settings.Intent, , WIA.FormatID.wiaFormatTIFF, False, False, False), ImageFile)
+                    img = DirectCast(dialog.ShowAcquireImage(WiaDeviceType.ScannerDeviceType, settings.Intent, , , False, False, False), ImageFile)
                 Else
-                    img = DirectCast(dialog.ShowTransfer(_scanner, WIA.FormatID.wiaFormatTIFF, False), ImageFile) 'This could throw ArgumentException.
+                    img = DirectCast(dialog.ShowTransfer(_scanner, , False), ImageFile) 'This could throw ArgumentException.
                 End If
 
                 Trace.WriteLine("Image acquired")
@@ -682,6 +684,7 @@ Public Class Scanner
                         Throw
                 End Select
             Catch ex As Exception
+                Trace.WriteLine(String.Format("Acquisition threw the exception {0}", ex.ToString()))
                 Throw 'TODO: Error handling
             End Try
 
@@ -713,7 +716,7 @@ Public Class Scanner
         Return imageList
     End Function
 
-    Function ScanADFNormal(ByVal settings As ScanSettings) As List(Of String)
+    Private Function ScanADFNormal(ByVal settings As ScanSettings) As List(Of String)
         Trace.WriteLine(String.Format("Starting acquisition"))
         Trace.Indent()
         Dim imageList As New List(Of String)()
@@ -801,9 +804,9 @@ Public Class Scanner
                 Trace.WriteLine(String.Format("Subitems count: {0}", _scanner.Items.Count))
 
                 If settings.Preview Then
-                    img = DirectCast(dialog.ShowAcquireImage(WiaDeviceType.ScannerDeviceType, settings.Intent, , WIA.FormatID.wiaFormatTIFF, False, False, False), ImageFile)
+                    img = DirectCast(dialog.ShowAcquireImage(WiaDeviceType.ScannerDeviceType, settings.Intent, , , False, False, False), ImageFile)
                 Else
-                    img = DirectCast(dialog.ShowTransfer(_scanner, WIA.FormatID.wiaFormatTIFF, False), ImageFile)
+                    img = DirectCast(dialog.ShowTransfer(_scanner, , False), ImageFile)
                 End If
 
                 Trace.WriteLine("Image acquired")
@@ -849,6 +852,7 @@ Public Class Scanner
                 End Select
                 Throw
             Catch ex As Exception
+                Trace.WriteLine(String.Format("Acquisition threw the exception {0}", ex.ToString()))
                 Throw 'TODO: Error handling
             End Try
             If Not settings.UseADF Then Exit While
@@ -891,7 +895,7 @@ Public Class Scanner
         Return imageList
     End Function
 
-    Sub TraceProp(ByVal prop As WIA.IProperty)
+    Private Sub TraceProp(ByVal prop As WIA.IProperty)
         Trace.WriteLine(String.Format("Property {0}: {1}  TYPE {2}", prop.PropertyID, prop.Name, prop.Type))
 
         If prop.IsVector Then
