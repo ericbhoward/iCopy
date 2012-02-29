@@ -1,4 +1,8 @@
-﻿== 1.5 ==
+﻿== 1.5.1 ==
+- ADD: Duplex ADF acquisition
+- FIX: Crash with Brother MFC-6800 (wrong image format)
+
+== 1.5 ==
 - FIX: Improvements in ADF support.
 - FIX: Less memory consumption. Images are saved to temporary files, which are deleted as long as they are not needed.
 - FIX: JPEG quality now works as expected.

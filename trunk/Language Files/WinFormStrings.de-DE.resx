@@ -626,7 +626,7 @@ FORTGESCHRITTENE PARAMETER
     <comment>Set JPEG compression (Save to File only)</comment>
   </data>
   <data name="mainFrm_chkADF" xml:space="preserve">
-    <value>Automatischen Dokumenteneinzug (ADE)</value>
+    <value>Automatischer Dokumenteneinzug</value>
     <comment>Use Document Feeder (ADF)</comment>
   </data>
   <data name="mainFrm_chkADFToolTip" xml:space="preserve">
@@ -660,5 +660,13 @@ FORTGESCHRITTENE PARAMETER
   <data name="dlgOptions_btnResetScanSettings" xml:space="preserve">
     <value>Zurücksetzen</value>
     <comment>Reset to default</comment>
+  </data>
+  <data name="dlgOptions_chkRememberScanSettings" xml:space="preserve">
+    <value>Bildeinstellungen speichern</value>
+    <comment>Remeber Scan Settings</comment>
+  </data>
+  <data name="dlgOptions_chkRememberScanSettingsToolTip" xml:space="preserve">
+    <value>Behält die Bildeinstellungen beim Neustart bei.</value>
+    <comment>If selected, iCopy will maintain image settings on next restart.</comment>
   </data>
 </root>

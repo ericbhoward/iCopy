@@ -939,6 +939,15 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized string similar to There was an error in the scanner driver. Please make sure that the driver is updated and is compatible with your Windows version..
+        '''</summary>
+        Friend Shared ReadOnly Property Msg_ExceptionInDriver() As String
+            Get
+                Return ResourceManager.GetString("Msg_ExceptionInDriver", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized string similar to Please insert a number between {0} and {1}..
         '''</summary>
         Friend Shared ReadOnly Property Msg_InsertNumber() As String
