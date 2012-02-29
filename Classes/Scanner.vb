@@ -568,7 +568,7 @@ Public Class Scanner
         If settings.UseADF And CanUseADF Then
             handling = WIA_DPS_DOCUMENT_HANDLING_SELECT.FEEDER
             If settings.Duplex And CanDoDuplex Then
-                handling = WIA_DPS_DOCUMENT_HANDLING_SELECT.DUPLEX
+                handling = handling And WIA_DPS_DOCUMENT_HANDLING_SELECT.DUPLEX
             End If
         End If
 
@@ -709,9 +709,9 @@ Public Class Scanner
                 Console.Write(ex.ToString())
             End Try
         End While
-
+        Trace.WriteLine("Exited loop")
         If _scanner IsNot Nothing Then _scanner = Nothing
-        Console.Write("Acquisition complete, returning {0} images", AcquiredPages)
+        Trace.WriteLine(String.Format("Acquisition complete, returning {0} images", AcquiredPages))
         Trace.Unindent()
         Return imageList
     End Function

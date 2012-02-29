@@ -33,6 +33,7 @@ Partial Class dlgOptions
         Me.cboBitDepth = New System.Windows.Forms.ComboBox()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.tabGeneral = New System.Windows.Forms.TabPage()
+        Me.btnResetScanSettings = New System.Windows.Forms.Button()
         Me.lblNote = New System.Windows.Forms.Label()
         Me.chkUpdates = New System.Windows.Forms.CheckBox()
         Me.chkRememberScanSettings = New System.Windows.Forms.CheckBox()
@@ -43,7 +44,6 @@ Partial Class dlgOptions
         Me.lblAvailableEvents = New System.Windows.Forms.Label()
         Me.ListBox1 = New System.Windows.Forms.ListBox()
         Me.btnRegister = New System.Windows.Forms.Button()
-        Me.btnResetScanSettings = New System.Windows.Forms.Button()
         Me.TabControl1.SuspendLayout()
         Me.tabGeneral.SuspendLayout()
         Me.tabScannerButtons.SuspendLayout()
@@ -52,9 +52,9 @@ Partial Class dlgOptions
         'btnOk
         '
         Me.btnOk.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnOk.Location = New System.Drawing.Point(206, 259)
+        Me.btnOk.Location = New System.Drawing.Point(186, 259)
         Me.btnOk.Name = "btnOk"
-        Me.btnOk.Size = New System.Drawing.Size(65, 23)
+        Me.btnOk.Size = New System.Drawing.Size(75, 23)
         Me.btnOk.TabIndex = 0
         Me.btnOk.Text = "OK"
         '
@@ -62,9 +62,9 @@ Partial Class dlgOptions
         '
         Me.btnCancel.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel
-        Me.btnCancel.Location = New System.Drawing.Point(277, 259)
+        Me.btnCancel.Location = New System.Drawing.Point(267, 259)
         Me.btnCancel.Name = "btnCancel"
-        Me.btnCancel.Size = New System.Drawing.Size(65, 23)
+        Me.btnCancel.Size = New System.Drawing.Size(75, 23)
         Me.btnCancel.TabIndex = 1
         Me.btnCancel.Text = "Cancel"
         '
@@ -143,6 +143,15 @@ Partial Class dlgOptions
         Me.tabGeneral.TabIndex = 0
         Me.tabGeneral.Text = "General"
         Me.tabGeneral.UseVisualStyleBackColor = True
+        '
+        'btnResetScanSettings
+        '
+        Me.btnResetScanSettings.Location = New System.Drawing.Point(211, 60)
+        Me.btnResetScanSettings.Name = "btnResetScanSettings"
+        Me.btnResetScanSettings.Size = New System.Drawing.Size(94, 23)
+        Me.btnResetScanSettings.TabIndex = 11
+        Me.btnResetScanSettings.Text = "Reset to default"
+        Me.btnResetScanSettings.UseVisualStyleBackColor = True
         '
         'lblNote
         '
@@ -250,15 +259,6 @@ Partial Class dlgOptions
         Me.btnRegister.TabIndex = 0
         Me.btnRegister.Text = "Register"
         Me.btnRegister.UseVisualStyleBackColor = True
-        '
-        'btnResetScanSettings
-        '
-        Me.btnResetScanSettings.Location = New System.Drawing.Point(211, 60)
-        Me.btnResetScanSettings.Name = "btnResetScanSettings"
-        Me.btnResetScanSettings.Size = New System.Drawing.Size(94, 23)
-        Me.btnResetScanSettings.TabIndex = 11
-        Me.btnResetScanSettings.Text = "Reset to default"
-        Me.btnResetScanSettings.UseVisualStyleBackColor = True
         '
         'dlgOptions
         '

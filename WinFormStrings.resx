@@ -643,4 +643,8 @@ ADVANCED PARAMETERS
     <value>Reset to default</value>
     <comment>Reset to default</comment>
   </data>
+  <data name="Msg_ExceptionInDriver" xml:space="preserve">
+    <value>There was an error in the scanner driver. Please make sure that the driver is updated and is compatible with your Windows version.</value>
+    <comment>There was an error in the scanner driver. Please make sure that the driver is updated and is compatible with your Windows version.</comment>
+  </data>
 </root>

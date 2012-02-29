@@ -28,8 +28,8 @@ Class appControl
     Shared _deviceID As String
     Shared _device As Device
     Shared _wscanner As WIA.Item
-    Private Shared LocRM As New System.Resources.ResourceManager("iCopy.WinFormStrings", GetType(mainFrm).Assembly)
-    Private Shared GetCulturesThread As New Threading.Thread(AddressOf GetAvailableLanguages)
+    Private Shared LocRM As Resources.ResourceManager
+    Private Shared GetCulturesThread As Threading.Thread
 
     Private Shared _availableCultures As Globalization.CultureInfo()
     Private Shared HasThreadFinished As Boolean
@@ -46,7 +46,8 @@ Class appControl
             My.Settings.LastScanSettings = New ScanSettings()
             My.Settings.Save()
         End If
-
+        GetCulturesThread = New Threading.Thread(AddressOf GetAvailableLanguages)
+        LocRM = New System.Resources.ResourceManager("iCopy.WinFormStrings", GetType(mainFrm).Assembly)
         'Deletes log file if it is more than 50 KB long
         Dim logPath As String = Path.Combine(GetWritablePath(), "iCopy.log")
         Try
@@ -519,6 +520,9 @@ retry:
             ElseIf ex.ErrorCode = WIA_ERRORS.WIA_ERROR_WARMING_UP Then
                 MsgBoxWrap(LocRM.GetString("Msg_ScannerWarmingUp"), MsgBoxStyle.Exclamation, "iCopy")
                 Return
+            ElseIf ex.ErrorCode = WIA_ERRORS.WIA_ERROR_EXCEPTION_IN_DRIVER Then
+                MsgBoxWrap(LocRM.GetString("Msg_ExceptionInDriver"), MsgBoxStyle.Exclamation, "iCopy")
+                Return
             ElseIf ex.ErrorCode = Convert.ToInt32("0x80004005", 16) Then
                 MsgBoxWrap("An error occured while processing the acquired image. Please try again with a lower resolution." & vbCrLf & "If the problem persists please report it (http://icopy.sourceforge.net/reportabug.html).", MsgBoxStyle.Critical, "iCopy")
                 Exit Sub
@@ -579,6 +583,12 @@ retry:
             Catch ex As System.Runtime.InteropServices.COMException
                 If ex.ErrorCode = -2145320860 Then       'If acquisition is cancelled
                     Exit Do
+                ElseIf ex.ErrorCode = WIA_ERRORS.WIA_ERROR_WARMING_UP Then
+                    MsgBoxWrap(LocRM.GetString("Msg_ScannerWarmingUp"), MsgBoxStyle.Exclamation, "iCopy")
+                    Exit Do
+                ElseIf ex.ErrorCode = WIA_ERRORS.WIA_ERROR_EXCEPTION_IN_DRIVER Then
+                    MsgBoxWrap(LocRM.GetString("Msg_ExceptionInDriver"), MsgBoxStyle.Exclamation, "iCopy")
+                    Exit Do
                 ElseIf ex.ErrorCode = Convert.ToInt32("0x80004005", 16) Then
                     MsgBoxWrap("An error occured while processing the acquired image. Please try again with a lower resolution." & vbCrLf & "If the problem persists please report it (http://icopy.sourceforge.net/reportabug.html).", MsgBoxStyle.Critical, "iCopy")
                 Else
@@ -620,6 +630,9 @@ retry:
                 Exit Sub
             ElseIf ex.ErrorCode = WIA_ERRORS.WIA_ERROR_WARMING_UP Then
                 MsgBoxWrap(LocRM.GetString("Msg_ScannerWarmingUp"), MsgBoxStyle.Exclamation, "iCopy")
+                Return
+            ElseIf ex.ErrorCode = WIA_ERRORS.WIA_ERROR_EXCEPTION_IN_DRIVER Then
+                MsgBoxWrap(LocRM.GetString("Msg_ExceptionInDriver"), MsgBoxStyle.Exclamation, "iCopy")
                 Return
             ElseIf ex.ErrorCode = Convert.ToInt32("0x80004005", 16) Then
                 MsgBoxWrap("An error occured while processing the acquired image. Please try again with a lower resolution." & vbCrLf & "If the problem persists please report it (http://icopy.sourceforge.net/reportabug.html).", MsgBoxStyle.Critical, "iCopy")
