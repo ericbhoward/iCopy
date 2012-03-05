@@ -136,6 +136,9 @@ Class mainFrm
         cboPaperSize.Text = My.Settings.PrinterSize 'Sets default paper size as stored in settings
         chkADF.Enabled = appControl.CanUseADF()
         chkDuplex.Enabled = appControl.CanDoDuplex()
+
+        chkADF.Checked = My.Settings.LastScanSettings.UseADF
+        chkDuplex.Checked = my.settings.LastScanSettings.Duplex
     End Sub
 
     Private Sub mainFrm_KeyUp(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles MyBase.KeyUp

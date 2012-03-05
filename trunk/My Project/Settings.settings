@@ -2,16 +2,16 @@
 <SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="My" GeneratedClassName="MySettings" UseMySettingsClassName="true">
   <Profiles />
   <Settings>
-    <Setting Name="DeviceID" Provider="iCopy.PortableSettingsProvider" Type="System.String" Scope="User">
+    <Setting Name="DeviceID" Provider="iCopy.PortableSettingsProvider" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="PrintColor" Provider="iCopy.PortableSettingsProvider" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="Location" Provider="iCopy.PortableSettingsProvider" Type="System.Drawing.Point" Scope="User">
+    <Setting Name="Location" Provider="iCopy.PortableSettingsProvider" Roaming="true" Type="System.Drawing.Point" Scope="User">
       <Value Profile="(Default)">100, 100</Value>
     </Setting>
-    <Setting Name="StoreLocation" Provider="iCopy.PortableSettingsProvider" Type="System.Boolean" Scope="User">
+    <Setting Name="StoreLocation" Provider="iCopy.PortableSettingsProvider" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="Culture" Provider="iCopy.PortableSettingsProvider" Roaming="true" Type="System.Globalization.CultureInfo" Scope="User">
@@ -20,10 +20,10 @@
     <Setting Name="RememberSettings" Provider="iCopy.PortableSettingsProvider" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="DefaultPrinter" Provider="iCopy.PortableSettingsProvider" Type="System.String" Scope="User">
+    <Setting Name="DefaultPrinter" Provider="iCopy.PortableSettingsProvider" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="DefaultScanner" Provider="iCopy.PortableSettingsProvider" Type="System.String" Scope="User">
+    <Setting Name="DefaultScanner" Provider="iCopy.PortableSettingsProvider" Roaming="true" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="PrinterSize" Provider="iCopy.PortableSettingsProvider" Roaming="true" Type="System.String" Scope="User">
@@ -32,13 +32,13 @@
     <Setting Name="CustomCulture" Provider="iCopy.PortableSettingsProvider" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="LastScanSettings" Provider="iCopy.PortableSettingsProvider" Type="iCopy.ScanSettings" Scope="User">
+    <Setting Name="LastScanSettings" Provider="iCopy.PortableSettingsProvider" Roaming="true" Type="iCopy.ScanSettings" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="LastVersionCheck" Provider="iCopy.PortableSettingsProvider" Type="System.DateTime" Scope="User">
+    <Setting Name="LastVersionCheck" Provider="iCopy.PortableSettingsProvider" Roaming="true" Type="System.DateTime" Scope="User">
       <Value Profile="(Default)">2011-01-01</Value>
     </Setting>
-    <Setting Name="CheckForUpdates" Provider="iCopy.PortableSettingsProvider" Type="System.Boolean" Scope="User">
+    <Setting Name="CheckForUpdates" Provider="iCopy.PortableSettingsProvider" Roaming="true" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
     <Setting Name="Silent" Provider="iCopy.PortableSettingsProvider" Roaming="true" Type="System.Boolean" Scope="User">
