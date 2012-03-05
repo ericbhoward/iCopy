@@ -352,7 +352,7 @@ Public Class Scanner
 
     'This function calls the appropriate acquisition function depending on the scanner name / manufacturer.
     Function ScanADF(ByVal options As ScanSettings) As List(Of String)
-        If _description = "Brother MFC-6800" Then
+        If _description = "Brother MFC-6800" Or _description.Contains("Brother MFC-5440CN") Then
             Return ScanADFBrother6800(options)
         ElseIf _description.ToLower().Contains("brother") Then
             Return ScanADFBrother(options)
@@ -369,7 +369,7 @@ Public Class Scanner
     End Property
 
     Private Function ScanADFBrother6800(ByVal settings As ScanSettings) As List(Of String)
-        Trace.WriteLine(String.Format("Starting acquisition (Brother MFC-6800)"))
+        Trace.WriteLine(String.Format("Starting acquisition (Brother MFC-6800/5440CN)"))
         Trace.Indent()
         Dim imageList As New List(Of String)()
         Dim dialog As New WIA.CommonDialog
@@ -394,9 +394,10 @@ Public Class Scanner
         If settings.UseADF And CanUseADF Then
             handling = WIA_DPS_DOCUMENT_HANDLING_SELECT.FEEDER
             If settings.Duplex And CanDoDuplex Then
-                handling = WIA_DPS_DOCUMENT_HANDLING_SELECT.DUPLEX
+                handling = handling Or WIA_DPS_DOCUMENT_HANDLING_SELECT.DUPLEX
             End If
         End If
+
 
         Try
             _device.Properties("Document Handling Select").Value = handling
@@ -444,7 +445,7 @@ Public Class Scanner
         Catch ex As Exception
             Trace.WriteLine(String.Format("Couldn't set BitDepth to {0}.", settings.BitDepth))
         End Try
-
+        WritePropertiesLog() 'TODO: Debugging purpose, remove
         'Acquisition loop
         While hasMorePages
             Trace.WriteLine(String.Format("Image count {0}. Acquiring next image", AcquiredPages))
@@ -568,7 +569,7 @@ Public Class Scanner
         If settings.UseADF And CanUseADF Then
             handling = WIA_DPS_DOCUMENT_HANDLING_SELECT.FEEDER
             If settings.Duplex And CanDoDuplex Then
-                handling = handling And WIA_DPS_DOCUMENT_HANDLING_SELECT.DUPLEX
+                handling = handling Or WIA_DPS_DOCUMENT_HANDLING_SELECT.DUPLEX
             End If
         End If
 
@@ -614,7 +615,7 @@ Public Class Scanner
         SetMaxExtent() 'After setting resolution, maximize the extent
 
         Try
-            SetBitDepth(settings.BitDepth)
+            If settings.BitDepth <> 0 Then SetBitDepth(settings.BitDepth)
         Catch ex As Exception
             Trace.WriteLine(String.Format("Couldn't set BitDepth to {0}.", settings.BitDepth))
         End Try
@@ -743,7 +744,7 @@ Public Class Scanner
             If settings.UseADF And CanUseADF Then
                 handling = WIA_DPS_DOCUMENT_HANDLING_SELECT.FEEDER
                 If settings.Duplex And CanDoDuplex Then
-                    handling = WIA_DPS_DOCUMENT_HANDLING_SELECT.DUPLEX
+                    handling = handling Or WIA_DPS_DOCUMENT_HANDLING_SELECT.DUPLEX
                 End If
             End If
 

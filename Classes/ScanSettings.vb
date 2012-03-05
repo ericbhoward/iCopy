@@ -150,7 +150,8 @@ Public Class ScanSettings
             vbTab + "Copies: " + vbTab + Copies.ToString() + vbCrLf + _
             vbTab + "Preview: " + vbTab + Preview.ToString() + vbCrLf + _
             vbTab + "UseADF: " + vbTab + UseADF.ToString() + vbCrLf + _
-            vbTab + "Path: " + vbTab + Path.ToString() + vbCrLf
+            vbTab + "Duplex: " + vbTab + Duplex.ToString() + vbCrLf + _
+        vbTab(+"Path: " + vbTab + Path.ToString() + vbCrLf)
     End Function
 
 End Class
