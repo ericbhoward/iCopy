@@ -145,7 +145,6 @@
     <None Include="app.config" />
     <None Include="Build\base_setup_script.nsi" />
     <None Include="Build\setup.nsi" />
-    <None Include="Classes\DLLRegistration.vb" />
     <Compile Include="Forms\MorePagesDialog.Designer.vb">
       <DependentUpon>MorePagesDialog.vb</DependentUpon>
     </Compile>
