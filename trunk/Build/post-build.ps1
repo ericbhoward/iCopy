@@ -6,8 +6,7 @@ $ProjDir = "D:\Matteo\Documenti\Visual Studio 2010\Projects\iCopy\iCopy"
 #	* NSIS Installer
 $NSISPath = "C:\Program Files (x86)\UTILITIES\NSIS Installer"
 #	* 7za.exe in $PWD
-#	* base_setup_script.nsi in $PWD
-$NSISBaseScript = "$ProjDir\Build\base_setup_script.nsi"
+#	* setup.nsi in $PWD
 $NSISOutScript = "$ProjDir\Build\setup.nsi"
 
 del "$ProjDir\bin\*.exe"

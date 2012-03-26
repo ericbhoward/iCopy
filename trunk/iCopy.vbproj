@@ -309,7 +309,12 @@
     <None Include="Build\post-build.ps1" />
     <None Include="Resources\iCopy.gif" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\..\PDFWriter\PDFWriter.csproj">
+      <Project>{A7400A6F-1809-4C4A-B604-1FAC6123C6B8}</Project>
+      <Name>PDFWriter</Name>
+    </ProjectReference>
+  </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
       <Visible>False</Visible>
