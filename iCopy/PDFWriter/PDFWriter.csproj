@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{A7400A6F-1809-4C4A-B604-1FAC6123C6B8}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>PDFWriter</RootNamespace>
+    <AssemblyName>PDFWriter</AssemblyName>
+    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>
+    </SccProjectName>
+    <SccLocalPath>
+    </SccLocalPath>
+    <SccAuxPath>
+    </SccAuxPath>
+    <SccProvider>
+    </SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="CCITTEncoder\ByteBuffer.cs" />
+    <Compile Include="CCITTEncoder\CCITTG4Encoder.cs" />
+    <Compile Include="FileTrailer.cs" />
+    <Compile Include="Interfaces\iPageTreeElement.cs" />
+    <Compile Include="Objects\Catalog.cs" />
+    <Compile Include="Objects\Content.cs" />
+    <Compile Include="Objects\ImageObject.cs" />
+    <Compile Include="Objects\Page.cs" />
+    <Compile Include="Enums.cs" />
+    <Compile Include="DataTypes\PDFArray.cs" />
+    <Compile Include="DataTypes\PDFBoolean.cs" />
+    <Compile Include="DataTypes\PDFDictionary.cs" />
+    <Compile Include="DataTypes\PDFIndirectObject.cs" />
+    <Compile Include="DataTypes\PDFReference.cs" />
+    <Compile Include="DataTypes\PDFStreamObject.cs" />
+    <Compile Include="Objects\PageTreeNode.cs" />
+    <Compile Include="Objects\PDFRectangle.cs" />
+    <Compile Include="PDFDocument.cs" />
+    <Compile Include="DataTypes\PDFName.cs" />
+    <Compile Include="DataTypes\PDFNumber.cs" />
+    <Compile Include="Interfaces\iPDFObject.cs" />
+    <Compile Include="DataTypes\PDFString.cs" />
+    <Compile Include="PDFFileStream.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="XRefTable.cs" />
+    <Compile Include="zlib\Adler32.cs" />
+    <Compile Include="zlib\Deflate.cs" />
+    <Compile Include="zlib\InfBlocks.cs" />
+    <Compile Include="zlib\InfCodes.cs" />
+    <Compile Include="zlib\Inflate.cs" />
+    <Compile Include="zlib\InfTree.cs" />
+    <Compile Include="zlib\JZlib.cs" />
+    <Compile Include="zlib\StaticTree.cs" />
+    <Compile Include="zlib\Tree.cs" />
+    <Compile Include="zlib\ZDeflaterOutputStream.cs" />
+    <Compile Include="zlib\ZInflaterInputStream.cs" />
+    <Compile Include="zlib\ZInputStream.cs" />
+    <Compile Include="zlib\ZOutputStream.cs" />
+    <Compile Include="zlib\ZStream.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram1.cd" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
