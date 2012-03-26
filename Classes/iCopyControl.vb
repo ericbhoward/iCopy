@@ -122,67 +122,8 @@ Class appControl
                 Next
                 Trace.WriteLine(String.Format("Command Line parameters: {0}", argstring))
 
-                Dim settings As ScanSettings = My.Settings.LastScanSettings
-
-                'Command line arguments parsing
-                'STEP 1 Parameters with an argument
-                Dim i As Integer
-                For i = 0 To sArgs.GetUpperBound(0)
-                    Try
-                        Select Case sArgs(i)
-                            Case "/brightness", "/b"
-                                settings.Brightness = CType(sArgs(i + 1), Integer)
-                            Case "/contrast", "/cnt"
-                                settings.Contrast = CType(sArgs(i + 1), Integer)
-                            Case "/resolution", "/r"
-                                settings.Resolution = CType(sArgs(i + 1), Integer)
-                            Case "/copies", "/nc"
-                                settings.Copies = CType(sArgs(i + 1), Integer)
-                            Case "/scaling", "/s"
-                                settings.Scaling = CType(sArgs(i + 1), Integer)
-                            Case "/printer"
-                                Try
-                                    _printer.Name = sArgs(i + 1)
-                                Catch ex As ArgumentException
-                                    MsgBoxWrap("The provided printer name is not valid. Using default printer.")
-                                End Try
-                            Case "/path"
-                                settings.Path = sArgs(i + 1)
-                        End Select
-                    Catch ex As InvalidCastException
-                        MsgBoxWrap("Command line parsing failed. See README for correct sintax")
-                        Exit Sub
-                    End Try
-
-                    'STEP 2 Parameters without an argument
-                    Select Case sArgs(i)
-                        Case "/log"
-                            Trace.Listeners.Add(New ConsoleTraceListener())
-                        Case "/silent"
-                            My.Settings.Silent = "True"
-                        Case "/color", "/colour", "/col"
-                            settings.Intent = WiaImageIntent.ColorIntent
-                        Case "/grayscale", "/gray"
-                            settings.Intent = WiaImageIntent.GrayscaleIntent
-                        Case "/text", "/bw"
-                            settings.Intent = WiaImageIntent.TextIntent
-                        Case "/preview", "/p"
-                            settings.Preview = True
-                        Case "/adf"
-                            settings.UseADF = True
-                        Case "/duplex", "/d"
-                            settings.Duplex = True
-                    End Select
-
-                    If sArgs(i).StartsWith("/StiDevice:") Then
-                        _deviceID = sArgs(i).Substring(sArgs(i).IndexOf(":") + 1)
-                    End If
-                    If sArgs(i).StartsWith("/StiEvent:") Then
-                        'TODO: Implement
-                    End If
-                Next
-
-                For i = 0 To sArgs.GetUpperBound(0)
+                'Utility commands
+                For i As Integer = 0 To sArgs.GetUpperBound(0)
                     Select Case sArgs(i).ToLower()
                         Case "/?", "/help"
                             Console.Write(LocRM.GetString("Console_Help"))
@@ -211,7 +152,80 @@ Class appControl
                             End Try
                             Return
                     End Select
+                Next
 
+                Dim settings As ScanSettings = My.Settings.LastScanSettings
+
+                'Command line arguments parsing
+                'STEP 1 Parameters with an argument
+                For i = 0 To sArgs.GetUpperBound(0)
+                    Try
+                        Select Case sArgs(i)
+                            Case "/brightness", "/b"
+                                settings.Brightness = CType(sArgs(i + 1), Integer)
+                                Continue For
+                            Case "/contrast", "/cnt"
+                                settings.Contrast = CType(sArgs(i + 1), Integer)
+                                Continue For
+                            Case "/resolution", "/r"
+                                settings.Resolution = CType(sArgs(i + 1), Integer)
+                                Continue For
+                            Case "/copies", "/nc"
+                                settings.Copies = CType(sArgs(i + 1), Integer)
+                                Continue For
+                            Case "/scaling", "/s"
+                                settings.Scaling = CType(sArgs(i + 1), Integer)
+                                Continue For
+                            Case "/printer"
+                                Try
+                                    _printer.Name = sArgs(i + 1)
+                                Catch ex As ArgumentException
+                                    MsgBoxWrap("The provided printer name is not valid. Using default printer.")
+                                End Try
+                                Continue For
+                            Case "/path"
+                                settings.Path = sArgs(i + 1)
+                                Continue For
+                        End Select
+                    Catch ex As InvalidCastException
+                        MsgBoxWrap("Command line parsing failed. See README for correct sintax")
+                        Exit Sub
+                    End Try
+
+                    'STEP 2 Parameters without an argument
+                    Select Case sArgs(i)
+                        Case "/log"
+                            Trace.Listeners.Add(New ConsoleTraceListener())
+                            Continue For
+                        Case "/silent"
+                            My.Settings.Silent = "True"
+                            Continue For
+                        Case "/color", "/colour", "/col"
+                            settings.Intent = WiaImageIntent.ColorIntent
+                            Continue For
+                        Case "/grayscale", "/gray"
+                            settings.Intent = WiaImageIntent.GrayscaleIntent
+                            Continue For
+                        Case "/text", "/bw"
+                            settings.Intent = WiaImageIntent.TextIntent
+                            Continue For
+                        Case "/preview", "/p"
+                            settings.Preview = True
+                            Continue For
+                        Case "/adf"
+                            settings.UseADF = True
+                            Continue For
+                        Case "/duplex", "/d"
+                            settings.Duplex = True
+                            Continue For
+                    End Select
+
+                    If sArgs(i).StartsWith("/StiDevice:") Then
+                        _deviceID = sArgs(i).Substring(sArgs(i).IndexOf(":") + 1)
+                    End If
+                    If sArgs(i).StartsWith("/StiEvent:") Then
+                        'TODO: Implement
+                    End If
                 Next
 
                 If _deviceID = "" Then
@@ -229,16 +243,29 @@ Class appControl
                     Select Case sArgs(i).ToLower()
                         Case "/copy", "/c"
                             Copy(settings)
+                            Application.Exit()
+                            Exit Sub
+                        Case "/pdf"
+                            ScanToPDF(settings)
+                            Application.Exit()
+                            Exit Sub
                         Case "/file", "/tofile", "/Scantofile", "/f"
                             Try
                                 SaveToFile(settings)
+                                Application.Exit()
+                                Exit Sub
                             Catch ex As ArgumentException
                                 MsgBoxWrap(ex.Message, vbExclamation, "iCopy")
                             End Try
                         Case "/copymultiplepages", "/multiplepages"
                             CopyMultiplePages(settings)
+                            Application.Exit()
+                            Exit Sub
                     End Select
                 Next
+
+                'If no action parameter is set, copy is the default
+                Copy(settings)
             End If
         Catch ex As ExitException
 
@@ -614,6 +641,51 @@ retry:
                 GoTo retry
             End If
         End If
+    End Sub
+
+    Shared Sub ScanToPDF(ByVal options As ScanSettings)
+        'Sets acquisition properties
+        Dim images As List(Of String) = New List(Of String)
+
+        changescanner(_scanner.DeviceId)
+        'Calls scan routine
+        Try
+            'Add the image to the printer buffer
+            images = _scanner.ScanADF(options)
+
+        Catch ex As System.Runtime.InteropServices.COMException
+            If ex.ErrorCode = -2145320860 Then       'If acquisition is cancelled
+                Exit Sub
+            ElseIf ex.ErrorCode = WIA_ERRORS.WIA_ERROR_WARMING_UP Then
+                MsgBoxWrap(LocRM.GetString("Msg_ScannerWarmingUp"), MsgBoxStyle.Exclamation, "iCopy")
+                Return
+            ElseIf ex.ErrorCode = WIA_ERRORS.WIA_ERROR_EXCEPTION_IN_DRIVER Then
+                MsgBoxWrap(LocRM.GetString("Msg_ExceptionInDriver"), MsgBoxStyle.Exclamation, "iCopy")
+                Return
+            ElseIf ex.ErrorCode = Convert.ToInt32("0x80004005", 16) Then
+                MsgBoxWrap("An error occured while processing the acquired image. Please try again with a lower resolution." & vbCrLf & "If the problem persists please report it (http://icopy.sourceforge.net/reportabug.html).", MsgBoxStyle.Critical, "iCopy")
+                Exit Sub
+            Else
+                Throw
+            End If
+        End Try
+
+        'Creates the pdf file
+        Dim pdf As New PDFWriter.PDFDocument()
+        For Each Str As String In images
+            Dim bmp As Bitmap = Image.FromFile(Str)
+            pdf.AddPage(bmp, PDFWriter.PaperSize.A4)
+        Next
+
+        pdf.Save("prova.pdf")
+
+        For Each Str As String In images
+            Try
+                File.Delete(Str)
+            Catch ex As Exception
+
+            End Try
+        Next
     End Sub
 
     Shared Sub Copy(ByVal options As ScanSettings)

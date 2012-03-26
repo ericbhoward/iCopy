@@ -354,7 +354,7 @@ Public Class Scanner
     Function ScanADF(ByVal options As ScanSettings) As List(Of String)
         If _description = "Brother MFC-6800" Or _description.Contains("Brother MFC-5440CN") Then
             Return ScanADFBrother6800(options)
-        ElseIf _description.ToLower().Contains("brother") Then
+        ElseIf _description.ToLower().Contains("brother") Or _description.Contains("Canon MF4500") Then
             Return ScanADFBrother(options)
         Else
             Return ScanADFNormal(options)
@@ -397,7 +397,6 @@ Public Class Scanner
                 handling = handling Or WIA_DPS_DOCUMENT_HANDLING_SELECT.DUPLEX
             End If
         End If
-
 
         Try
             _device.Properties("Document Handling Select").Value = handling
@@ -445,7 +444,7 @@ Public Class Scanner
         Catch ex As Exception
             Trace.WriteLine(String.Format("Couldn't set BitDepth to {0}.", settings.BitDepth))
         End Try
-        WritePropertiesLog() 'TODO: Debugging purpose, remove
+
         'Acquisition loop
         While hasMorePages
             Trace.WriteLine(String.Format("Image count {0}. Acquiring next image", AcquiredPages))
@@ -494,6 +493,15 @@ Public Class Scanner
                 End If
             Catch ex As COMException
                 Select Case ex.ErrorCode
+                    Case WIA_ERRORS.WIA_ERROR_WARMING_UP
+                        If MsgBoxWrap("The device is warming up. Press OK to Retry.", MsgBoxStyle.Information + vbOKCancel) = MsgBoxResult.Ok Then
+
+                            Trace.WriteLine("Device warming up, waiting 2 seconds...")
+                            Threading.Thread.Sleep(2000)
+                            Continue While
+                        Else
+                            Exit While
+                        End If
                     Case WIA_ERRORS.WIA_ERROR_PAPER_EMPTY   'This error is reported when ADF is empty
                         Trace.WriteLine(String.Format("The ADF is empty"))
                         Exit While                          'The acquisition is complete
