@@ -1,4 +1,8 @@
-﻿== 1.5.1 ==
+﻿== 1.6 ==
+- ADD: PDF Export
+- CHANGED: Redesigned part of the interface
+
+== 1.5.1 ==
 - ADD: Duplex ADF acquisition
 - FIX: Crash with Brother MFC-6800 (wrong image format)
 
