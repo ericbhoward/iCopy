@@ -189,48 +189,56 @@ Public Class Scanner
     End Sub
 
     Public Sub SetIntent(ByVal value As WiaImageIntent)
-        If value = WiaImageIntent.ColorIntent Then
+        Try
+            _scanner.Properties("Current Intent").Value = value
+            Trace.WriteLine(String.Format("Intent set to {0}", value))
+        Catch e As Exception When TypeOf e Is ArgumentException Or TypeOf e Is COMException
+            'Some scanner don't support the Intent property correctly. In this case, a solution
+            'could be to set the Channels per pixel and the bits per channel properties to
+            'force the intent
+
+            Trace.WriteLine("Couldn't set intent. Trying with manual setting of channels")
+
             Try
-                _scanner.Properties("Current Intent").Value = value
-                Trace.WriteLine(String.Format("Intent set to {0}", value))
-            Catch e As COMException
-                If e.ErrorCode = WIA_ERRORS.WIA_ERROR_PROPERTY_DONT_EXIST Then
-                    Try
+                '_scanner.Properties("Current Intent").Value = WiaImageIntent.UnspecifiedIntent
+                'Trace.WriteLine(String.Format("Intent set to {0}", value))
+
+                Select Case value
+                    Case WiaImageIntent.ColorIntent
                         _scanner.Properties("Channels per pixel").Value = 3 '3 channels (RGB)
-                        Trace.WriteLine(String.Format("E: Couldn't set intent. Set channels per pixel instead"))
-                    Catch ex As COMException
-                        Trace.WriteLine(String.Format("E: Couldn't set intent. Report error"))
-                        Throw ex
-                    End Try
-                Else : Throw e
+                        Trace.WriteLine(String.Format("E: Couldn't set intent. Set 3 channels per pixel instead"))
+
+                        If My.Settings.LastScanSettings.BitDepth <> 0 Then
+                            Try
+                                SetBitDepth(My.Settings.LastScanSettings.BitDepth)
+                            Catch ex As Exception
+                                'Property not supported or whatever
+                            End Try
+                        End If
+                    Case WiaImageIntent.GrayscaleIntent
+                        _scanner.Properties("Channels per pixel").Value = 1 '1 channel
+                        Trace.WriteLine(String.Format("E: Couldn't set intent. Set 1 channel per pixel instead"))
+                        _scanner.Properties("Bits per channel").Value = 8 '?
+
+                    Case WiaImageIntent.TextIntent
+                        _scanner.Properties("Channels per pixel").Value = 1 '1 channel
+                        Trace.WriteLine(String.Format("E: Couldn't set intent. Set 1 channel per pixel instead"))
+                        _scanner.Properties("Bits per channel").Value = 1 'Text is just BW
+
+                End Select
+
+                Trace.WriteLine(String.Format("E: Couldn't set intent. Set channels per pixel instead"))
+            Catch ex As Exception
+                Trace.WriteLine(String.Format("E: Couldn't set intent. Report error"))
+                If TypeOf ex Is COMException Then
+                    Dim cex As COMException = ex
+                    Trace.WriteLine(String.Format("COMException. Error {0}", cex.ErrorCode.ToString("X8")))
+                Else
+                    Trace.WriteLine(ex.ToString())
                 End If
             End Try
+        End Try
 
-            If My.Settings.LastScanSettings.BitDepth <> 0 Then
-                Try
-                    SetBitDepth(My.Settings.LastScanSettings.BitDepth)
-                Catch ex As Exception
-
-                End Try
-            End If
-        ElseIf value = WiaImageIntent.GrayscaleIntent Or value = WiaImageIntent.TextIntent Then
-            Try
-                _scanner.Properties("Current Intent").Value = value
-            Catch e As COMException
-                If e.ErrorCode = WIA_ERRORS.WIA_ERROR_PROPERTY_DONT_EXIST Then
-                    Try
-                        _scanner.Properties("Channels per pixel").Value = 1 '1 channel (Grayscale)
-                        Trace.WriteLine(String.Format("E: Couldn't set intent. Set channels per pixel instead"))
-                    Catch ex As COMException
-                        Trace.WriteLine(String.Format("E: Couldn't set intent. Report error"))
-                        Throw ex
-                    End Try
-                Else : Throw e
-                End If
-            End Try
-        Else
-            _scanner.Properties("Current Intent").Value = WiaImageIntent.UnspecifiedIntent
-        End If
     End Sub
 
     Public Sub SetResolution(ByVal value As Integer)
