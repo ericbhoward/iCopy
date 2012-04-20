@@ -193,7 +193,7 @@ Public Class Scanner
             _scanner.Properties("Current Intent").Value = value
             Trace.WriteLine(String.Format("Intent set to {0}", value))
         Catch e As Exception When TypeOf e Is ArgumentException Or TypeOf e Is COMException
-            'Some scanner don't support the Intent property correctly. In this case, a solution
+            'Some scanners don't support the Intent property correctly. In this case, a solution
             'could be to set the Channels per pixel and the bits per channel properties to
             'force the intent
 

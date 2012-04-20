@@ -378,12 +378,12 @@ TEXT - Acquired image will be black &amp; white. This is the fasted method, usef
     <value>次回の起動時にイメージ設定をデフォルト値にリセットします</value>
     <comment>Reset image settings to their default values on next program restart</comment>
   </data>
-  <data name="dlgOptions_chkRememberSettings" xml:space="preserve">
+  <data name="dlgOptions_chkRememberScanSettings" xml:space="preserve">
     <value>再起動時に同じイメージ設定を復元します</value>
     <comment>Remember image settings 
 on program restart</comment>
   </data>
-  <data name="dlgOptions_chkRememberSettingsToolTip" xml:space="preserve">
+  <data name="dlgOptions_chkRememberScanSettingsToolTip" xml:space="preserve">
     <value>選択すると、iCopyはイメージ設定を次回の起動時に維持します。</value>
     <comment>If selected, iCopy will maintain image settings on next restart.</comment>
   </data>

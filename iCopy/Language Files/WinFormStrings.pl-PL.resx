@@ -385,13 +385,13 @@ TEXT - Acquired image will be black &amp; white. This is the fasted method, usef
     <value>Domyślne ustawienia obrazu zostaną zastosowane po ponownym uruchomieniu programu</value>
     <comment>Reset image settings to their default values on next program restart</comment>
   </data>
-  <data name="dlgOptions_chkRememberSettings" xml:space="preserve">
+  <data name="dlgOptions_chkRememberScanSettings" xml:space="preserve">
     <value>Pamiętaj, ustawienia obrazu 
 przy ponownym uruchomieniu programu</value>
     <comment>Remember image settings 
 on program restart</comment>
   </data>
-  <data name="dlgOptions_chkRememberSettingsToolTip" xml:space="preserve">
+  <data name="dlgOptions_chkRememberScanSettingsToolTip" xml:space="preserve">
     <value>Jeśli jest zaznaczone, iCopy zachowa ustawienia obrazu przy następnym uruchomieniu.</value>
     <comment>If selected, iCopy will maintain image settings on next restart.</comment>
   </data>
@@ -638,5 +638,13 @@ ZAAWANSOWANE PARAMETRY
   <data name="dlgOptions_btnResetScanSettings" xml:space="preserve">
     <value>Przywróć ustawienia domyślne</value>
     <comment>Reset to default</comment>
+  </data>
+  <data name="AboutBox1_lblDescription" xml:space="preserve">
+    <value>Połacz swój skaner i drukarkę w zaawansowaną fotokopiarkę</value>
+    <comment>Combine your scanner and printer into a powerful photocopier.</comment>
+  </data>
+  <data name="mainFrm_chkDuplex" xml:space="preserve">
+    <value>Skanowanie dwustronne</value>
+    <comment>Duplex acquisition</comment>
   </data>
 </root>
