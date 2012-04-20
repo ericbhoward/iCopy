@@ -370,10 +370,12 @@ TEXT - Acquired image will be black &amp; white. This is the fasted method, usef
     <comment>No scanner connected, please connect a scanner and click Retry.</comment>
   </data>
   <data name="Msg_WIAUnregistered" xml:space="preserve">
-    <value>WIA Automation Layer (wiaaut.dll) isn't registered in your system. iCopy needs WIA Automation to be registered in order to work properly. Wiaaut.dll is a system file provided by Microsoft and doesn't harm your system. 
+    <value>It appears that some components needed by iCopy are not registered in your system.
+iCopy needs WIA Automation to be registered in order to work properly. 
 
 Click OK if you want iCopy to register wiaaut.dll for you, otherwise click Cancel to close iCopy. This operation requires administrator privileges.</value>
-    <comment>WIA Automation Layer (wiaaut.dll) isn't registered in your system. iCopy needs WIA Automation to be registered in order to work properly. Wiaaut.dll is a system file provided by Microsoft and doesn't harm your system. 
+    <comment>It appears that some components needed by iCopy are not registered in your system.
+iCopy needs WIA Automation to be registered in order to work properly. 
 
 Click OK if you want iCopy to register wiaaut.dll for you, otherwise click Cancel to close iCopy. This operation requires administrator privileges.</comment>
   </data>
@@ -646,5 +648,13 @@ ADVANCED PARAMETERS
   <data name="Msg_ExceptionInDriver" xml:space="preserve">
     <value>There was an error in the scanner driver. Please make sure that the driver is updated and is compatible with your Windows version.</value>
     <comment>There was an error in the scanner driver. Please make sure that the driver is updated and is compatible with your Windows version.</comment>
+  </data>
+  <data name="AboutBox1_lblDescription" xml:space="preserve">
+    <value>Combine your scanner and printer into a powerful photocopier.</value>
+    <comment>Combine your scanner and printer into a powerful photocopier.</comment>
+  </data>
+  <data name="mainFrm_chkDuplex" xml:space="preserve">
+    <value>Duplex acquisition</value>
+    <comment>Duplex acquisition</comment>
   </data>
 </root>

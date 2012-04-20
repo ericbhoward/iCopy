@@ -385,12 +385,12 @@ TEXT - Acquired image will be black &amp; white. This is the fasted method, usef
     <value>Palauta kuvan asetukset niiden oletus arvoihin seuraavassa uudelleenkäynnistyksessä</value>
     <comment>Reset image settings to their default values on next program restart</comment>
   </data>
-  <data name="dlgOptions_chkRememberSettings" xml:space="preserve">
+  <data name="dlgOptions_chkRememberScanSettings" xml:space="preserve">
     <value>Muista kuvan asetukset sovelluksen uudelleenkäynnistyksessä</value>
     <comment>Remember image settings 
 on program restart</comment>
   </data>
-  <data name="dlgOptions_chkRememberSettingsToolTip" xml:space="preserve">
+  <data name="dlgOptions_chkRememberScanSettingsToolTip" xml:space="preserve">
     <value>Jos valittu, iCopy säilyttää kuvan asetukset seuraavassa uudelleenkäynnistyksessä.</value>
     <comment>If selected, iCopy will maintain image settings on next restart.</comment>
   </data>
