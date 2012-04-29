@@ -67,5 +67,10 @@ namespace PDFWriter
             stream.NewLine();
             stream.WriteLine("endobj");
         }
+
+        public static void ResetObjectCount()
+        {
+            objectCount = 1;
+        }
     }
 }
