@@ -571,8 +571,4 @@ impostazioni dell'immagine</value>
 impostazioni immagine utilizzate anche al successivo riavvio</value>
     <comment>If selected, iCopy will maintain image settings on next restart.</comment>
   </data>
-  <data name="mainFrm_chkDuplex" xml:space="preserve">
-    <value>Acquisisci fronte/retro</value>
-    <comment>Acquisisci fronte/retro</comment>
-  </data>
 </root>

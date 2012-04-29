@@ -119,7 +119,7 @@ Section -Main SEC0000
 	File /r ..\bin\Release\*.dll
 	File /r ..\bin\Release\*.txt
     File ..\bin\Release\iCopy.exe.config
-	
+	ExecWait '"$INSTDIR\iCopy.exe" /wiareg'
     WriteRegStr HKLM "${REGKEY}\Components" Main 1
 SectionEnd
 

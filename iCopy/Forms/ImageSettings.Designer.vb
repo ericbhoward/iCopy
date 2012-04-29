@@ -155,9 +155,9 @@ Partial Class frmImageSettings
         '
         Me.cboResolution.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.cboResolution.FormattingEnabled = True
-        Me.cboResolution.Location = New System.Drawing.Point(105, 111)
+        Me.cboResolution.Location = New System.Drawing.Point(90, 111)
         Me.cboResolution.Name = "cboResolution"
-        Me.cboResolution.Size = New System.Drawing.Size(82, 21)
+        Me.cboResolution.Size = New System.Drawing.Size(88, 21)
         Me.cboResolution.TabIndex = 45
         '
         'Label1

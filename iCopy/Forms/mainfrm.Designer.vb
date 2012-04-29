@@ -37,8 +37,6 @@ Partial Class mainFrm
         Me.PrinterStatusLabel = New System.Windows.Forms.ToolStripStatusLabel()
         Me.VersionStatusLabel = New System.Windows.Forms.ToolStripStatusLabel()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.chkPreview = New System.Windows.Forms.CheckBox()
-        Me.btnScanModes = New System.Windows.Forms.Button()
         Me.llblAbout = New System.Windows.Forms.LinkLabel()
         Me.llblSettings = New System.Windows.Forms.LinkLabel()
         Me.btnImageSettings = New System.Windows.Forms.Button()
@@ -49,6 +47,10 @@ Partial Class mainFrm
         Me.Label2 = New System.Windows.Forms.Label()
         Me.chkADF = New System.Windows.Forms.CheckBox()
         Me.chkDuplex = New System.Windows.Forms.CheckBox()
+        Me.chkMultipage = New System.Windows.Forms.CheckBox()
+        Me.chkSaveToFile = New System.Windows.Forms.CheckBox()
+        Me.chkPDF = New System.Windows.Forms.CheckBox()
+        Me.chkPreview = New System.Windows.Forms.CheckBox()
         CType(Me.nudNCopie, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.StatusStrip1.SuspendLayout()
         Me.ScanMenuStrip.SuspendLayout()
@@ -125,15 +127,16 @@ Partial Class mainFrm
         Me.nudNCopie.Name = "nudNCopie"
         Me.nudNCopie.Size = New System.Drawing.Size(55, 26)
         Me.nudNCopie.TabIndex = 1
+        Me.nudNCopie.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.nudNCopie.Value = New Decimal(New Integer() {1, 0, 0, 0})
         '
         'Label1
         '
         Me.Label1.Cursor = System.Windows.Forms.Cursors.Default
         Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(196, 96)
+        Me.Label1.Location = New System.Drawing.Point(166, 100)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(111, 19)
+        Me.Label1.Size = New System.Drawing.Size(150, 19)
         Me.Label1.TabIndex = 12
         Me.Label1.Text = "N° of copies"
         Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -141,7 +144,7 @@ Partial Class mainFrm
         'StatusStrip1
         '
         Me.StatusStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ScannerStatusLabel, Me.PrinterStatusLabel, Me.VersionStatusLabel})
-        Me.StatusStrip1.Location = New System.Drawing.Point(0, 188)
+        Me.StatusStrip1.Location = New System.Drawing.Point(0, 200)
         Me.StatusStrip1.Name = "StatusStrip1"
         Me.StatusStrip1.Size = New System.Drawing.Size(532, 22)
         Me.StatusStrip1.SizingGrip = False
@@ -151,6 +154,7 @@ Partial Class mainFrm
         'ScannerStatusLabel
         '
         Me.ScannerStatusLabel.Image = Global.iCopy.My.Resources.Resources.scanner
+        Me.ScannerStatusLabel.Margin = New System.Windows.Forms.Padding(0, 3, 6, 2)
         Me.ScannerStatusLabel.Name = "ScannerStatusLabel"
         Me.ScannerStatusLabel.Size = New System.Drawing.Size(137, 17)
         Me.ScannerStatusLabel.Text = "ToolStripStatusLabel1"
@@ -166,34 +170,19 @@ Partial Class mainFrm
         '
         Me.VersionStatusLabel.IsLink = True
         Me.VersionStatusLabel.Name = "VersionStatusLabel"
-        Me.VersionStatusLabel.Size = New System.Drawing.Size(243, 17)
+        Me.VersionStatusLabel.Size = New System.Drawing.Size(237, 17)
         Me.VersionStatusLabel.Spring = True
         Me.VersionStatusLabel.Text = "New Version Available!"
         Me.VersionStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         Me.VersionStatusLabel.Visible = False
         '
-        'chkPreview
+        'ToolTip1
         '
-        Me.chkPreview.AutoSize = True
-        Me.chkPreview.Location = New System.Drawing.Point(166, 127)
-        Me.chkPreview.Name = "chkPreview"
-        Me.chkPreview.Size = New System.Drawing.Size(64, 17)
-        Me.chkPreview.TabIndex = 4
-        Me.chkPreview.Text = "Preview"
-        Me.chkPreview.UseVisualStyleBackColor = True
-        '
-        'btnScanModes
-        '
-        Me.btnScanModes.Location = New System.Drawing.Point(12, 152)
-        Me.btnScanModes.Name = "btnScanModes"
-        Me.btnScanModes.Size = New System.Drawing.Size(138, 25)
-        Me.btnScanModes.TabIndex = 8
-        Me.btnScanModes.Text = "Other scan modes"
-        Me.btnScanModes.UseVisualStyleBackColor = True
+        Me.ToolTip1.AutomaticDelay = 300
         '
         'llblAbout
         '
-        Me.llblAbout.Location = New System.Drawing.Point(371, 168)
+        Me.llblAbout.Location = New System.Drawing.Point(371, 177)
         Me.llblAbout.Name = "llblAbout"
         Me.llblAbout.Size = New System.Drawing.Size(149, 13)
         Me.llblAbout.TabIndex = 10
@@ -203,7 +192,7 @@ Partial Class mainFrm
         '
         'llblSettings
         '
-        Me.llblSettings.Location = New System.Drawing.Point(376, 148)
+        Me.llblSettings.Location = New System.Drawing.Point(376, 157)
         Me.llblSettings.Name = "llblSettings"
         Me.llblSettings.Size = New System.Drawing.Size(144, 13)
         Me.llblSettings.TabIndex = 9
@@ -213,7 +202,7 @@ Partial Class mainFrm
         '
         'btnImageSettings
         '
-        Me.btnImageSettings.Location = New System.Drawing.Point(383, 66)
+        Me.btnImageSettings.Location = New System.Drawing.Point(383, 96)
         Me.btnImageSettings.Name = "btnImageSettings"
         Me.btnImageSettings.Size = New System.Drawing.Size(137, 42)
         Me.btnImageSettings.TabIndex = 5
@@ -255,7 +244,7 @@ Partial Class mainFrm
         '
         'Label2
         '
-        Me.Label2.Location = New System.Drawing.Point(163, 73)
+        Me.Label2.Location = New System.Drawing.Point(163, 69)
         Me.Label2.Name = "Label2"
         Me.Label2.Size = New System.Drawing.Size(101, 23)
         Me.Label2.TabIndex = 22
@@ -264,7 +253,7 @@ Partial Class mainFrm
         '
         'chkADF
         '
-        Me.chkADF.Location = New System.Drawing.Point(166, 145)
+        Me.chkADF.Location = New System.Drawing.Point(166, 154)
         Me.chkADF.Name = "chkADF"
         Me.chkADF.Size = New System.Drawing.Size(207, 21)
         Me.chkADF.TabIndex = 23
@@ -274,37 +263,79 @@ Partial Class mainFrm
         'chkDuplex
         '
         Me.chkDuplex.AutoSize = True
-        Me.chkDuplex.Location = New System.Drawing.Point(166, 167)
+        Me.chkDuplex.Location = New System.Drawing.Point(166, 177)
         Me.chkDuplex.Name = "chkDuplex"
         Me.chkDuplex.Size = New System.Drawing.Size(98, 17)
         Me.chkDuplex.TabIndex = 24
         Me.chkDuplex.Text = "Acquire Duplex"
         Me.chkDuplex.UseVisualStyleBackColor = True
         '
+        'chkMultipage
+        '
+        Me.chkMultipage.Appearance = System.Windows.Forms.Appearance.Button
+        Me.chkMultipage.Image = Global.iCopy.My.Resources.Resources.multipage
+        Me.chkMultipage.Location = New System.Drawing.Point(12, 151)
+        Me.chkMultipage.Name = "chkMultipage"
+        Me.chkMultipage.Size = New System.Drawing.Size(42, 42)
+        Me.chkMultipage.TabIndex = 26
+        Me.chkMultipage.UseVisualStyleBackColor = True
+        '
+        'chkSaveToFile
+        '
+        Me.chkSaveToFile.Appearance = System.Windows.Forms.Appearance.Button
+        Me.chkSaveToFile.Image = Global.iCopy.My.Resources.Resources.saveToFile
+        Me.chkSaveToFile.Location = New System.Drawing.Point(60, 151)
+        Me.chkSaveToFile.Name = "chkSaveToFile"
+        Me.chkSaveToFile.Size = New System.Drawing.Size(42, 42)
+        Me.chkSaveToFile.TabIndex = 26
+        Me.chkSaveToFile.UseVisualStyleBackColor = True
+        '
+        'chkPDF
+        '
+        Me.chkPDF.Appearance = System.Windows.Forms.Appearance.Button
+        Me.chkPDF.Image = Global.iCopy.My.Resources.Resources.pdficon_large
+        Me.chkPDF.Location = New System.Drawing.Point(108, 151)
+        Me.chkPDF.Name = "chkPDF"
+        Me.chkPDF.Size = New System.Drawing.Size(42, 42)
+        Me.chkPDF.TabIndex = 26
+        Me.chkPDF.UseVisualStyleBackColor = True
+        '
+        'chkPreview
+        '
+        Me.chkPreview.AutoSize = True
+        Me.chkPreview.Location = New System.Drawing.Point(166, 135)
+        Me.chkPreview.Name = "chkPreview"
+        Me.chkPreview.Size = New System.Drawing.Size(64, 17)
+        Me.chkPreview.TabIndex = 4
+        Me.chkPreview.Text = "Preview"
+        Me.chkPreview.UseVisualStyleBackColor = True
+        '
         'mainFrm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(532, 210)
-        Me.Controls.Add(Me.chkDuplex)
-        Me.Controls.Add(Me.Label2)
+        Me.ClientSize = New System.Drawing.Size(532, 222)
+        Me.Controls.Add(Me.chkPDF)
+        Me.Controls.Add(Me.chkSaveToFile)
+        Me.Controls.Add(Me.chkMultipage)
         Me.Controls.Add(Me.Label8)
+        Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.cboPrintMode)
-        Me.Controls.Add(Me.btnScanModes)
         Me.Controls.Add(Me.cboPaperSize)
         Me.Controls.Add(Me.cboScanMode)
         Me.Controls.Add(Me.Label7)
         Me.Controls.Add(Me.StatusStrip1)
-        Me.Controls.Add(Me.chkADF)
-        Me.Controls.Add(Me.llblSettings)
-        Me.Controls.Add(Me.btnImageSettings)
         Me.Controls.Add(Me.btnCopy)
+        Me.Controls.Add(Me.btnImageSettings)
+        Me.Controls.Add(Me.chkDuplex)
         Me.Controls.Add(Me.btnSelScanner)
+        Me.Controls.Add(Me.llblSettings)
+        Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.btnPrintSetup)
         Me.Controls.Add(Me.nudNCopie)
-        Me.Controls.Add(Me.chkPreview)
         Me.Controls.Add(Me.llblAbout)
-        Me.Controls.Add(Me.Label1)
+        Me.Controls.Add(Me.chkPreview)
+        Me.Controls.Add(Me.chkADF)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
         Me.KeyPreview = True
         Me.MaximizeBox = False
@@ -331,8 +362,6 @@ Partial Class mainFrm
     Friend WithEvents Label7 As System.Windows.Forms.Label
     Friend WithEvents StatusStrip1 As System.Windows.Forms.StatusStrip
     Friend WithEvents ToolTip1 As System.Windows.Forms.ToolTip
-    Friend WithEvents chkPreview As System.Windows.Forms.CheckBox
-    Friend WithEvents btnScanModes As System.Windows.Forms.Button
     Friend WithEvents llblAbout As System.Windows.Forms.LinkLabel
     Friend WithEvents llblSettings As System.Windows.Forms.LinkLabel
     Friend WithEvents btnImageSettings As System.Windows.Forms.Button
@@ -346,4 +375,8 @@ Partial Class mainFrm
     Friend WithEvents VersionStatusLabel As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents chkADF As System.Windows.Forms.CheckBox
     Friend WithEvents chkDuplex As System.Windows.Forms.CheckBox
+    Friend WithEvents chkMultipage As System.Windows.Forms.CheckBox
+    Friend WithEvents chkSaveToFile As System.Windows.Forms.CheckBox
+    Friend WithEvents chkPDF As System.Windows.Forms.CheckBox
+    Friend WithEvents chkPreview As System.Windows.Forms.CheckBox
 End Class

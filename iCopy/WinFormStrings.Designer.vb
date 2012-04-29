@@ -83,15 +83,6 @@ Namespace My.Resources
         End Property
         
         '''<summary>
-        '''  Looks up a localized string similar to Combine your scanner and printer into a powerful photocopier..
-        '''</summary>
-        Friend Shared ReadOnly Property AboutBox1_lblDescription() As String
-            Get
-                Return ResourceManager.GetString("AboutBox1_lblDescription", resourceCulture)
-            End Get
-        End Property
-        
-        '''<summary>
         '''  Looks up a localized string similar to Click here to read license text.
         '''</summary>
         Friend Shared ReadOnly Property AboutBox1_LinkLabel3() As String
@@ -737,15 +728,6 @@ Namespace My.Resources
         Friend Shared ReadOnly Property mainFrm_chkADFToolTip() As String
             Get
                 Return ResourceManager.GetString("mainFrm_chkADFToolTip", resourceCulture)
-            End Get
-        End Property
-        
-        '''<summary>
-        '''  Looks up a localized string similar to Duplex acquisition.
-        '''</summary>
-        Friend Shared ReadOnly Property mainFrm_chkDuplex() As String
-            Get
-                Return ResourceManager.GetString("mainFrm_chkDuplex", resourceCulture)
             End Get
         End Property
         

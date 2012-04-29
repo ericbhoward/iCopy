@@ -1,11 +1,10 @@
 ﻿== 1.6 ==
-- ADD: PDF Export. It works with single page, multipage and ADF acquisitions, and can create color, grayscale and bw PDFs.
-- CHANGED: Redesigned part of the interface
-- FIX: Some other bugfixes
+- ADD: Save to PDF function
 
 == 1.5.1 ==
 - ADD: Duplex ADF acquisition
 - FIX: Crash with Brother MFC-6800 (wrong image format)
+- FIX: Crash at startup when wiaaut.dll not registered
 
 == 1.5 ==
 - FIX: Improvements in ADF support.
