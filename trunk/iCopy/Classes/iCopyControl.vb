@@ -24,10 +24,7 @@ Imports System.Text.RegularExpressions
 <Assembly: CLSCompliantAttribute(True)> 
 Class appControl
 
-    Shared WithEvents manager As New DeviceManager
     Shared _deviceID As String
-    Shared _device As Device
-    Shared _wscanner As WIA.Item
     Private Shared LocRM As Resources.ResourceManager
     Private Shared GetCulturesThread As Threading.Thread
 
@@ -40,6 +37,10 @@ Class appControl
     Public Shared MainForm As mainFrm
 
     Shared Sub Main(ByVal sArgs() As String)
+        Dim _device As Device
+        Dim _wscanner As WIA.Item
+        Dim manager As DeviceManager
+
         My.Settings.Silent = False
         Application.EnableVisualStyles()
         If My.Settings.LastScanSettings Is Nothing Then
@@ -79,6 +80,7 @@ Class appControl
 
         Try
             If sArgs.Length = 0 Then 'If there are no arguments, run app normally
+
                 CommandLine = False
                 'Avoids that two processes run simultaneously
                 If Process.GetProcessesByName("icopy").Length > 1 Then
@@ -94,6 +96,9 @@ Class appControl
                 Catch ex As Threading.ThreadStateException
                     MsgBoxWrap(ex.ToString)
                 End Try
+
+
+                manager = New DeviceManager 'This is the first call to WIA library. If it isn't registered, an error is thrown
 
                 'Initializes new scanning interface
                 appControl.CreateScanner(My.Settings.DeviceID)
@@ -122,15 +127,33 @@ Class appControl
                 Next
                 Trace.WriteLine(String.Format("Command Line parameters: {0}", argstring))
 
-                'Utility commands
+                For i As Integer = 0 To sArgs.GetUpperBound(0)
+                    If sArgs(i) = "/silent" Then My.Settings.Silent = "True"
+                Next
+
+                'Utility commands (no WIA library references)
                 For i As Integer = 0 To sArgs.GetUpperBound(0)
                     Select Case sArgs(i).ToLower()
                         Case "/?", "/help"
                             Console.Write(LocRM.GetString("Console_Help"))
                             Return
                         Case "/wiareg", "/wr"
-                            RegisterWiaautdll(True)
+                            Try
+                                manager = New DeviceManager
+                            Catch ex As Exception
+                                RegisterWiaautdll(True)
+                            End Try
                             Return
+
+                    End Select
+                Next
+
+                Dim settings As ScanSettings = My.Settings.LastScanSettings
+
+                manager = New DeviceManager 'This is the first call to WIA library. If it isn't registered, an error is thrown
+
+                For i As Integer = 0 To sArgs.GetUpperBound(0)
+                    Select Case sArgs(i).ToLower()
                         Case "/register", "/reg"
                             Try
                                 manager.RegisterPersistentEvent(Application.ExecutablePath + " /StiDevice:%1 /StiEvent:%2 /copy", "iCopy", "Directly print using iCopy", Application.ExecutablePath + ",0", WIA.EventID.wiaEventScanImage)
@@ -153,8 +176,6 @@ Class appControl
                             Return
                     End Select
                 Next
-
-                Dim settings As ScanSettings = My.Settings.LastScanSettings
 
                 'Command line arguments parsing
                 'STEP 1 Parameters with an argument
@@ -196,9 +217,6 @@ Class appControl
                     Select Case sArgs(i)
                         Case "/log"
                             Trace.Listeners.Add(New ConsoleTraceListener())
-                            Continue For
-                        Case "/silent"
-                            My.Settings.Silent = "True"
                             Continue For
                         Case "/color", "/colour", "/col"
                             settings.Intent = WiaImageIntent.ColorIntent
@@ -245,20 +263,18 @@ Class appControl
                             Copy(settings)
                             Application.Exit()
                             Exit Sub
-                        Case "/pdf"
-                            ScanToPDF(settings)
-                            Application.Exit()
-                            Exit Sub
                         Case "/file", "/tofile", "/Scantofile", "/f"
+                            settings.ScanOutput = ScanOutput.File
                             Try
-                                SaveToFile(settings)
+                                Copy(settings)
                                 Application.Exit()
                                 Exit Sub
                             Catch ex As ArgumentException
                                 MsgBoxWrap(ex.Message, vbExclamation, "iCopy")
                             End Try
                         Case "/copymultiplepages", "/multiplepages"
-                            CopyMultiplePages(settings)
+                            settings.Multipage = True
+                            Copy(settings)
                             Application.Exit()
                             Exit Sub
                     End Select
@@ -279,12 +295,15 @@ Class appControl
             ElseIf ex.ErrorCode = WIA_ERRORS.WIA_ERROR_UNKNOWN_ERROR Or ex.ErrorCode = WIA_ERRORS.WIA_ERROR_NO_SCANNER_CONNECTED Then
                 MsgBoxWrap("There is a problem with your scanner connection. Please try to reconnect your scanner and restart iCopy. If this doesn't solve the problem, please report it on iCopy website", MsgBoxStyle.Critical, "iCopy")
             End If
+#If Debug = False Then
         Catch ex As Exception
             HandleException(ex) 'Overrides .NET message box to include error reporting
+
+#End If
         End Try
         Trace.WriteLine(vbCrLf)
-
         Application.Exit()
+
     End Sub
 
     Private Shared Sub HandleException(ByVal ex As Exception)
@@ -313,8 +332,6 @@ Class appControl
     End Function
 
     Private Shared Sub RegisterWiaautdll(ByVal suppressMessage As Boolean)
-
-        MsgBoxWrap("iCopy will now try to register WIA Automation layer.")
 
         'Check if iCopy is run as administrator
         Dim isElevated As Boolean
@@ -356,7 +373,7 @@ Class appControl
                 If msg = Microsoft.WindowsAPICodePack.Dialogs.TaskDialogResult.Ok Then
                     Dim psi As System.Diagnostics.ProcessStartInfo = New ProcessStartInfo()
                     psi.FileName = Application.ExecutablePath
-                    psi.Arguments = "-r"
+                    psi.Arguments = "/wiareg"
                     psi.Verb = "runas"
                     Process.Start(psi)
                     Exit Sub
@@ -368,7 +385,7 @@ Class appControl
                 If msg = MsgBoxResult.Yes Then
                     Dim psi As System.Diagnostics.ProcessStartInfo = New ProcessStartInfo()
                     psi.FileName = Application.ExecutablePath
-                    psi.Arguments = "-r"
+                    psi.Arguments = "/wiareg"
                     psi.Verb = "runas"
                     Process.Start(psi)
                     Exit Sub
@@ -495,86 +512,6 @@ retry:
         Scanner.WritePropertiesLog()
     End Sub
 
-    Shared Sub SaveToFile(ByVal options As ScanSettings)
-        If options.Path = "" Then
-            Dim dialog As New SaveFileDialog()
-
-            dialog.AddExtension = True
-            dialog.DefaultExt = "jpg"
-            dialog.Filter = "JPEG image|*.jpg|Windows Bitmap|*.bmp|Compuserve GIF|*.gif|Portable Network Graphics (PNG)|*.png"
-
-            If Not dialog.ShowDialog() = Windows.Forms.DialogResult.Cancel Then
-                options.Path = dialog.FileName
-            Else : Exit Sub
-            End If
-        End If
-
-        'Check if the provided path is valid (AUTHORIZATION, SYNTAX, ecc)
-        Try
-            Dim a As FileStream = IO.File.Create(options.Path)
-            a.Close()
-        Catch ex As Exception
-            Throw New ArgumentException("Invalid file path")
-        End Try
-        IO.File.Delete(options.Path)
-
-        Dim format As Imaging.ImageFormat
-        'Determines the extension of the file
-        Dim ext As String = Right(options.Path, 3)
-        Dim pathWoExt = Left(options.Path, options.Path.Length - 4)
-        Dim images As List(Of String)
-
-        Select Case ext
-            Case "jpg"
-                format = ImageFormat.Jpeg
-            Case "bmp"
-                format = ImageFormat.Bmp
-            Case "gif"
-                format = ImageFormat.Gif
-            Case "png"
-                format = ImageFormat.Png
-            Case Else
-                Throw New ArgumentException("File extension isn't a valid extension")
-        End Select
-
-        changescanner(_scanner.DeviceId)
-        'Calls scan routine
-        Try
-            images = _scanner.ScanADF(options)
-        Catch ex As System.Runtime.InteropServices.COMException
-            If ex.ErrorCode = -2145320860 Then       'If acquisition is cancelled
-                Exit Sub
-            ElseIf ex.ErrorCode = WIA_ERRORS.WIA_ERROR_WARMING_UP Then
-                MsgBoxWrap(LocRM.GetString("Msg_ScannerWarmingUp"), MsgBoxStyle.Exclamation, "iCopy")
-                Return
-            ElseIf ex.ErrorCode = WIA_ERRORS.WIA_ERROR_EXCEPTION_IN_DRIVER Then
-                MsgBoxWrap(LocRM.GetString("Msg_ExceptionInDriver"), MsgBoxStyle.Exclamation, "iCopy")
-                Return
-            ElseIf ex.ErrorCode = Convert.ToInt32("0x80004005", 16) Then
-                MsgBoxWrap("An error occured while processing the acquired image. Please try again with a lower resolution." & vbCrLf & "If the problem persists please report it (http://icopy.sourceforge.net/reportabug.html).", MsgBoxStyle.Critical, "iCopy")
-                Exit Sub
-            Else
-                Throw
-            End If
-        End Try
-
-        If images.Count = 1 Then
-            Dim img As Image = Image.FromFile(images(0))
-            img.Save(options.Path, format)
-            img.Dispose()
-            File.Delete(images(0))
-        ElseIf images.Count > 1 Then
-            For i = 0 To images.Count - 1
-                Dim path As String = pathWoExt + i.ToString("000") + "." + ext
-                Dim img As Image = Image.FromFile(images(i))
-                img.Save(path, format)
-                img.Dispose()
-                File.Delete(images(i))
-            Next
-        End If
-
-    End Sub
-
     Shared Function GetAvailableResolutions() As List(Of Integer)
         Return _scanner.AvailableResolutions
     End Function
@@ -587,10 +524,63 @@ retry:
         Return _scanner.CanDoDuplex
     End Function
 
-    Shared Sub CopyMultiplePages(ByVal options As ScanSettings)
+    Shared Sub Copy(ByVal options As ScanSettings)
+        Dim pathWoExt, ext As String
+        Dim format As Imaging.ImageFormat
 
-        'Sets acquisition properties
-        Dim morePages As DialogResult = DialogResult.Yes
+        If options.ScanOutput = ScanOutput.File Or ScanOutput.PDF Then
+            If options.Path = "" Then
+                Dim dialog As New SaveFileDialog()
+
+                If options.ScanOutput = ScanOutput.File Then
+                    dialog.AddExtension = True
+                    dialog.DefaultExt = "jpg"
+                    dialog.Filter = "JPEG image|*.jpg|Windows Bitmap|*.bmp|Compuserve GIF|*.gif|Portable Network Graphics (PNG)|*.png"
+                Else
+                    dialog.AddExtension = True
+                    dialog.DefaultExt = "pdf"
+                    dialog.Filter = "Adobe PDF file|*.pdf"
+                End If
+
+                If Not dialog.ShowDialog() = Windows.Forms.DialogResult.Cancel Then
+                    options.Path = dialog.FileName
+                Else : Exit Sub
+                End If
+            End If
+
+            'Check if the provided path is valid (AUTHORIZATION, SYNTAX, ecc)
+            Try
+                Dim a As FileStream = IO.File.Create(options.Path)
+                a.Close()
+            Catch ex As Exception
+                Throw New ArgumentException("Invalid file path")
+            End Try
+            IO.File.Delete(options.Path)
+
+            If options.ScanOutput = ScanOutput.File Then
+                'Determines the extension of the file in order to use the correct format
+                ext = Right(options.Path, 3)
+                pathWoExt = Left(options.Path, options.Path.Length - 4)
+
+                Select Case ext
+                    Case "jpg"
+                        format = ImageFormat.Jpeg
+                    Case "bmp"
+                        format = ImageFormat.Bmp
+                    Case "gif"
+                        format = ImageFormat.Gif
+                    Case "png"
+                        format = ImageFormat.Png
+                    Case Else
+                        Throw New ArgumentException("File extension isn't a valid extension")
+                End Select
+
+            End If
+        End If
+
+        Dim morePages As DialogResult = DialogResult.No
+        'List of acquired images
+        Dim images As New List(Of String)()
 
         Dim dlg As New dlgScanMorePages
         If CommandLine Then
@@ -598,124 +588,87 @@ retry:
         Else
             dlg.Location = New Point(MainForm.Left + (MainForm.Width - dlg.Width) / 2, MainForm.Top + (MainForm.Height - dlg.Height) / 2)
         End If
-retry:
-        Do Until morePages = DialogResult.No Or morePages = DialogResult.Cancel
-            changescanner(_scanner.DeviceId)
-            'Calls scan routine
+
+        changescanner(_scanner.DeviceId)
+
+        'Calls scan routine
+        Do
             Try
-                'Add the image to the print buffer
-                _printer.AddImages(_scanner.ScanADF(options), options.Scaling)
-                morePages = dlg.ShowDialog()
+                'Add the image to the printer buffer
+                images.AddRange(_scanner.ScanADF(options))
+
+                If options.Multipage Then morePages = dlg.ShowDialog()
 
             Catch ex As System.Runtime.InteropServices.COMException
                 If ex.ErrorCode = -2145320860 Then       'If acquisition is cancelled
-                    Exit Do
+                    Exit Sub
                 ElseIf ex.ErrorCode = WIA_ERRORS.WIA_ERROR_WARMING_UP Then
                     MsgBoxWrap(LocRM.GetString("Msg_ScannerWarmingUp"), MsgBoxStyle.Exclamation, "iCopy")
-                    Exit Do
+                    Return
                 ElseIf ex.ErrorCode = WIA_ERRORS.WIA_ERROR_EXCEPTION_IN_DRIVER Then
                     MsgBoxWrap(LocRM.GetString("Msg_ExceptionInDriver"), MsgBoxStyle.Exclamation, "iCopy")
-                    Exit Do
+                    Return
                 ElseIf ex.ErrorCode = Convert.ToInt32("0x80004005", 16) Then
                     MsgBoxWrap("An error occured while processing the acquired image. Please try again with a lower resolution." & vbCrLf & "If the problem persists please report it (http://icopy.sourceforge.net/reportabug.html).", MsgBoxStyle.Critical, "iCopy")
+                    Exit Sub
                 Else
                     Throw
                 End If
             End Try
 
-        Loop
-
-        If Not morePages = DialogResult.Cancel Then
-            'Prints images
-            Try
-                _printer.Print(options.Copies)
-            Catch ex As ArgumentException 'If no images were sent to the printer
-
-            End Try
-
-        Else 'If the process is canceled by closing the dialog
-            Dim res As MsgBoxResult = MsgBoxWrap("Are you sure you want to cancel the operation? Click Yes if you are sure to proceed.", MsgBoxStyle.Question + MsgBoxStyle.YesNo, "iCopy")
-            If res = MsgBoxResult.Yes Then
-                _printer.ClearBuffer()
-            Else
-                GoTo retry
+            If morePages = DialogResult.Cancel Then
+                'If the process is canceled by closing the dialog
+                Dim res As MsgBoxResult = MsgBoxWrap("Are you sure you want to cancel the operation? Click Yes if you are sure to proceed.", MsgBoxStyle.Question + MsgBoxStyle.YesNo, "iCopy")
+                If res = MsgBoxResult.Yes Then
+                    _printer.ClearBuffer()
+                Else
+                    Continue Do
+                End If
             End If
-        End If
-    End Sub
+        Loop While morePages = DialogResult.Yes
 
-    Shared Sub ScanToPDF(ByVal options As ScanSettings)
-        'Sets acquisition properties
-        Dim images As List(Of String) = New List(Of String)
+        'Process the images to the desired output
+        Select Case options.ScanOutput
 
-        changescanner(_scanner.DeviceId)
-        'Calls scan routine
-        Try
-            'Add the image to the printer buffer
-            images = _scanner.ScanADF(options)
+            Case ScanOutput.File
+                If images.Count = 1 Then
+                    Dim img As Image = Image.FromFile(images(0))
+                    img.Save(options.Path, format)
+                    img.Dispose()
+                    File.Delete(images(0))
+                ElseIf images.Count > 1 Then
+                    For i = 0 To images.Count - 1
+                        Dim path As String = pathWoExt + i.ToString("001") + "." + ext
+                        Dim img As Image = Image.FromFile(images(i))
+                        img.Save(path, format)
+                        img.Dispose()
+                        File.Delete(images(i))
+                    Next
+                End If
 
-        Catch ex As System.Runtime.InteropServices.COMException
-            If ex.ErrorCode = -2145320860 Then       'If acquisition is cancelled
-                Exit Sub
-            ElseIf ex.ErrorCode = WIA_ERRORS.WIA_ERROR_WARMING_UP Then
-                MsgBoxWrap(LocRM.GetString("Msg_ScannerWarmingUp"), MsgBoxStyle.Exclamation, "iCopy")
-                Return
-            ElseIf ex.ErrorCode = WIA_ERRORS.WIA_ERROR_EXCEPTION_IN_DRIVER Then
-                MsgBoxWrap(LocRM.GetString("Msg_ExceptionInDriver"), MsgBoxStyle.Exclamation, "iCopy")
-                Return
-            ElseIf ex.ErrorCode = Convert.ToInt32("0x80004005", 16) Then
-                MsgBoxWrap("An error occured while processing the acquired image. Please try again with a lower resolution." & vbCrLf & "If the problem persists please report it (http://icopy.sourceforge.net/reportabug.html).", MsgBoxStyle.Critical, "iCopy")
-                Exit Sub
-            Else
-                Throw
-            End If
-        End Try
+            Case ScanOutput.PDF
+                Dim doc As New PDFWriter.PDFDocument()
+                For i = 0 To images.Count - 1
+                    Dim img As Image = Image.FromFile(images(i))
+                    doc.AddPage(img, PDFWriter.PaperSize.A4)
+                Next
 
-        'Creates the pdf file
-        Dim pdf As New PDFWriter.PDFDocument()
-        For Each Str As String In images
-            Dim bmp As Bitmap = Image.FromFile(Str)
-            pdf.AddPage(bmp, PDFWriter.PaperSize.A4)
-        Next
+                doc.Save(options.Path)
+                doc.Close()
 
-        pdf.Save("prova.pdf")
+                For i = 0 To images.Count - 1
+                    File.Delete(images(i))
+                Next
 
-        For Each Str As String In images
-            Try
-                File.Delete(Str)
-            Catch ex As Exception
+            Case Else
+                _printer.AddImages(images, options.Scaling)
+                'Prints images
+                Try
+                    _printer.Print(options.Copies)
+                Catch ex As ArgumentException 'If no images were sent to the printer
 
-            End Try
-        Next
-    End Sub
-
-    Shared Sub Copy(ByVal options As ScanSettings)
-        'Sets acquisition properties
-
-        changescanner(_scanner.DeviceId)
-        'Calls scan routine
-        Try
-            'Add the image to the printer buffer
-            _printer.AddImages(_scanner.ScanADF(options), options.Scaling)
-
-        Catch ex As System.Runtime.InteropServices.COMException
-            If ex.ErrorCode = -2145320860 Then       'If acquisition is cancelled
-                Exit Sub
-            ElseIf ex.ErrorCode = WIA_ERRORS.WIA_ERROR_WARMING_UP Then
-                MsgBoxWrap(LocRM.GetString("Msg_ScannerWarmingUp"), MsgBoxStyle.Exclamation, "iCopy")
-                Return
-            ElseIf ex.ErrorCode = WIA_ERRORS.WIA_ERROR_EXCEPTION_IN_DRIVER Then
-                MsgBoxWrap(LocRM.GetString("Msg_ExceptionInDriver"), MsgBoxStyle.Exclamation, "iCopy")
-                Return
-            ElseIf ex.ErrorCode = Convert.ToInt32("0x80004005", 16) Then
-                MsgBoxWrap("An error occured while processing the acquired image. Please try again with a lower resolution." & vbCrLf & "If the problem persists please report it (http://icopy.sourceforge.net/reportabug.html).", MsgBoxStyle.Critical, "iCopy")
-                Exit Sub
-            Else
-                Throw
-            End If
-        End Try
-
-        'Prints images
-        _printer.Print(options.Copies)
+                End Try
+        End Select
     End Sub
 
     Shared Function GetScannerEvents() As WIA.DeviceEvents
@@ -748,9 +701,5 @@ retry:
             Return _availableCultures
         End Get
     End Property
-
-    Private Shared Sub manager_OnEvent(EventID As String, DeviceID As String, ItemID As String) Handles manager.OnEvent
-        MsgBoxWrap("Device " + DeviceID + " triggered the event " + EventID)
-    End Sub
 
 End Class

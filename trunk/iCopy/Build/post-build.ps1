@@ -1,6 +1,6 @@
 # Automated script for creating setup and zip files
 # Project folder
-$ProjDir = "D:\Matteo\Documenti\Visual Studio 2010\Projects\iCopy\iCopy"
+$ProjDir = "D:\Matteo\Documenti\Visual Studio 2010\Projects\iCopy\trunk\iCopy\"
 
 # NEEDED:
 #	* NSIS Installer

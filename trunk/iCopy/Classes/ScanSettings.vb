@@ -1,5 +1,11 @@
 ﻿Imports WIA
 
+Public Enum ScanOutput
+    Printer
+    File
+    PDF
+End Enum
+
 Public Class ScanSettings
 
     Private _Brightness As Integer
@@ -14,6 +20,8 @@ Public Class ScanSettings
     Private _Path As String
     Private _UseADF As Boolean
     Private _duplex As Boolean
+    Private _scanOutput As ScanOutput
+    Private _multipage As Boolean
 
     ''' Creates default properties
     Public Sub New()
@@ -29,6 +37,8 @@ Public Class ScanSettings
         _Scaling = 100
         _BitDepth = 0
         _Path = ""
+        _scanOutput = iCopy.ScanOutput.Printer
+        _multipage = False
     End Sub
 
     Public Property Brightness() As Integer
@@ -112,6 +122,24 @@ Public Class ScanSettings
         End Set
     End Property
 
+    Public Property Multipage() As Boolean
+        Get
+            Return _multipage
+        End Get
+        Set(ByVal value As Boolean)
+            _multipage = value
+        End Set
+    End Property
+
+    Public Property ScanOutput() As ScanOutput
+        Get
+            Return _scanOutput
+        End Get
+        Set(ByVal value As ScanOutput)
+            _scanOutput = value
+        End Set
+    End Property
+
     Public Property UseADF() As Boolean
         Get
             Return _UseADF
@@ -151,6 +179,8 @@ Public Class ScanSettings
             vbTab + "Preview: " + vbTab + Preview.ToString() + vbCrLf + _
             vbTab + "UseADF: " + vbTab + UseADF.ToString() + vbCrLf + _
             vbTab + "Duplex: " + vbTab + Duplex.ToString() + vbCrLf + _
+            vbTab + "Multipage: " + vbTab + Multipage.ToString() + vbCrLf + _
+            vbTab + "Scan Output: " + vbTab + ScanOutput.ToString() + vbCrLf + _
             vbTab + "Path: " + vbTab + Path.ToString() + vbCrLf
     End Function
 

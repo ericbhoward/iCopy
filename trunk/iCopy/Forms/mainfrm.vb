@@ -149,11 +149,13 @@ Class mainFrm
                 Case Keys.S 'Copy
                     btnCopy_Click(btnCopy, ea)
                 Case Keys.M 'Copy Multiple Pages
-                    ScanMultiplePages_Click(ScanMultiplePages, ea)
+                    chkMultipage.Checked = Not chkMultipage.Checked
                 Case Keys.F 'Scan to File
-                    ScanToFile_Click(ScanToFile, ea)
+                    chkSaveToFile.Checked = Not chkSaveToFile.Checked
                 Case Keys.I 'Image settings
                     btnImageSettings_Click(btnImageSettings, ea)
+                Case Keys.P 'Scan to pdf
+                    chkPDF.Checked = Not chkPDF.Checked
             End Select
         End If
     End Sub
@@ -230,14 +232,18 @@ Class mainFrm
         End Try
     End Sub
 
+    'Show printer settings
     Private Sub PrintSetup_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnPrintSetup.Click, PrinterStatusLabel.Click
-        appControl.Printer.showPreferences()
-        My.Settings.DefaultPrinter = appControl.Printer.Name
-        PrinterStatusLabel.Text = appControl.Printer.Name
-        If PrinterStatusLabel.Text.Contains("PDF") Then
-            PrinterStatusLabel.Image = My.Resources.pdf_icon
-        Else
-            PrinterStatusLabel.Image = My.Resources.printer
+        'Disable printer settings when chkPDF is selected
+        If Not chkPDF.Checked Then
+            appControl.Printer.showPreferences()
+            My.Settings.DefaultPrinter = appControl.Printer.Name
+            PrinterStatusLabel.Text = appControl.Printer.Name
+            If PrinterStatusLabel.Text.Contains("PDF") Then
+                PrinterStatusLabel.Image = My.Resources.pdf_icon
+            Else
+                PrinterStatusLabel.Image = My.Resources.printer
+            End If
         End If
     End Sub
 
@@ -262,11 +268,6 @@ Class mainFrm
         My.Settings.PrintColor = appControl.Printer.PageSettings.Color
     End Sub
 
-    Private Sub btnScanModes_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnScanModes.Click
-        Dim pos As Point = btnScanModes.Location
-        pos.Y += btnScanModes.Height
-        ScanMenuStrip.Show(Me, pos)
-    End Sub
 
     Private Sub btnImageSettings_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles btnImageSettings.Click
 
@@ -314,21 +315,17 @@ Class mainFrm
         opts.BitDepth = My.Settings.LastScanSettings.BitDepth
         opts.UseADF = chkADF.Checked
         opts.Duplex = chkDuplex.Checked
+        opts.Multipage = chkMultipage.Checked
+
+        If chkSaveToFile.Checked Then
+            opts.ScanOutput = ScanOutput.File
+        ElseIf chkPDF.Checked Then
+            opts.ScanOutput = ScanOutput.PDF
+        End If
 
         My.Settings.LastScanSettings = opts
         Return opts
     End Function
-
-    Private Sub ScanToFile_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ScanToFile.Click
-        appControl.SaveToFile(getScanSettings())
-    End Sub
-
-    Private Sub ScanMultiplePages_Click(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles ScanMultiplePages.Click
-        Me.Enabled = False
-        'Starts copy process
-        appControl.CopyMultiplePages(getScanSettings())
-        Me.Enabled = True
-    End Sub
 
     Private Sub cboPaperSize_SelectedIndexChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles cboPaperSize.SelectedIndexChanged
         appControl.Printer.PageSettings.PaperSize = appControl.Printer.PrinterSettings.PaperSizes.Item(cboPaperSize.SelectedIndex)
@@ -341,5 +338,40 @@ Class mainFrm
 
     Private Sub chkADF_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles chkADF.CheckedChanged
         chkPreview.Enabled = Not chkADF.Checked
+        chkDuplex.Enabled = chkADF.Checked
+        If Not chkADF.Checked Then
+            chkDuplex.Checked = False
+        End If
     End Sub
+
+    Private Sub chkSaveToFile_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles chkSaveToFile.CheckedChanged
+        If chkSaveToFile.Checked Then
+            chkPDF.Checked = False
+            PrinterStatusLabel.Image = My.Resources.saveToFile
+            PrinterStatusLabel.Text = "Save to file"
+        Else
+            PrinterStatusLabel.Text = appControl.Printer.Name
+            If PrinterStatusLabel.Text.Contains("PDF") Then
+                PrinterStatusLabel.Image = My.Resources.pdf_icon
+            Else
+                PrinterStatusLabel.Image = My.Resources.printer
+            End If
+        End If
+    End Sub
+
+    Private Sub chkPDF_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles chkPDF.CheckedChanged
+        If chkPDF.Checked Then
+            chkSaveToFile.Checked = False
+            PrinterStatusLabel.Image = My.Resources.pdf_icon
+            PrinterStatusLabel.Text = "Export to PDF"
+        Else
+            PrinterStatusLabel.Text = appControl.Printer.Name
+            If PrinterStatusLabel.Text.Contains("PDF") Then
+                PrinterStatusLabel.Image = My.Resources.pdf_icon
+            Else
+                PrinterStatusLabel.Image = My.Resources.printer
+            End If
+        End If
+    End Sub
+
 End Class

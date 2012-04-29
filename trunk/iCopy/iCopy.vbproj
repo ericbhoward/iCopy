@@ -112,6 +112,9 @@
   <PropertyGroup>
     <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.WindowsAPICodePack, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL" />
     <Reference Include="System" />
@@ -295,6 +298,7 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <None Include="My Project\app.manifest" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application1.Designer.vb</LastGenOutput>
@@ -308,12 +312,6 @@
   <ItemGroup>
     <None Include="Build\post-build.ps1" />
     <None Include="Resources\iCopy.gif" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\PDFWriter\PDFWriter.csproj">
-      <Project>{A7400A6F-1809-4C4A-B604-1FAC6123C6B8}</Project>
-      <Name>PDFWriter</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
@@ -351,7 +349,15 @@
     <None Include="Resources\iCopy192.png" />
     <Content Include="Build\7za.exe" />
     <None Include="Resources\iCopy_button.png" />
+    <Content Include="CREDITS.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Resources\InstBann.bmp" />
+    <Content Include="Resources\multipage.png" />
+    <Content Include="Resources\pdficon_large.png" />
+    <Content Include="Resources\printer.gif" />
+    <Content Include="Resources\saveToFile.png" />
+    <Content Include="Resources\scanner.gif" />
     <Content Include="Resources\welcome.bmp" />
     <Content Include="wiaaut.dll">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -373,8 +379,6 @@
     <None Include="Resources\Printer-icon.png" />
     <None Include="Resources\pdf_icon.gif" />
     <None Include="Scanner Logs\brother ADF.log" />
-    <None Include="Resources\printer.bmp" />
-    <None Include="Resources\scanner.bmp" />
     <None Include="Resources\Aboutbgr.jpg" />
     <None Include="Resources\iCopyAbout.bmp" />
   </ItemGroup>
@@ -388,7 +392,12 @@
       <Isolated>False</Isolated>
     </COMReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <ProjectReference Include="..\PDFWriter\PDFWriter.csproj">
+      <Project>{A7400A6F-1809-4C4A-B604-1FAC6123C6B8}</Project>
+      <Name>PDFWriter</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
   <PropertyGroup>
     <PostBuildEvent>powershell.exe -File "$(ProjectDir)Build\post-build.ps1"</PostBuildEvent>
