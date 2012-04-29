@@ -11,19 +11,15 @@ namespace PDFWriter
     /// Represents a PDF document. Has methods to add pages and images And to save the output to file
     /// </summary>
     public class PDFDocument
-    {
-        PDFDictionary dict = new PDFDictionary();
+    {    
+        PageTreeNode _root;     //Contains the children pages. This is the root obj of a PDF document
+        Catalog _cat;           //PDF Document catalog
+        XRefTable _table;       //PDF Reference table
+        FileTrailer _trailer;   //PDF Trailer
         
-        PageTreeNode _root = new PageTreeNode();
-        Catalog _cat;
-        FileTrailer _trailer;
-        XRefTable _table = new XRefTable();
-
-        List<Page> _pages;
-
         public int PageCount
         {
-            get { return _pages.Count; }
+            get { return _root.Kids.Count; }
         }
 
         /// <summary>
@@ -61,9 +57,30 @@ namespace PDFWriter
             stream.Close();
         }
 
+        /// <summary>
+        /// Closes the document and releases the memory (eg images)
+        /// </summary>
+        public void Close()
+        {
+            foreach (Page pag in _root.Kids)
+            {
+                pag.Dispose();
+            }
+            _root.Kids.Clear();
+        }
+
+        ~PDFDocument()
+        {
+            Close();
+        }
+
         public PDFDocument()
         {
+            PDFIndirectObject.ResetObjectCount();
+            _root = new PageTreeNode();
             _cat = new Catalog(_root);
+            _table = new XRefTable();
         }
+
     }
 }

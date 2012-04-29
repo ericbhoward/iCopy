@@ -7,7 +7,7 @@ using System.util.zlib;
 
 namespace PDFWriter
 {
-    public class ImageObject : PDFIndirectObject, iPDFObject
+    public class ImageObject : PDFIndirectObject, iPDFObject, IDisposable
     {
         PDFDictionary _dict = new PDFDictionary();
         Image _source;
@@ -186,6 +186,10 @@ namespace PDFWriter
             }
             return bdata;
         }
-        
+
+        public void Dispose()
+        {
+            _source.Dispose();
+        }
     }
 }

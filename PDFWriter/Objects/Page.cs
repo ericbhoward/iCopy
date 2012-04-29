@@ -6,7 +6,7 @@ using System.Globalization;
 
 namespace PDFWriter
 {
-    public class Page : PDFIndirectObject, iPageTreeElement
+    public class Page : PDFIndirectObject, iPageTreeElement, IDisposable
     {
         PDFDictionary _dict = new PDFDictionary();
         ImageObject _image;
@@ -128,7 +128,11 @@ namespace PDFWriter
             }
 
             base.WriteToStream(stream, table);
+        }
 
+        public void Dispose()
+        {
+            _image.Dispose();
         }
     }
 }
