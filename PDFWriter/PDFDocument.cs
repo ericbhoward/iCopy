@@ -28,19 +28,17 @@ namespace PDFWriter
         /// <param name="img">A System.Drawing.Image</param>
         /// <param name="size">Paper size of the page</param>
         /// <param name="landscape">Orientation (portrait by default)</param>
-        public void AddPage(Image img, PaperSize size, bool landscape = false)
+        /// <param name="center">Tells if the image has to be centered or put at (0,0)</param>
+        /// <param name="scaling">Scaling (in %)</param>
+        public void AddPage(Image img, PaperSize size, int scaling = 100, bool center = true)
         {
+            if (scaling < 1) throw new ArgumentException("Scaling can't be less than 1%");
             ImageObject imgObj = new ImageObject(img);
-            Page page = new Page(_root, size, landscape);
+            Page page = new Page(_root, size, center, scaling);
             page.Image = imgObj;
             _root.Kids.Add(page);
         }
 
-        public void AddPage( PaperSize size, bool landscape = false)
-        {
-            Page page = new Page(_root, size, landscape);
-            _root.Kids.Add(page);
-        }
 
         /// <summary>
         /// Saves the document to the provided file path
