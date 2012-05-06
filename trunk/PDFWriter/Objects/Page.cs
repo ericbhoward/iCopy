@@ -3,17 +3,20 @@ using System.Drawing;
 using System.Collections.Generic;
 using System.Text;
 using System.Globalization;
+using System.Drawing.Printing;
 
 namespace PDFWriter
 {
     public class Page : PDFIndirectObject, iPageTreeElement, IDisposable
     {
+        private bool _center;
         PDFDictionary _dict = new PDFDictionary();
         ImageObject _image;
         PDFRectangle _CropBox = null;
         PageTreeNode _parent;
         PDFRectangle _MediaBox = null;
         ContentStream _cont = null;
+        private int _scaling;
         
         public ContentStream PageContent
         {
@@ -40,11 +43,16 @@ namespace PDFWriter
             _MediaBox = MediaBox;
         }
 
-        public Page(PageTreeNode Parent, PaperSize size, bool landscape = false)
+        public Page(PageTreeNode Parent, PaperSize size, bool center, int scaling = 100)
         {
             _parent = Parent;
             Content = _dict;
-            if (landscape)
+            _MediaBox = new PDFRectangle(0, 0, size.Height, size.Width);
+            _scaling = scaling;
+            _center = center;
+
+            /*
+             * if (landscape)
             switch (size)
                 {
                     case PaperSize.A4:
@@ -76,6 +84,7 @@ namespace PDFWriter
                     default:
                         break;
                 }
+             */
         }
 
         public PDFRectangle MediaBox
@@ -103,12 +112,24 @@ namespace PDFWriter
                 else
                     resources.Add("ProcSet", "ImageC");
                 PDFDictionary imgDict = new PDFDictionary();
-                //Calculate the position of the lower left corner in order to center the image
-                
-                double imWidth = (double)_image.Source.Width / ((Bitmap)_image.Source).HorizontalResolution * 72;
-                double imHeight = (double)_image.Source.Height / ((Bitmap)_image.Source).VerticalResolution * 72;
-                double x = Math.Max((_MediaBox.Width - imWidth) / 2, 0);
-                double y = Math.Max((_MediaBox.Height - imHeight) / 2, 0);
+     
+                //Determine the image size in user space units
+                double imWidth = (double)_scaling / 100 * (double)_image.Source.Width / ((Bitmap)_image.Source).HorizontalResolution * 72;
+                double imHeight = (double)_scaling / 100 * (double)_image.Source.Height / ((Bitmap)_image.Source).VerticalResolution * 72;
+                double x, y;
+
+                if (_center)
+                {
+                    //Calculate the position of the lower left corner in order to center the image           
+                    x = Math.Max((_MediaBox.Width - imWidth) / 2, 0);
+                    y = Math.Max((_MediaBox.Height - imHeight) / 2, 0);
+                }
+                else
+                {
+                    x = 0;
+                    y = _MediaBox.Height - imHeight;
+                }
+
                 imgDict.Add(String.Format("Im{0}", _image.ObjID), _image.Reference);
                 StringBuilder sb = new StringBuilder();
                 sb.AppendLine(String.Format(CultureInfo.InvariantCulture.NumberFormat, "1 0 0 1 {0} {1} cm", x, y));

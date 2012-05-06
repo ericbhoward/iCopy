@@ -31,12 +31,4 @@ namespace PDFWriter
         /// </summary>
         SP = 32
     }
-
-    public enum PaperSize
-    {
-        A4,
-        A3,
-        Legal,
-        Letter,
-    }
 }
