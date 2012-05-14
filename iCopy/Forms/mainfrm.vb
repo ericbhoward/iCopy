@@ -316,6 +316,7 @@ Class mainFrm
         opts.UseADF = chkADF.Checked
         opts.Duplex = chkDuplex.Checked
         opts.Multipage = chkMultipage.Checked
+        opts.Center = frmImageSettings.chkCenter.Checked
 
         If chkSaveToFile.Checked Then
             opts.ScanOutput = ScanOutput.File
@@ -344,8 +345,19 @@ Class mainFrm
         End If
     End Sub
 
-    Private Sub chkSaveToFile_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles chkSaveToFile.CheckedChanged
-        If chkSaveToFile.Checked Then
+    Private Sub Outputchanged(sender As System.Object, e As System.EventArgs) Handles chkSaveToFile.CheckedChanged, chkPDF.CheckedChanged
+
+        If sender Is chkPDF Then
+            chkSaveToFile.Checked = chkSaveToFile.Checked And (Not chkPDF.Checked)
+        Else
+            chkPDF.Checked = chkPDF.Checked And (Not chkSaveToFile.Checked)
+        End If
+
+        If chkPDF.Checked Then
+            chkSaveToFile.Checked = False
+            PrinterStatusLabel.Image = My.Resources.pdf_icon
+            PrinterStatusLabel.Text = "Export to PDF"
+        ElseIf chkSaveToFile.Checked Then
             chkPDF.Checked = False
             PrinterStatusLabel.Image = My.Resources.saveToFile
             PrinterStatusLabel.Text = "Save to file"
@@ -356,22 +368,27 @@ Class mainFrm
             Else
                 PrinterStatusLabel.Image = My.Resources.printer
             End If
+            cboPaperSize.Enabled = True
+            Label2.Enabled = True
         End If
-    End Sub
 
-    Private Sub chkPDF_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles chkPDF.CheckedChanged
-        If chkPDF.Checked Then
-            chkSaveToFile.Checked = False
-            PrinterStatusLabel.Image = My.Resources.pdf_icon
-            PrinterStatusLabel.Text = "Export to PDF"
-        Else
-            PrinterStatusLabel.Text = appControl.Printer.Name
-            If PrinterStatusLabel.Text.Contains("PDF") Then
-                PrinterStatusLabel.Image = My.Resources.pdf_icon
-            Else
-                PrinterStatusLabel.Image = My.Resources.printer
-            End If
-        End If
+        'Enable/disable controls that are unused with the pdf and file modes
+        'Print mode
+        cboPrintMode.Enabled = Not (chkPDF.Checked Or chkSaveToFile.Checked)
+        Label8.Enabled = Not (chkPDF.Checked Or chkSaveToFile.Checked)
+        'Paper Size (only for save to file)
+        cboPaperSize.Enabled = Not chkSaveToFile.Checked
+        Label2.Enabled = Not chkSaveToFile.Checked
+        'Printer setup
+        btnPrintSetup.Enabled = Not (chkPDF.Checked Or chkSaveToFile.Checked)
+        'N* of copies
+        nudNCopie.Enabled = Not (chkPDF.Checked Or chkSaveToFile.Checked)
+        Label1.Enabled = Not (chkPDF.Checked Or chkSaveToFile.Checked)
+        'JPEG compression
+        frmImageSettings.lblCompressionLabel.Enabled = chkSaveToFile.Checked
+        frmImageSettings.tbCompression.Enabled = chkSaveToFile.Checked
+        frmImageSettings.lblCompression.Enabled = chkSaveToFile.Checked
+
     End Sub
 
 End Class
