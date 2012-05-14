@@ -26,12 +26,12 @@ Partial Class mainFrm
         Me.btnCopy = New System.Windows.Forms.Button()
         Me.btnSelScanner = New System.Windows.Forms.Button()
         Me.cboPrintMode = New System.Windows.Forms.ComboBox()
-        Me.Label8 = New System.Windows.Forms.Label()
-        Me.Label7 = New System.Windows.Forms.Label()
+        Me.lblPrinter = New System.Windows.Forms.Label()
+        Me.lblScanner = New System.Windows.Forms.Label()
         Me.cboScanMode = New System.Windows.Forms.ComboBox()
         Me.btnPrintSetup = New System.Windows.Forms.Button()
         Me.nudNCopie = New System.Windows.Forms.NumericUpDown()
-        Me.Label1 = New System.Windows.Forms.Label()
+        Me.lblCopies = New System.Windows.Forms.Label()
         Me.StatusStrip1 = New System.Windows.Forms.StatusStrip()
         Me.ScannerStatusLabel = New System.Windows.Forms.ToolStripStatusLabel()
         Me.PrinterStatusLabel = New System.Windows.Forms.ToolStripStatusLabel()
@@ -44,7 +44,7 @@ Partial Class mainFrm
         Me.ScanMultiplePages = New System.Windows.Forms.ToolStripMenuItem()
         Me.ScanToFile = New System.Windows.Forms.ToolStripMenuItem()
         Me.cboPaperSize = New System.Windows.Forms.ComboBox()
-        Me.Label2 = New System.Windows.Forms.Label()
+        Me.lblPaperSize = New System.Windows.Forms.Label()
         Me.chkADF = New System.Windows.Forms.CheckBox()
         Me.chkDuplex = New System.Windows.Forms.CheckBox()
         Me.chkMultipage = New System.Windows.Forms.CheckBox()
@@ -71,7 +71,7 @@ Partial Class mainFrm
         Me.btnSelScanner.Name = "btnSelScanner"
         Me.btnSelScanner.Size = New System.Drawing.Size(137, 21)
         Me.btnSelScanner.TabIndex = 7
-        Me.btnSelScanner.Text = "Choose &scanner..."
+        Me.btnSelScanner.Text = "btnSelScanner"
         Me.btnSelScanner.UseVisualStyleBackColor = True
         '
         'cboPrintMode
@@ -83,23 +83,23 @@ Partial Class mainFrm
         Me.cboPrintMode.Size = New System.Drawing.Size(107, 21)
         Me.cboPrintMode.TabIndex = 3
         '
-        'Label8
+        'lblPrinter
         '
-        Me.Label8.Location = New System.Drawing.Point(163, 42)
-        Me.Label8.Name = "Label8"
-        Me.Label8.Size = New System.Drawing.Size(101, 18)
-        Me.Label8.TabIndex = 2
-        Me.Label8.Text = "Printer"
-        Me.Label8.TextAlign = System.Drawing.ContentAlignment.TopRight
+        Me.lblPrinter.Location = New System.Drawing.Point(163, 42)
+        Me.lblPrinter.Name = "lblPrinter"
+        Me.lblPrinter.Size = New System.Drawing.Size(101, 18)
+        Me.lblPrinter.TabIndex = 2
+        Me.lblPrinter.Text = "lblPrinter"
+        Me.lblPrinter.TextAlign = System.Drawing.ContentAlignment.TopRight
         '
-        'Label7
+        'lblScanner
         '
-        Me.Label7.Location = New System.Drawing.Point(163, 15)
-        Me.Label7.Name = "Label7"
-        Me.Label7.Size = New System.Drawing.Size(101, 18)
-        Me.Label7.TabIndex = 1
-        Me.Label7.Text = "Scanner"
-        Me.Label7.TextAlign = System.Drawing.ContentAlignment.TopRight
+        Me.lblScanner.Location = New System.Drawing.Point(163, 15)
+        Me.lblScanner.Name = "lblScanner"
+        Me.lblScanner.Size = New System.Drawing.Size(101, 18)
+        Me.lblScanner.TabIndex = 1
+        Me.lblScanner.Text = "lblScanner"
+        Me.lblScanner.TextAlign = System.Drawing.ContentAlignment.TopRight
         '
         'cboScanMode
         '
@@ -116,7 +116,7 @@ Partial Class mainFrm
         Me.btnPrintSetup.Name = "btnPrintSetup"
         Me.btnPrintSetup.Size = New System.Drawing.Size(137, 21)
         Me.btnPrintSetup.TabIndex = 6
-        Me.btnPrintSetup.Text = "&Printer options..."
+        Me.btnPrintSetup.Text = "btnPrintSetup"
         Me.btnPrintSetup.UseVisualStyleBackColor = True
         '
         'nudNCopie
@@ -130,16 +130,16 @@ Partial Class mainFrm
         Me.nudNCopie.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
         Me.nudNCopie.Value = New Decimal(New Integer() {1, 0, 0, 0})
         '
-        'Label1
+        'lblCopies
         '
-        Me.Label1.Cursor = System.Windows.Forms.Cursors.Default
-        Me.Label1.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.Label1.Location = New System.Drawing.Point(166, 100)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(150, 19)
-        Me.Label1.TabIndex = 12
-        Me.Label1.Text = "N° of copies"
-        Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        Me.lblCopies.Cursor = System.Windows.Forms.Cursors.Default
+        Me.lblCopies.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.lblCopies.Location = New System.Drawing.Point(166, 100)
+        Me.lblCopies.Name = "lblCopies"
+        Me.lblCopies.Size = New System.Drawing.Size(150, 19)
+        Me.lblCopies.TabIndex = 12
+        Me.lblCopies.Text = "lblCopies"
+        Me.lblCopies.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'StatusStrip1
         '
@@ -156,15 +156,15 @@ Partial Class mainFrm
         Me.ScannerStatusLabel.Image = Global.iCopy.My.Resources.Resources.scanner
         Me.ScannerStatusLabel.Margin = New System.Windows.Forms.Padding(0, 3, 6, 2)
         Me.ScannerStatusLabel.Name = "ScannerStatusLabel"
-        Me.ScannerStatusLabel.Size = New System.Drawing.Size(137, 17)
-        Me.ScannerStatusLabel.Text = "ToolStripStatusLabel1"
+        Me.ScannerStatusLabel.Size = New System.Drawing.Size(125, 17)
+        Me.ScannerStatusLabel.Text = "ScannerStatusLabel"
         '
         'PrinterStatusLabel
         '
         Me.PrinterStatusLabel.Image = Global.iCopy.My.Resources.Resources.printer
         Me.PrinterStatusLabel.Name = "PrinterStatusLabel"
-        Me.PrinterStatusLabel.Size = New System.Drawing.Size(137, 17)
-        Me.PrinterStatusLabel.Text = "ToolStripStatusLabel2"
+        Me.PrinterStatusLabel.Size = New System.Drawing.Size(118, 17)
+        Me.PrinterStatusLabel.Text = "PrinterStatusLabel"
         '
         'VersionStatusLabel
         '
@@ -187,7 +187,7 @@ Partial Class mainFrm
         Me.llblAbout.Size = New System.Drawing.Size(149, 13)
         Me.llblAbout.TabIndex = 10
         Me.llblAbout.TabStop = True
-        Me.llblAbout.Text = "About iCopy"
+        Me.llblAbout.Text = "llblAbout"
         Me.llblAbout.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'llblSettings
@@ -197,7 +197,7 @@ Partial Class mainFrm
         Me.llblSettings.Size = New System.Drawing.Size(144, 13)
         Me.llblSettings.TabIndex = 9
         Me.llblSettings.TabStop = True
-        Me.llblSettings.Text = "Settings"
+        Me.llblSettings.Text = "llblSettings"
         Me.llblSettings.TextAlign = System.Drawing.ContentAlignment.TopRight
         '
         'btnImageSettings
@@ -206,7 +206,7 @@ Partial Class mainFrm
         Me.btnImageSettings.Name = "btnImageSettings"
         Me.btnImageSettings.Size = New System.Drawing.Size(137, 42)
         Me.btnImageSettings.TabIndex = 5
-        Me.btnImageSettings.Text = "Image Settings >>"
+        Me.btnImageSettings.Text = "btnImageSettings"
         Me.btnImageSettings.UseVisualStyleBackColor = True
         '
         'ScanMenuStrip
@@ -242,14 +242,14 @@ Partial Class mainFrm
         Me.cboPaperSize.Size = New System.Drawing.Size(107, 21)
         Me.cboPaperSize.TabIndex = 21
         '
-        'Label2
+        'lblPaperSize
         '
-        Me.Label2.Location = New System.Drawing.Point(163, 69)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(101, 23)
-        Me.Label2.TabIndex = 22
-        Me.Label2.Text = "Paper Size"
-        Me.Label2.TextAlign = System.Drawing.ContentAlignment.TopRight
+        Me.lblPaperSize.Location = New System.Drawing.Point(163, 69)
+        Me.lblPaperSize.Name = "lblPaperSize"
+        Me.lblPaperSize.Size = New System.Drawing.Size(101, 23)
+        Me.lblPaperSize.TabIndex = 22
+        Me.lblPaperSize.Text = "lblPaperSize"
+        Me.lblPaperSize.TextAlign = System.Drawing.ContentAlignment.TopRight
         '
         'chkADF
         '
@@ -257,7 +257,7 @@ Partial Class mainFrm
         Me.chkADF.Name = "chkADF"
         Me.chkADF.Size = New System.Drawing.Size(207, 21)
         Me.chkADF.TabIndex = 23
-        Me.chkADF.Text = "Use Document Feeder"
+        Me.chkADF.Text = "chkADF"
         Me.chkADF.UseVisualStyleBackColor = True
         '
         'chkDuplex
@@ -265,9 +265,9 @@ Partial Class mainFrm
         Me.chkDuplex.AutoSize = True
         Me.chkDuplex.Location = New System.Drawing.Point(166, 177)
         Me.chkDuplex.Name = "chkDuplex"
-        Me.chkDuplex.Size = New System.Drawing.Size(98, 17)
+        Me.chkDuplex.Size = New System.Drawing.Size(77, 17)
         Me.chkDuplex.TabIndex = 24
-        Me.chkDuplex.Text = "Acquire Duplex"
+        Me.chkDuplex.Text = "chkDuplex"
         Me.chkDuplex.UseVisualStyleBackColor = True
         '
         'chkMultipage
@@ -305,9 +305,9 @@ Partial Class mainFrm
         Me.chkPreview.AutoSize = True
         Me.chkPreview.Location = New System.Drawing.Point(166, 135)
         Me.chkPreview.Name = "chkPreview"
-        Me.chkPreview.Size = New System.Drawing.Size(64, 17)
+        Me.chkPreview.Size = New System.Drawing.Size(82, 17)
         Me.chkPreview.TabIndex = 4
-        Me.chkPreview.Text = "Preview"
+        Me.chkPreview.Text = "chkPreview"
         Me.chkPreview.UseVisualStyleBackColor = True
         '
         'mainFrm
@@ -318,19 +318,19 @@ Partial Class mainFrm
         Me.Controls.Add(Me.chkPDF)
         Me.Controls.Add(Me.chkSaveToFile)
         Me.Controls.Add(Me.chkMultipage)
-        Me.Controls.Add(Me.Label8)
-        Me.Controls.Add(Me.Label2)
+        Me.Controls.Add(Me.lblPrinter)
+        Me.Controls.Add(Me.lblPaperSize)
         Me.Controls.Add(Me.cboPrintMode)
         Me.Controls.Add(Me.cboPaperSize)
         Me.Controls.Add(Me.cboScanMode)
-        Me.Controls.Add(Me.Label7)
+        Me.Controls.Add(Me.lblScanner)
         Me.Controls.Add(Me.StatusStrip1)
         Me.Controls.Add(Me.btnCopy)
         Me.Controls.Add(Me.btnImageSettings)
         Me.Controls.Add(Me.chkDuplex)
         Me.Controls.Add(Me.btnSelScanner)
         Me.Controls.Add(Me.llblSettings)
-        Me.Controls.Add(Me.Label1)
+        Me.Controls.Add(Me.lblCopies)
         Me.Controls.Add(Me.btnPrintSetup)
         Me.Controls.Add(Me.nudNCopie)
         Me.Controls.Add(Me.llblAbout)
@@ -355,11 +355,11 @@ Partial Class mainFrm
     Friend WithEvents btnSelScanner As System.Windows.Forms.Button
     Friend WithEvents btnPrintSetup As System.Windows.Forms.Button
     Friend WithEvents nudNCopie As System.Windows.Forms.NumericUpDown
-    Friend WithEvents Label1 As System.Windows.Forms.Label
+    Friend WithEvents lblCopies As System.Windows.Forms.Label
     Friend WithEvents cboScanMode As System.Windows.Forms.ComboBox
     Friend WithEvents cboPrintMode As System.Windows.Forms.ComboBox
-    Friend WithEvents Label8 As System.Windows.Forms.Label
-    Friend WithEvents Label7 As System.Windows.Forms.Label
+    Friend WithEvents lblPrinter As System.Windows.Forms.Label
+    Friend WithEvents lblScanner As System.Windows.Forms.Label
     Friend WithEvents StatusStrip1 As System.Windows.Forms.StatusStrip
     Friend WithEvents ToolTip1 As System.Windows.Forms.ToolTip
     Friend WithEvents llblAbout As System.Windows.Forms.LinkLabel
@@ -369,7 +369,7 @@ Partial Class mainFrm
     Friend WithEvents ScanToFile As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ScanMultiplePages As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents cboPaperSize As System.Windows.Forms.ComboBox
-    Friend WithEvents Label2 As System.Windows.Forms.Label
+    Friend WithEvents lblPaperSize As System.Windows.Forms.Label
     Friend WithEvents ScannerStatusLabel As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents PrinterStatusLabel As System.Windows.Forms.ToolStripStatusLabel
     Friend WithEvents VersionStatusLabel As System.Windows.Forms.ToolStripStatusLabel

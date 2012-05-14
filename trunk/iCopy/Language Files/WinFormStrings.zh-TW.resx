@@ -161,19 +161,19 @@ copy the folder xx-XX to iCopy folder</comment>
     <value>圖片設定</value>
     <comment>Image Settings</comment>
   </data>
-  <data name="frmImageSettings_Label10" xml:space="preserve">
+  <data name="frmImageSettings_lblScaling" xml:space="preserve">
     <value>放大</value>
     <comment>Enlargement</comment>
   </data>
-  <data name="frmImageSettings_Label2" xml:space="preserve">
+  <data name="frmImageSettings_lblBrightness" xml:space="preserve">
     <value>亮度</value>
     <comment>Brightness</comment>
   </data>
-  <data name="frmImageSettings_Label3" xml:space="preserve">
+  <data name="frmImageSettings_lblContrast" xml:space="preserve">
     <value>對比</value>
     <comment>Contrast</comment>
   </data>
-  <data name="frmImageSettings_Label9" xml:space="preserve">
+  <data name="frmImageSettings_lblResolution" xml:space="preserve">
     <value>解析</value>
     <comment>Resolution</comment>
   </data>
@@ -304,15 +304,15 @@ TEXT - Acquired image will be black &amp; white. This is the fasted method, usef
     <value>顯示對話方塊來選擇掃描的範圍</value>
     <comment>Shows a dialog to select the area to be scanned</comment>
   </data>
-  <data name="mainFrm_Label1" xml:space="preserve">
+  <data name="mainFrm_lblCopies" xml:space="preserve">
     <value>N° 個份數</value>
     <comment>N° of copies</comment>
   </data>
-  <data name="mainFrm_Label7" xml:space="preserve">
+  <data name="mainFrm_lblScanner" xml:space="preserve">
     <value>掃描器</value>
     <comment>Scanner</comment>
   </data>
-  <data name="mainFrm_Label8" xml:space="preserve">
+  <data name="mainFrm_lblPrinter" xml:space="preserve">
     <value>印表機</value>
     <comment>Printer</comment>
   </data>
@@ -393,7 +393,7 @@ on program restart</comment>
     <value>如果選擇,iCopy 將維護圖片設定在下一次啟動</value>
     <comment>If selected, iCopy will maintain image settings on next restart.</comment>
   </data>
-  <data name="frmImageSettings_Label1" xml:space="preserve">
+  <data name="frmImageSettings_lblDPI" xml:space="preserve">
     <value>DPI</value>
     <comment>DPI</comment>
   </data>
@@ -441,7 +441,7 @@ on program restart</comment>
     <value>取得一個圖片並儲存它到指定的檔案</value>
     <comment>Acquires an image and saves it to a specified file</comment>
   </data>
-  <data name="mainFrm_Label2" xml:space="preserve">
+  <data name="mainFrm_lblPaperSize" xml:space="preserve">
     <value>頁面尺寸</value>
     <comment>Paper Size</comment>
   </data>

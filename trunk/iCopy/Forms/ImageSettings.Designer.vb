@@ -24,19 +24,19 @@ Partial Class frmImageSettings
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Me.tbScaling = New System.Windows.Forms.TrackBar()
-        Me.Label10 = New System.Windows.Forms.Label()
-        Me.Label9 = New System.Windows.Forms.Label()
+        Me.lblScaling = New System.Windows.Forms.Label()
+        Me.lblResolution = New System.Windows.Forms.Label()
         Me.tbContrast = New System.Windows.Forms.TrackBar()
-        Me.Label2 = New System.Windows.Forms.Label()
+        Me.lblBrightness = New System.Windows.Forms.Label()
         Me.tbBrightness = New System.Windows.Forms.TrackBar()
         Me.txtContrast = New System.Windows.Forms.TextBox()
-        Me.Label3 = New System.Windows.Forms.Label()
+        Me.lblContrast = New System.Windows.Forms.Label()
         Me.txtBrightness = New System.Windows.Forms.TextBox()
         Me.txtScaling = New System.Windows.Forms.TextBox()
         Me.lblPerc = New System.Windows.Forms.Label()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.cboResolution = New System.Windows.Forms.ComboBox()
-        Me.Label1 = New System.Windows.Forms.Label()
+        Me.lblDPI = New System.Windows.Forms.Label()
         Me.lblCompressionLabel = New System.Windows.Forms.Label()
         Me.tbCompression = New System.Windows.Forms.TrackBar()
         Me.lblCompression = New System.Windows.Forms.Label()
@@ -61,23 +61,23 @@ Partial Class frmImageSettings
         Me.tbScaling.TickFrequency = 50
         Me.tbScaling.Value = 100
         '
-        'Label10
+        'lblScaling
         '
-        Me.Label10.Location = New System.Drawing.Point(0, 77)
-        Me.Label10.Name = "Label10"
-        Me.Label10.Size = New System.Drawing.Size(80, 13)
-        Me.Label10.TabIndex = 38
-        Me.Label10.Text = "Scaling"
-        Me.Label10.TextAlign = System.Drawing.ContentAlignment.TopRight
+        Me.lblScaling.Location = New System.Drawing.Point(0, 77)
+        Me.lblScaling.Name = "lblScaling"
+        Me.lblScaling.Size = New System.Drawing.Size(80, 13)
+        Me.lblScaling.TabIndex = 38
+        Me.lblScaling.Text = "lblScaling"
+        Me.lblScaling.TextAlign = System.Drawing.ContentAlignment.TopRight
         '
-        'Label9
+        'lblResolution
         '
-        Me.Label9.Location = New System.Drawing.Point(4, 114)
-        Me.Label9.Name = "Label9"
-        Me.Label9.Size = New System.Drawing.Size(80, 13)
-        Me.Label9.TabIndex = 36
-        Me.Label9.Text = "Resolution"
-        Me.Label9.TextAlign = System.Drawing.ContentAlignment.TopRight
+        Me.lblResolution.Location = New System.Drawing.Point(4, 114)
+        Me.lblResolution.Name = "lblResolution"
+        Me.lblResolution.Size = New System.Drawing.Size(80, 13)
+        Me.lblResolution.TabIndex = 36
+        Me.lblResolution.Text = "lblResolution"
+        Me.lblResolution.TextAlign = System.Drawing.ContentAlignment.TopRight
         '
         'tbContrast
         '
@@ -90,14 +90,14 @@ Partial Class frmImageSettings
         Me.tbContrast.TabIndex = 32
         Me.tbContrast.TickFrequency = 20
         '
-        'Label2
+        'lblBrightness
         '
-        Me.Label2.Location = New System.Drawing.Point(1, 15)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(83, 13)
-        Me.Label2.TabIndex = 34
-        Me.Label2.Text = "Brightness"
-        Me.Label2.TextAlign = System.Drawing.ContentAlignment.TopRight
+        Me.lblBrightness.Location = New System.Drawing.Point(1, 15)
+        Me.lblBrightness.Name = "lblBrightness"
+        Me.lblBrightness.Size = New System.Drawing.Size(83, 13)
+        Me.lblBrightness.TabIndex = 34
+        Me.lblBrightness.Text = "lblBrightness"
+        Me.lblBrightness.TextAlign = System.Drawing.ContentAlignment.TopRight
         '
         'tbBrightness
         '
@@ -118,14 +118,14 @@ Partial Class frmImageSettings
         Me.txtContrast.Size = New System.Drawing.Size(37, 20)
         Me.txtContrast.TabIndex = 33
         '
-        'Label3
+        'lblContrast
         '
-        Me.Label3.Location = New System.Drawing.Point(4, 46)
-        Me.Label3.Name = "Label3"
-        Me.Label3.Size = New System.Drawing.Size(80, 13)
-        Me.Label3.TabIndex = 35
-        Me.Label3.Text = "Contrast"
-        Me.Label3.TextAlign = System.Drawing.ContentAlignment.TopRight
+        Me.lblContrast.Location = New System.Drawing.Point(4, 46)
+        Me.lblContrast.Name = "lblContrast"
+        Me.lblContrast.Size = New System.Drawing.Size(80, 13)
+        Me.lblContrast.TabIndex = 35
+        Me.lblContrast.Text = "lblContrast"
+        Me.lblContrast.TextAlign = System.Drawing.ContentAlignment.TopRight
         '
         'txtBrightness
         '
@@ -161,14 +161,14 @@ Partial Class frmImageSettings
         Me.cboResolution.Size = New System.Drawing.Size(88, 21)
         Me.cboResolution.TabIndex = 45
         '
-        'Label1
+        'lblDPI
         '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(193, 114)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(25, 13)
-        Me.Label1.TabIndex = 46
-        Me.Label1.Text = "DPI"
+        Me.lblDPI.AutoSize = True
+        Me.lblDPI.Location = New System.Drawing.Point(193, 114)
+        Me.lblDPI.Name = "lblDPI"
+        Me.lblDPI.Size = New System.Drawing.Size(35, 13)
+        Me.lblDPI.TabIndex = 46
+        Me.lblDPI.Text = "lblDPI"
         '
         'lblCompressionLabel
         '
@@ -214,9 +214,9 @@ Partial Class frmImageSettings
         Me.chkCenter.DataBindings.Add(New System.Windows.Forms.Binding("Checked", Global.iCopy.My.MySettings.Default, "Center", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
         Me.chkCenter.Location = New System.Drawing.Point(12, 183)
         Me.chkCenter.Name = "chkCenter"
-        Me.chkCenter.Size = New System.Drawing.Size(81, 17)
+        Me.chkCenter.Size = New System.Drawing.Size(75, 17)
         Me.chkCenter.TabIndex = 51
-        Me.chkCenter.Text = "CheckBox1"
+        Me.chkCenter.Text = "chkCenter"
         Me.chkCenter.UseVisualStyleBackColor = True
         '
         'frmImageSettings
@@ -231,17 +231,17 @@ Partial Class frmImageSettings
         Me.Controls.Add(Me.tbScaling)
         Me.Controls.Add(Me.tbCompression)
         Me.Controls.Add(Me.lblCompressionLabel)
-        Me.Controls.Add(Me.Label1)
-        Me.Controls.Add(Me.Label9)
-        Me.Controls.Add(Me.Label2)
+        Me.Controls.Add(Me.lblDPI)
+        Me.Controls.Add(Me.lblResolution)
+        Me.Controls.Add(Me.lblBrightness)
         Me.Controls.Add(Me.txtContrast)
-        Me.Controls.Add(Me.Label3)
+        Me.Controls.Add(Me.lblContrast)
         Me.Controls.Add(Me.txtBrightness)
         Me.Controls.Add(Me.tbContrast)
         Me.Controls.Add(Me.tbBrightness)
         Me.Controls.Add(Me.lblPerc)
         Me.Controls.Add(Me.txtScaling)
-        Me.Controls.Add(Me.Label10)
+        Me.Controls.Add(Me.lblScaling)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow
         Me.KeyPreview = True
         Me.Name = "frmImageSettings"
@@ -258,19 +258,19 @@ Partial Class frmImageSettings
 
     End Sub
     Friend WithEvents tbScaling As System.Windows.Forms.TrackBar
-    Friend WithEvents Label10 As System.Windows.Forms.Label
-    Friend WithEvents Label9 As System.Windows.Forms.Label
+    Friend WithEvents lblScaling As System.Windows.Forms.Label
+    Friend WithEvents lblResolution As System.Windows.Forms.Label
     Friend WithEvents tbContrast As System.Windows.Forms.TrackBar
-    Friend WithEvents Label2 As System.Windows.Forms.Label
+    Friend WithEvents lblBrightness As System.Windows.Forms.Label
     Friend WithEvents tbBrightness As System.Windows.Forms.TrackBar
     Friend WithEvents txtContrast As System.Windows.Forms.TextBox
-    Friend WithEvents Label3 As System.Windows.Forms.Label
+    Friend WithEvents lblContrast As System.Windows.Forms.Label
     Friend WithEvents txtBrightness As System.Windows.Forms.TextBox
     Friend WithEvents txtScaling As System.Windows.Forms.TextBox
     Friend WithEvents lblPerc As System.Windows.Forms.Label
     Friend WithEvents ToolTip1 As System.Windows.Forms.ToolTip
     Friend WithEvents cboResolution As System.Windows.Forms.ComboBox
-    Friend WithEvents Label1 As System.Windows.Forms.Label
+    Friend WithEvents lblDPI As System.Windows.Forms.Label
     Friend WithEvents lblCompressionLabel As System.Windows.Forms.Label
     Friend WithEvents tbCompression As System.Windows.Forms.TrackBar
     Friend WithEvents lblCompression As System.Windows.Forms.Label

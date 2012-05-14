@@ -192,23 +192,23 @@ copy the folder xx-XX to iCopy folder</comment>
     <value>Impostazioni Immagine</value>
     <comment>Image Settings</comment>
   </data>
-  <data name="frmImageSettings_Label1" xml:space="preserve">
+  <data name="frmImageSettings_lblDPI" xml:space="preserve">
     <value>DPI</value>
     <comment>DPI</comment>
   </data>
-  <data name="frmImageSettings_Label10" xml:space="preserve">
+  <data name="frmImageSettings_lblScaling" xml:space="preserve">
     <value>Ingrandimento</value>
     <comment>enlargement</comment>
   </data>
-  <data name="frmImageSettings_Label2" xml:space="preserve">
+  <data name="frmImageSettings_lblBrightness" xml:space="preserve">
     <value>Luminosità</value>
     <comment>Brightness</comment>
   </data>
-  <data name="frmImageSettings_Label3" xml:space="preserve">
+  <data name="frmImageSettings_lblContrast" xml:space="preserve">
     <value>Contrasto</value>
     <comment>Contrast</comment>
   </data>
-  <data name="frmImageSettings_Label9" xml:space="preserve">
+  <data name="frmImageSettings_lblResolution" xml:space="preserve">
     <value>Risoluzione</value>
     <comment>Resolution</comment>
   </data>
@@ -338,15 +338,15 @@ TEXT - Acquired image will be black &amp; white. This is the fasted method, usef
     <value>Mostra una finestra per selezionare l'area da acquisire</value>
     <comment>Shows a dialog to select the area to be scanned</comment>
   </data>
-  <data name="mainFrm_Label1" xml:space="preserve">
+  <data name="mainFrm_lblCopies" xml:space="preserve">
     <value>N° di copie</value>
     <comment>N° of copies</comment>
   </data>
-  <data name="mainFrm_Label7" xml:space="preserve">
+  <data name="mainFrm_lblScanner" xml:space="preserve">
     <value>Scanner</value>
     <comment>Scanner</comment>
   </data>
-  <data name="mainFrm_Label8" xml:space="preserve">
+  <data name="mainFrm_lblPrinter" xml:space="preserve">
     <value>Stampante</value>
     <comment>Printer</comment>
   </data>
@@ -519,7 +519,7 @@ If it isn't, please download iCopy again.</comment>
 impostazioni dell'immagine</value>
     <comment>Sets image settings to their default values</comment>
   </data>
-  <data name="mainFrm_Label2" xml:space="preserve">
+  <data name="mainFrm_lblPaperSize" xml:space="preserve">
     <value>Formato carta</value>
     <comment>Paper size</comment>
   </data>
