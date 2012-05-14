@@ -41,6 +41,7 @@ Partial Class frmImageSettings
         Me.tbCompression = New System.Windows.Forms.TrackBar()
         Me.lblCompression = New System.Windows.Forms.Label()
         Me.btnDefault = New System.Windows.Forms.Button()
+        Me.chkCenter = New System.Windows.Forms.CheckBox()
         CType(Me.tbScaling, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.tbContrast, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.tbBrightness, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -180,7 +181,7 @@ Partial Class frmImageSettings
         '
         'tbCompression
         '
-        Me.tbCompression.Location = New System.Drawing.Point(86, 138)
+        Me.tbCompression.Location = New System.Drawing.Point(86, 148)
         Me.tbCompression.Maximum = 100
         Me.tbCompression.Minimum = 1
         Me.tbCompression.Name = "tbCompression"
@@ -191,7 +192,7 @@ Partial Class frmImageSettings
         '
         'lblCompression
         '
-        Me.lblCompression.Location = New System.Drawing.Point(193, 153)
+        Me.lblCompression.Location = New System.Drawing.Point(193, 148)
         Me.lblCompression.Name = "lblCompression"
         Me.lblCompression.Size = New System.Drawing.Size(28, 23)
         Me.lblCompression.TabIndex = 49
@@ -205,11 +206,25 @@ Partial Class frmImageSettings
         Me.btnDefault.Text = "Default"
         Me.btnDefault.UseVisualStyleBackColor = True
         '
+        'chkCenter
+        '
+        Me.chkCenter.AutoSize = True
+        Me.chkCenter.Checked = Global.iCopy.My.MySettings.Default.Center
+        Me.chkCenter.CheckState = System.Windows.Forms.CheckState.Checked
+        Me.chkCenter.DataBindings.Add(New System.Windows.Forms.Binding("Checked", Global.iCopy.My.MySettings.Default, "Center", True, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged))
+        Me.chkCenter.Location = New System.Drawing.Point(12, 183)
+        Me.chkCenter.Name = "chkCenter"
+        Me.chkCenter.Size = New System.Drawing.Size(81, 17)
+        Me.chkCenter.TabIndex = 51
+        Me.chkCenter.Text = "CheckBox1"
+        Me.chkCenter.UseVisualStyleBackColor = True
+        '
         'frmImageSettings
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(242, 210)
+        Me.Controls.Add(Me.chkCenter)
         Me.Controls.Add(Me.btnDefault)
         Me.Controls.Add(Me.lblCompression)
         Me.Controls.Add(Me.cboResolution)
@@ -260,4 +275,5 @@ Partial Class frmImageSettings
     Friend WithEvents tbCompression As System.Windows.Forms.TrackBar
     Friend WithEvents lblCompression As System.Windows.Forms.Label
     Friend WithEvents btnDefault As System.Windows.Forms.Button
+    Friend WithEvents chkCenter As System.Windows.Forms.CheckBox
 End Class
