@@ -528,7 +528,7 @@ retry:
         Dim pathWoExt, ext As String
         Dim format As Imaging.ImageFormat
 
-        If options.ScanOutput = ScanOutput.File Or ScanOutput.PDF Then
+        If options.ScanOutput = ScanOutput.File Or options.ScanOutput = ScanOutput.PDF Then
             If options.Path = "" Then
                 Dim dialog As New SaveFileDialog()
 
@@ -650,7 +650,7 @@ retry:
                 Dim doc As New PDFWriter.PDFDocument()
                 For i = 0 To images.Count - 1
                     Dim img As Image = Image.FromFile(images(i))
-                    doc.AddPage(img, PDFWriter.PaperSize.A4)
+                    doc.AddPage(img, New Printing.PaperSize("A4", 842, 595.22), options.Scaling, options.Center)
                 Next
 
                 doc.Save(options.Path)
@@ -661,7 +661,7 @@ retry:
                 Next
 
             Case Else
-                _printer.AddImages(images, options.Scaling)
+                _printer.AddImages(images, options.Scaling, options.Center)
                 'Prints images
                 Try
                     _printer.Print(options.Copies)

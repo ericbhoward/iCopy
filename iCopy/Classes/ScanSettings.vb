@@ -9,6 +9,7 @@ End Enum
 Public Class ScanSettings
 
     Private _Brightness As Integer
+    Private _center As Boolean
     Private _Contrast As Integer
     Private _BitDepth As Integer
     Private _Resolution As Short
@@ -39,6 +40,7 @@ Public Class ScanSettings
         _Path = ""
         _scanOutput = iCopy.ScanOutput.Printer
         _multipage = False
+        _center = True
     End Sub
 
     Public Property Brightness() As Integer
@@ -47,6 +49,15 @@ Public Class ScanSettings
         End Get
         Set(ByVal value As Integer)
             _Brightness = value
+        End Set
+    End Property
+
+    Public Property Center() As Boolean
+        Get
+            Return _center
+        End Get
+        Set(value As Boolean)
+            _center = value
         End Set
     End Property
 
@@ -181,7 +192,8 @@ Public Class ScanSettings
             vbTab + "Duplex: " + vbTab + Duplex.ToString() + vbCrLf + _
             vbTab + "Multipage: " + vbTab + Multipage.ToString() + vbCrLf + _
             vbTab + "Scan Output: " + vbTab + ScanOutput.ToString() + vbCrLf + _
-            vbTab + "Path: " + vbTab + Path.ToString() + vbCrLf
+            vbTab + "Path: " + vbTab + Path.ToString() + vbCrLf + _
+            vbTab + "Center: " + vbTab + Center.ToString()
     End Function
 
 End Class

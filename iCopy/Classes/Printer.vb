@@ -21,6 +21,7 @@ Friend Class Printer
     Private WithEvents pd As PrintDocument
 
     Dim _scaleperc As Short
+    Dim _center As Boolean
 
     Dim _images As New Queue(Of String) 'The buffer of images to be printed
 
@@ -69,12 +70,13 @@ Friend Class Printer
         pd.DefaultPageSettings = dlg.Document.DefaultPageSettings
     End Sub
 
-    Sub AddImages(ByVal images As List(Of String), Optional ByVal scaleperc As Short = 100)
+    Sub AddImages(ByVal images As List(Of String), Optional ByVal scaleperc As Short = 100, Optional center As Boolean = False)
         If images IsNot Nothing Then
             For Each img As String In images
                 _images.Enqueue(img)
             Next
             _scaleperc = scaleperc
+            _center = center
         End If
     End Sub
 
@@ -96,10 +98,27 @@ Friend Class Printer
         Dim imgPath As String = _images.Dequeue()
         Dim img As Image = Image.FromFile(imgPath)
 
-        'Resize the image, then draw it 
         e.Graphics.ScaleTransform(_scaleperc / 100, _scaleperc / 100)
+        'Resize the image, then draw it 
+        If _center Then
+            Dim picture_bounds As RectangleF = img.GetBounds(e.Graphics.PageUnit)
+
+            Dim margin_bounds As RectangleF = e.Graphics.VisibleClipBounds
+
+            ' Apply the transformation.
+            Dim dx As Single = _
+                margin_bounds.Left - _scaleperc / 100 * picture_bounds.Left + _
+                (margin_bounds.Width - _scaleperc / 100 * picture_bounds.Width) / 4
+            Dim dy As Single = _
+                margin_bounds.Top - _scaleperc / 100 * picture_bounds.Top + _
+                (margin_bounds.Height - _scaleperc / 100 * picture_bounds.Height) / 4
+            e.Graphics.TranslateTransform(dx, dy)
+        End If
+
         e.Graphics.DrawImage(img, 0, 0)
+
         img.Dispose()
+
         Try
             IO.File.Delete(imgPath)
         Catch ex As Exception
