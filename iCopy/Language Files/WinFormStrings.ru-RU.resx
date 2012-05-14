@@ -157,19 +157,19 @@ copy the folder xx-XX to iCopy folder</comment>
    <value>Настройки изображения</value>
    <comment>Image Settings</comment>
  </data>
-  <data name="frmImageSettings_Label10" xml:space="preserve">
+  <data name="frmImageSettings_lblScaling" xml:space="preserve">
    <value>Масштаб</value>
    <comment>enlargement</comment>
  </data>
-  <data name="frmImageSettings_Label2" xml:space="preserve">
+  <data name="frmImageSettings_lblBrightness" xml:space="preserve">
    <value>Яркость</value>
    <comment>Brightness</comment>
  </data>
-  <data name="frmImageSettings_Label3" xml:space="preserve">
+  <data name="frmImageSettings_lblContrast" xml:space="preserve">
    <value>Контраст</value>
    <comment>Contrast</comment>
  </data>
-  <data name="frmImageSettings_Label9" xml:space="preserve">
+  <data name="frmImageSettings_lblResolution" xml:space="preserve">
    <value>Разрешение</value>
    <comment>Resolution</comment>
  </data>
@@ -300,15 +300,15 @@ TEXT - Acquired image will be black &amp; white. This is the fasted method, usef
    <value>Показать диалог выбора участка сканирования</value>
    <comment>Shows a dialog to select the area to be scanned</comment>
  </data>
-  <data name="mainFrm_Label1" xml:space="preserve">
+  <data name="mainFrm_lblCopies" xml:space="preserve">
    <value>Количество копий</value>
    <comment>N° of copies</comment>
  </data>
-  <data name="mainFrm_Label7" xml:space="preserve">
+  <data name="mainFrm_lblScanner" xml:space="preserve">
    <value>Сканер</value>
    <comment>Scanner</comment>
  </data>
-  <data name="mainFrm_Label8" xml:space="preserve">
+  <data name="mainFrm_lblPrinter" xml:space="preserve">
    <value>Принтер</value>
    <comment>Printer</comment>
  </data>
@@ -389,7 +389,7 @@ on program restart</comment>
    <value>Если выбрано, iCopy cохранит настройки изображения после перезагрузки</value>
    <comment>If selected, iCopy will maintain image settings on next restart.</comment>
  </data>
-  <data name="frmImageSettings_Label1" xml:space="preserve">
+  <data name="frmImageSettings_lblDPI" xml:space="preserve">
    <value>Если активно, настройки изображения сохранятся при следующем старте. </value>
    <comment>DPI</comment>
  </data>
@@ -437,7 +437,7 @@ on program restart</comment>
    <value>Сканировать изображение и сохранить его в указанном файле</value>
    <comment>Acquires an image and saves it to a specified file</comment>
  </data>
-  <data name="mainFrm_Label2" xml:space="preserve">
+  <data name="mainFrm_lblPaperSize" xml:space="preserve">
    <value>Размер бумаги</value>
    <comment>Paper Size</comment>
  </data>

@@ -369,25 +369,29 @@ Class mainFrm
                 PrinterStatusLabel.Image = My.Resources.printer
             End If
             cboPaperSize.Enabled = True
-            Label2.Enabled = True
+            lblPaperSize.Enabled = True
         End If
 
         'Enable/disable controls that are unused with the pdf and file modes
         'Print mode
         cboPrintMode.Enabled = Not (chkPDF.Checked Or chkSaveToFile.Checked)
-        Label8.Enabled = Not (chkPDF.Checked Or chkSaveToFile.Checked)
+        lblPrinter.Enabled = Not (chkPDF.Checked Or chkSaveToFile.Checked)
         'Paper Size (only for save to file)
         cboPaperSize.Enabled = Not chkSaveToFile.Checked
-        Label2.Enabled = Not chkSaveToFile.Checked
+        lblPaperSize.Enabled = Not chkSaveToFile.Checked
         'Printer setup
         btnPrintSetup.Enabled = Not (chkPDF.Checked Or chkSaveToFile.Checked)
         'N* of copies
         nudNCopie.Enabled = Not (chkPDF.Checked Or chkSaveToFile.Checked)
-        Label1.Enabled = Not (chkPDF.Checked Or chkSaveToFile.Checked)
+        lblCopies.Enabled = Not (chkPDF.Checked Or chkSaveToFile.Checked)
         'JPEG compression
         frmImageSettings.lblCompressionLabel.Enabled = chkSaveToFile.Checked
         frmImageSettings.tbCompression.Enabled = chkSaveToFile.Checked
         frmImageSettings.lblCompression.Enabled = chkSaveToFile.Checked
+        'Image centering and scaling
+        frmImageSettings.chkCenter.Enabled = Not chkSaveToFile.Checked
+        frmImageSettings.tbScaling.Enabled = Not chkSaveToFile.Checked
+        frmImageSettings.txtScaling.Enabled = Not chkSaveToFile.Checked
 
     End Sub
 

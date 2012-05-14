@@ -161,37 +161,25 @@ copy the folder xx-XX to iCopy folder</comment>
     <value>Image Settings</value>
     <comment>Image Settings</comment>
   </data>
-  <data name="frmImageSettings_Label10" xml:space="preserve">
+  <data name="frmImageSettings_lblScaling" xml:space="preserve">
     <value>Scaling</value>
     <comment>Scaling</comment>
   </data>
-  <data name="frmImageSettings_Label2" xml:space="preserve">
+  <data name="frmImageSettings_lblBrightness" xml:space="preserve">
     <value>Brightness</value>
     <comment>Brightness</comment>
   </data>
-  <data name="frmImageSettings_Label3" xml:space="preserve">
+  <data name="frmImageSettings_lblContrast" xml:space="preserve">
     <value>Contrast</value>
     <comment>Contrast</comment>
   </data>
-  <data name="frmImageSettings_Label9" xml:space="preserve">
+  <data name="frmImageSettings_lblResolution" xml:space="preserve">
     <value>Resolution</value>
     <comment>Resolution</comment>
   </data>
   <data name="frmImageSettings_lblPerc" xml:space="preserve">
     <value>%</value>
     <comment>%</comment>
-  </data>
-  <data name="frmImageSettings_lblQuality_Quality_1" xml:space="preserve">
-    <value>Draft</value>
-    <comment>Draft</comment>
-  </data>
-  <data name="frmImageSettings_lblQuality_Quality_2" xml:space="preserve">
-    <value>Normal</value>
-    <comment>Normal</comment>
-  </data>
-  <data name="frmImageSettings_lblQuality_Quality_3" xml:space="preserve">
-    <value>High</value>
-    <comment>High</comment>
   </data>
   <data name="frmImageSettings_tbBrightnessToolTip" xml:space="preserve">
     <value>Set brightness value.</value>
@@ -305,15 +293,15 @@ TEXT - Acquired image will be black &amp; white. This is the fasted method, usef
     <value>Shows a dialog to select the area to be scanned</value>
     <comment>Shows a dialog to select the area to be scanned</comment>
   </data>
-  <data name="mainFrm_Label1" xml:space="preserve">
+  <data name="mainFrm_lblCopies" xml:space="preserve">
     <value>N° of copies</value>
     <comment>N° of copies</comment>
   </data>
-  <data name="mainFrm_Label7" xml:space="preserve">
+  <data name="mainFrm_lblScanner" xml:space="preserve">
     <value>Scanner</value>
     <comment>Scanner</comment>
   </data>
-  <data name="mainFrm_Label8" xml:space="preserve">
+  <data name="mainFrm_lblPrinter" xml:space="preserve">
     <value>Printer</value>
     <comment>Printer</comment>
   </data>
@@ -399,7 +387,7 @@ Click OK if you want iCopy to register wiaaut.dll for you, otherwise click Cance
     <value>If selected, iCopy will maintain image settings on next restart.</value>
     <comment>If selected, iCopy will maintain image settings on next restart.</comment>
   </data>
-  <data name="frmImageSettings_Label1" xml:space="preserve">
+  <data name="frmImageSettings_lblDPI" xml:space="preserve">
     <value>DPI</value>
     <comment>DPI</comment>
   </data>
@@ -447,7 +435,7 @@ Click OK if you want iCopy to register wiaaut.dll for you, otherwise click Cance
     <value>Acquires an image and saves it to a specified file</value>
     <comment>Acquires an image and saves it to a specified file</comment>
   </data>
-  <data name="mainFrm_Label2" xml:space="preserve">
+  <data name="mainFrm_lblPaperSize" xml:space="preserve">
     <value>Paper Size</value>
     <comment>Paper Size</comment>
   </data>
@@ -648,5 +636,21 @@ ADVANCED PARAMETERS
   <data name="Msg_ExceptionInDriver" xml:space="preserve">
     <value>There was an error in the scanner driver. Please make sure that the driver is updated and is compatible with your Windows version.</value>
     <comment>There was an error in the scanner driver. Please make sure that the driver is updated and is compatible with your Windows version.</comment>
+  </data>
+  <data name="AboutBox1_lblDescription" xml:space="preserve">
+    <value>Combine your scanner and printer into a powerful photocopier.</value>
+    <comment>Combine your scanner and printer into a powerful photocopier.</comment>
+  </data>
+  <data name="mainFrm_chkDuplex" xml:space="preserve">
+    <value>Duplex acquisition</value>
+    <comment>Duplex acquisition</comment>
+  </data>
+  <data name="frmImageSettings_chkCenter" xml:space="preserve">
+    <value>Center image</value>
+    <comment>Center image</comment>
+  </data>
+  <data name="frmImageSettings_chkCenterToolTip" xml:space="preserve">
+    <value>If checked, iCopy prints the image in the center of the page, otherwise the image will be printed from the upper left corner.</value>
+    <comment>If checked, iCopy prints the image in the center of the page, otherwise the image will be printed from the upper left corner.</comment>
   </data>
 </root>

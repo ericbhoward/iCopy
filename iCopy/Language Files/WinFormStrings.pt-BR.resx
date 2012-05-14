@@ -161,19 +161,19 @@ copy the folder xx-XX to iCopy folder</comment>
     <value>Configurações de imagem.</value>
     <comment>Image Settings</comment>
   </data>
-  <data name="frmImageSettings_Label10" xml:space="preserve">
+  <data name="frmImageSettings_lblScaling" xml:space="preserve">
     <value>Alargamento</value>
     <comment>Enlargement</comment>
   </data>
-  <data name="frmImageSettings_Label2" xml:space="preserve">
+  <data name="frmImageSettings_lblBrightness" xml:space="preserve">
     <value>Brilho</value>
     <comment>Brightness</comment>
   </data>
-  <data name="frmImageSettings_Label3" xml:space="preserve">
+  <data name="frmImageSettings_lblContrast" xml:space="preserve">
     <value>Contraste</value>
     <comment>Contrast</comment>
   </data>
-  <data name="frmImageSettings_Label9" xml:space="preserve">
+  <data name="frmImageSettings_lblResolution" xml:space="preserve">
     <value>Resolução</value>
     <comment>Resolution</comment>
   </data>
@@ -305,15 +305,15 @@ TEXT - Acquired image will be black &amp; white. This is the fasted method, usef
     <value>Mostra uma janela para selecionar a área a ser digitalizada</value>
     <comment>Shows a dialog to select the area to be scanned</comment>
   </data>
-  <data name="mainFrm_Label1" xml:space="preserve">
+  <data name="mainFrm_lblCopies" xml:space="preserve">
     <value>N° de cópias</value>
     <comment>N° of copies</comment>
   </data>
-  <data name="mainFrm_Label7" xml:space="preserve">
+  <data name="mainFrm_lblScanner" xml:space="preserve">
     <value>Scanner</value>
     <comment>Scanner</comment>
   </data>
-  <data name="mainFrm_Label8" xml:space="preserve">
+  <data name="mainFrm_lblPrinter" xml:space="preserve">
     <value>Impressora</value>
     <comment>Printer</comment>
   </data>
@@ -395,7 +395,7 @@ on program restart</comment>
     <value>Se selecionado, o iCopy irá manter as configurações de imagem na próxima reinicialização.</value>
     <comment>If selected, iCopy will maintain image settings on next restart.</comment>
   </data>
-  <data name="frmImageSettings_Label1" xml:space="preserve">
+  <data name="frmImageSettings_lblDPI" xml:space="preserve">
     <value>DPI</value>
     <comment>DPI</comment>
   </data>
@@ -443,7 +443,7 @@ on program restart</comment>
     <value>Adquire uma imagem e salva em um arquivo especificado</value>
     <comment>Acquires an image and saves it to a specified file</comment>
   </data>
-  <data name="mainFrm_Label2" xml:space="preserve">
+  <data name="mainFrm_lblPaperSize" xml:space="preserve">
     <value>Tamanho do Papel</value>
     <comment>Paper Size</comment>
   </data>
