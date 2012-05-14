@@ -34,7 +34,7 @@ Public NotInheritable Class AboutBox1
         Me.LabelVersion.Text = String.Format("Version {0}", My.Application.Info.Version.ToString)
         Me.LabelCopyright.Text = My.Application.Info.Copyright
         Me.LabelCompanyName.Text = My.Application.Info.CompanyName
-        Me.lblDescription.Text = My.Application.Info.Description
+        lblDescription.Text = appControl.GetLocalizedString("AboutBox1_lblDescription")
         Label1.Text = appControl.GetLocalizedString("AboutBox1_Label1")
         LinkLabel3.Text = appControl.GetLocalizedString("AboutBox1_LinkLabel3")
         LinkLabel5.Text = appControl.GetLocalizedString("AboutBox1_Donate")
