@@ -47,7 +47,8 @@ namespace PDFWriter
         {
             _parent = Parent;
             Content = _dict;
-            _MediaBox = new PDFRectangle(0, 0, size.Height, size.Width);
+            // PaperSize specifies the size of the page in hundreths of an inch, while we want pt. We use the factor 1.388 to fix this
+            _MediaBox = new PDFRectangle(0, 0, Math.Round(size.Width / 1.388, 2), Math.Round(size.Height / 1.388, 2));
             _scaling = scaling;
             _center = center;
 
