@@ -42,7 +42,7 @@ namespace PDFWriter
                     _dict.Add("ColorSpace", "DeviceRGB");
                     _dict.Add("BitsPerComponent", 8);      
                     break;
-                default: //Converts the image to 24bppRGB
+                default: //Converts the image to 24bppRGB in order to threat it
                     Bitmap conv = new Bitmap(source.Size.Width, source.Size.Height, System.Drawing.Imaging.PixelFormat.Format24bppRgb);
                     conv.SetResolution(source.HorizontalResolution, source.VerticalResolution);
                     Graphics g = Graphics.FromImage(conv);
@@ -53,6 +53,7 @@ namespace PDFWriter
                     _dict.Add("Filter", "DCTDecode");
                     _dict.Add("ColorSpace", "DeviceRGB");
                     _dict.Add("BitsPerComponent", 8);
+                    source.Dispose(); //Must be called to release memory
                     break;
             }
         }
