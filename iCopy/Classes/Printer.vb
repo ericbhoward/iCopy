@@ -98,7 +98,6 @@ Friend Class Printer
         Dim imgPath As String = _images.Dequeue()
         Dim img As Image = Image.FromFile(imgPath)
 
-        e.Graphics.ScaleTransform(_scaleperc / 100, _scaleperc / 100)
         'Resize the image, then draw it 
         If _center Then
             Dim picture_bounds As RectangleF = img.GetBounds(e.Graphics.PageUnit)
@@ -107,13 +106,12 @@ Friend Class Printer
 
             ' Apply the transformation.
             Dim dx As Single = _
-                margin_bounds.Left - _scaleperc / 100 * picture_bounds.Left + _
-                (margin_bounds.Width - _scaleperc / 100 * picture_bounds.Width) / 4
+                margin_bounds.Left + (margin_bounds.Width - _scaleperc / 100 * e.Graphics.DpiX / img.HorizontalResolution * picture_bounds.Width) / 2
             Dim dy As Single = _
-                margin_bounds.Top - _scaleperc / 100 * picture_bounds.Top + _
-                (margin_bounds.Height - _scaleperc / 100 * picture_bounds.Height) / 4
+                margin_bounds.Top + (margin_bounds.Height - _scaleperc / 100 * e.Graphics.DpiY / img.VerticalResolution * picture_bounds.Height) / 2
             e.Graphics.TranslateTransform(dx, dy)
         End If
+        e.Graphics.ScaleTransform(_scaleperc / 100, _scaleperc / 100)
 
         e.Graphics.DrawImage(img, 0, 0)
 
