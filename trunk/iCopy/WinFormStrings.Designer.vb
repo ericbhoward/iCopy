@@ -103,14 +103,12 @@ Namespace My.Resources
         '''<summary>
         '''  Looks up a localized string similar to &gt; icopy.exe [/copy /file /multiplePages ..] [params]
         '''
-        '''[params] are the parameters to be used. If a parameter is not specified, iCopy uses the value stored in settings
+        '''[params] are the parameters to be used. If a parameter is not specified, iCopy uses the values stored in settings
         '''
         '''/copy /c				Directly copy from scanner to printer, using settings provided or default settings
         '''/file /ScanToFile /f	Scan to a file. If file path is not provided a dialog will let you choose where to save the acquired image
-        '''/multiplePages			Scan a multipage document.
-        '''/copymultiplepages
-        '''
-        '''/resolution -or- /r	[value]		Specify a valid sca [rest of string was truncated]&quot;;.
+        '''/copyMultiplePages		Scan a multipage document. Also /copymultiplepages
+        '''/pdf					Scans to PDF. Output path can be  [rest of string was truncated]&quot;;.
         '''</summary>
         Friend Shared ReadOnly Property Console_Help() As String
             Get

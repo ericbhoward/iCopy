@@ -317,6 +317,7 @@ Class mainFrm
         opts.Duplex = chkDuplex.Checked
         opts.Multipage = chkMultipage.Checked
         opts.Center = frmImageSettings.chkCenter.Checked
+        opts.PaperSize = appControl.Printer.PrinterSettings.PaperSizes.Item(cboPaperSize.SelectedIndex)
 
         If chkSaveToFile.Checked Then
             opts.ScanOutput = ScanOutput.File

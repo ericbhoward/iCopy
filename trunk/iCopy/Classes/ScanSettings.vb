@@ -1,4 +1,5 @@
 ﻿Imports WIA
+Imports System.Drawing.Printing
 
 Public Enum ScanOutput
     Printer
@@ -23,6 +24,7 @@ Public Class ScanSettings
     Private _duplex As Boolean
     Private _scanOutput As ScanOutput
     Private _multipage As Boolean
+    Private _paperSize As PaperSize
 
     ''' Creates default properties
     Public Sub New()
@@ -41,6 +43,7 @@ Public Class ScanSettings
         _scanOutput = iCopy.ScanOutput.Printer
         _multipage = False
         _center = True
+        _paperSize = New PaperSize("A4", 595.22, 842)
     End Sub
 
     Public Property Brightness() As Integer
@@ -67,6 +70,15 @@ Public Class ScanSettings
         End Get
         Set(ByVal value As Integer)
             _Contrast = value
+        End Set
+    End Property
+
+    Public Property PaperSize() As PaperSize
+        Get
+            Return _paperSize
+        End Get
+        Set(ByVal value As PaperSize)
+            _paperSize = value
         End Set
     End Property
 

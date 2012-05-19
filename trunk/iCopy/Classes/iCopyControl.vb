@@ -272,11 +272,21 @@ Class appControl
                             Catch ex As ArgumentException
                                 MsgBoxWrap(ex.Message, vbExclamation, "iCopy")
                             End Try
-                        Case "/copymultiplepages", "/multiplepages"
+                        Case "/copymultiplepages"
                             settings.Multipage = True
                             Copy(settings)
                             Application.Exit()
                             Exit Sub
+                        Case "/pdf"
+                            settings.ScanOutput = ScanOutput.PDF
+                            Try
+                                Copy(settings)
+                                Application.Exit()
+                                Exit Sub
+                            Catch ex As ArgumentException
+                                MsgBoxWrap(ex.Message, vbExclamation, "iCopy")
+                            End Try
+
                     End Select
                 Next
 
@@ -668,7 +678,7 @@ retry:
                 Dim doc As New PDFWriter.PDFDocument()
                 For i = 0 To images.Count - 1
                     Dim img As Image = Image.FromFile(images(i))
-                    doc.AddPage(img, New Printing.PaperSize("A4", 842, 595.22), options.Scaling, options.Center)
+                    doc.AddPage(img, options.PaperSize, options.Scaling, options.Center)
                 Next
 
                 doc.Save(options.Path)

@@ -1,7 +1,9 @@
 iCopy
 ----------------------------
-iCopy is a free and open source software that lets you combine your scanner and printer into a powerful, but easy to use photocopier by only pressing a button.
-Its simple user interface lets you manage scanner and printer options, like brightness, contrast, number of copies in a couple of seconds.
+iCopy is a free and open source software that lets you combine your scanner and printer into a powerful, 
+but easy to use photocopier by only pressing a button.Its simple user interface lets you manage scanner 
+and printer options, like brightness, contrast, number of copies in a couple of seconds. Automatic Document Feeders (ADF)
+and duplex scanners are supported. You can also save the acquired image to file or to PDF.
 As it's small and no installation is required, iCopy is also suitable for USB pen drives.
 
 1) Features
@@ -19,7 +21,9 @@ As it's small and no installation is required, iCopy is also suitable for USB pe
 # Run by pressing scanner button
 # Resolution, brightness and contrast, scaling settings
 # Scan Multiple Pages before printing, including ADF support
+# Scan duplex (with compatible scanners)
 # Scan to file function
+# Scan to PDF
 # Preview function
 # Command-line parameters
 # No installation needed and little hard disk space required
@@ -27,16 +31,17 @@ As it's small and no installation is required, iCopy is also suitable for USB pe
 
 2) System requirements
 --------------------------
-* Windows XP SP1/Vista
+* Windows XP SP1/Vista/7/8
 * Microsoft .NET Framework 2.0 or higher
 * A WIA (Windows Image Acquisition) compatible scanner
 
-NOTE: unfortunately not all scanners are compatible, if you have troubles with your scanner, please report it to iCopy bug tracker
+NOTE: Some older scanners are not compatible with WIA. If you have troubles with your scanner, please report it 
+to iCopy bug tracker.
 A list of the known compatible scanners can be found at http://icopy.sourceforge.net/?page_id=174
 
 3) Command line parameters
 --------------------------
-iCopy can be run as a Windows application, but it has also some command line parameters to copy directly to the printer or to a file
+iCopy can be run as a Windows application, but its functionality can entirely be controlled from the command line.
 
 No parameters: standard mode with windows
 
@@ -46,8 +51,8 @@ No parameters: standard mode with windows
 
 /copy /c				Directly copy from scanner to printer, using settings provided or default settings
 /file /ScanToFile /f	Scan to a file. If file path is not provided a dialog will let you choose where to save the acquired image
-/multiplePages			Scan a multipage document. Also /copymultiplepages
-
+/copyMultiplePages		Scan a multipage document. Also /copymultiplepages
+/pdf					Scans to PDF. Output path can be specified with the /path parameter
 Parameters:
 
 /adf							Enable ADF support
@@ -61,7 +66,7 @@ Parameters:
 /contrast -or -	/cnt [value]	Value from -100 to 100 for constrast
 /preview -or- /p				Enables preview mode
 /path "path"					Specify the path for file acquisition. Paths containing spaces must be put between inverted commas 
-								(eg. /path "C:\my folder\file.jpg"). Valid file estensions are .jpg, .bmp, .gif, .png
+								(eg. /path "C:\my folder\file.jpg"). Valid file estensions are .jpg, .bmp, .gif, .png, or .pdf for PDF docs
 /printer "printer name"			Specify the name of the printer between inverted commas. If not provided, the system default printer is used
 
 NOTE: Parameters are not case sensitive
@@ -83,7 +88,8 @@ ADVANCED PARAMETERS
 4) Known errors & solutions 
 -------------------------
 * Wiaaut.dll not registered error.
-	iCopy asks if you want to register WIA Automation Layer. If it fails in doing so, you can register it manually:
+	iCopy asks if you want to register WIA Automation Layer. If it fails in doing so, you can 
+	register it manually:
 		* Copy the file wiaaut.dll that you find in iCopy directory to C:\Windows\system32\
 		* Open a Prompt command with administrator rights
 		* Enter commands:
@@ -94,15 +100,17 @@ ADVANCED PARAMETERS
 	Now iCopy should run as expected.
 
 * Scanner isn't recognized by iCopy
-	If you think that your scanner is WIA compatible but it isn't recognized by iCopy, try to run icopy with the -diag parameter and post the log to iCopy bug tracker.
+	If you think that your scanner is WIA compatible but it isn't recognized by iCopy, try to run 
+	icopy with the -diag parameter and post the log to iCopy bug tracker.
 	A list of the known compatible scanners can be found at http://icopy.sourceforge.net/?page_id=174
 
 5) Support
 -------------------------
-Please read iCopy F.A.Q.:
+Please read the F.A.Q.:
 http://icopy.sourceforge.net/?page_id=10
 
-If you want to report an exception or a bug, to suggest a new feature or a change, or ask for support, please use Sourceforge Bug tracker:
+If you want to report an exception or a bug, to suggest a new feature or a change, or ask for support, 
+please use Sourceforge Bug tracker:
 
 https://sourceforge.net/tracker/?func=add&group_id=201245&atid=976783
 
@@ -111,6 +119,7 @@ https://sourceforge.net/tracker/?func=add&group_id=201245&atid=976783
 iCopy is free software, so it is supported only by your generous donations and by advertisements on the website.
 If you like iCopy, please help me to make it a better software! You can:
 
-	* Tell your friends about iCopy, on your blog, on Facebook, Twitter or wherever you like, so that it gets more and more famous.
+	* Tell your friends about iCopy, on your blog, on Facebook, Twitter or wherever you like, so that it gets 
+	more and more famous.
 	* Surf the website, leave comments, and maybe give a look (and a click) at the advertisements.
 	* Donate a small amount (even a few $) with Paypal: http://sourceforge.net/donate/index.php?group_id=201245.

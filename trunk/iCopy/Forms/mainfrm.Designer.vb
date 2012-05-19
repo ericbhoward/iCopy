@@ -170,7 +170,7 @@ Partial Class mainFrm
         '
         Me.VersionStatusLabel.IsLink = True
         Me.VersionStatusLabel.Name = "VersionStatusLabel"
-        Me.VersionStatusLabel.Size = New System.Drawing.Size(237, 17)
+        Me.VersionStatusLabel.Size = New System.Drawing.Size(268, 17)
         Me.VersionStatusLabel.Spring = True
         Me.VersionStatusLabel.Text = "New Version Available!"
         Me.VersionStatusLabel.TextAlign = System.Drawing.ContentAlignment.MiddleRight
@@ -332,8 +332,8 @@ Partial Class mainFrm
         Me.Controls.Add(Me.llblSettings)
         Me.Controls.Add(Me.lblCopies)
         Me.Controls.Add(Me.btnPrintSetup)
-        Me.Controls.Add(Me.nudNCopie)
         Me.Controls.Add(Me.llblAbout)
+        Me.Controls.Add(Me.nudNCopie)
         Me.Controls.Add(Me.chkPreview)
         Me.Controls.Add(Me.chkADF)
         Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle
