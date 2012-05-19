@@ -1,5 +1,7 @@
-﻿== 1.6 ==
+﻿== 1.6 beta 1 ==
 - ADD: Save to PDF function
+- ADD: Some improvements to the interface
+- ADD: The acquired image can be printed in the center of the image
 
 == 1.5.1 ==
 - ADD: Duplex ADF acquisition

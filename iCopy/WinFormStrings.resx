@@ -549,28 +549,30 @@ If it isn't, please download iCopy again.</comment>
   <data name="Console_Help" xml:space="preserve">
     <value>&gt; icopy.exe [/copy /file /multiplePages ..] [params]
 
-[params] are the parameters to be used. If a parameter is not specified, iCopy uses the value stored in settings
+[params] are the parameters to be used. If a parameter is not specified, iCopy uses the values stored in settings
 
 /copy /c				Directly copy from scanner to printer, using settings provided or default settings
 /file /ScanToFile /f	Scan to a file. If file path is not provided a dialog will let you choose where to save the acquired image
-/multiplePages			Scan a multipage document.
-/copymultiplepages
+/copyMultiplePages		Scan a multipage document. Also /copymultiplepages
+/pdf					Scans to PDF. Output path can be specified with the /path parameter
+Parameters:
 
+/adf							Enable ADF support
 /resolution -or- /r	[value]		Specify a valid scanning resolution in DPI (eg /resolution 100, /r 500)
-/color -or- /col			Color acquisition
+/color -or- /col				Color acquisition
 /grayscale -or- /gray			Grayscale acquisition
-/text -or- /bw				Black and white (text) acquisition
+/text -or- /bw					Black and white (text) acquisition
 /copies -or- /nc [value]		The number of copies to be printed (default one copy)
-/scaling -or- /s			The scaling percentage (eg /s 150) default value: 100
-/brightness	-or- /b [value]	Value from -100 to 100 for brightness
+/scaling -or- /s				The scaling percentage (eg /s 150) default value: 100
+/brightness	-or- /b [value]		Value from -100 to 100 for brightness
 /contrast -or -	/cnt [value]	Value from -100 to 100 for constrast
 /preview -or- /p				Enables preview mode
 /path "path"					Specify the path for file acquisition. Paths containing spaces must be put between inverted commas 
-								(eg. /path "C:\my folder\file.jpg"). Valid file estensions are .jpg, .bmp, .gif, .png
+								(eg. /path "C:\my folder\file.jpg"). Valid file estensions are .jpg, .bmp, .gif, .png, or .pdf for PDF docs
 /printer "printer name"			Specify the name of the printer between inverted commas. If not provided, the system default printer is used
-				
+
 NOTE: Parameters are not case sensitive
-				
+
 Examples:
 &gt; icopy.exe /copy /r 200 /text
 	Copy with 200 DPI resolution in text mode, with default brightness and contrast
@@ -580,10 +582,49 @@ Examples:
 	Prints the file to PDF using Adobe Acrobat (if installed)
 
 ADVANCED PARAMETERS
-/wiareg /wr			Registers WIA components. Use if WIA errors are thrown during execution
-/debug /d			Creates an XML file containing scanner information. Should be included in any bug report
+/silent				No message boxes.
+/wiareg /wr			Registers WIA components. Use if WIA errors are thrown during execution.
 /register /reg		Registers iCopy to the scanner buttons.
 /unregister /unreg	Unregisters iCopy from the scanner button applications.</value>
+    <comment>&gt; icopy.exe [/copy /file /multiplePages ..] [params]
+
+[params] are the parameters to be used. If a parameter is not specified, iCopy uses the values stored in settings
+
+/copy /c				Directly copy from scanner to printer, using settings provided or default settings
+/file /ScanToFile /f	Scan to a file. If file path is not provided a dialog will let you choose where to save the acquired image
+/copyMultiplePages		Scan a multipage document. Also /copymultiplepages
+/pdf					Scans to PDF. Output path can be specified with the /path parameter
+Parameters:
+
+/adf							Enable ADF support
+/resolution -or- /r	[value]		Specify a valid scanning resolution in DPI (eg /resolution 100, /r 500)
+/color -or- /col				Color acquisition
+/grayscale -or- /gray			Grayscale acquisition
+/text -or- /bw					Black and white (text) acquisition
+/copies -or- /nc [value]		The number of copies to be printed (default one copy)
+/scaling -or- /s				The scaling percentage (eg /s 150) default value: 100
+/brightness	-or- /b [value]		Value from -100 to 100 for brightness
+/contrast -or -	/cnt [value]	Value from -100 to 100 for constrast
+/preview -or- /p				Enables preview mode
+/path "path"					Specify the path for file acquisition. Paths containing spaces must be put between inverted commas 
+								(eg. /path "C:\my folder\file.jpg"). Valid file estensions are .jpg, .bmp, .gif, .png, or .pdf for PDF docs
+/printer "printer name"			Specify the name of the printer between inverted commas. If not provided, the system default printer is used
+
+NOTE: Parameters are not case sensitive
+
+Examples:
+&gt; icopy.exe /copy /r 200 /text
+	Copy with 200 DPI resolution in text mode, with default brightness and contrast
+&gt; icopy.exe /file /brightness 0 /contrast 10 /path "C:\my folder\file.jpg"
+	Saves to file "C:\my folder\file.jpg" with brighness 0 and contrast 10
+&gt; icopy.exe /copy /printer "Adobe PDF"
+	Prints the file to PDF using Adobe Acrobat (if installed)
+
+ADVANCED PARAMETERS
+/silent				No message boxes.
+/wiareg /wr			Registers WIA components. Use if WIA errors are thrown during execution.
+/register /reg		Registers iCopy to the scanner buttons.
+/unregister /unreg	Unregisters iCopy from the scanner button applications.</comment>
   </data>
   <data name="mainFrm_VersionStatusLabel" xml:space="preserve">
     <value>New version available!</value>
