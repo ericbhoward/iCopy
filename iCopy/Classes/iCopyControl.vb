@@ -633,7 +633,25 @@ retry:
             Case ScanOutput.File
                 If images.Count = 1 Then
                     Dim img As Image = Image.FromFile(images(0))
-                    img.Save(options.Path, format)
+                    If format Is ImageFormat.Jpeg Then
+                        Dim jgpEncoder As ImageCodecInfo = GetEncoder(ImageFormat.Jpeg)
+
+                        ' Create an Encoder object based on the GUID
+                        ' for the Quality parameter category.
+                        Dim myEncoder As System.Drawing.Imaging.Encoder = System.Drawing.Imaging.Encoder.Quality
+
+                        ' Create an EncoderParameters object.
+                        ' An EncoderParameters object has an array of EncoderParameter
+                        ' objects. In this case, there is only one
+                        ' EncoderParameter object in the array.
+                        Dim myEncoderParameters As New EncoderParameters(1)
+
+                        Dim myEncoderParameter As New EncoderParameter(myEncoder, options.Quality)
+                        myEncoderParameters.Param(0) = myEncoderParameter
+                        img.Save(options.Path, jgpEncoder, myEncoderParameters)
+                    Else
+                        img.Save(options.Path, format)
+                    End If
                     img.Dispose()
                     File.Delete(images(0))
                 ElseIf images.Count > 1 Then
@@ -670,6 +688,20 @@ retry:
                 End Try
         End Select
     End Sub
+
+    Private Shared Function GetEncoder(ByVal format As ImageFormat) As ImageCodecInfo
+
+        Dim codecs As ImageCodecInfo() = ImageCodecInfo.GetImageDecoders()
+
+        Dim codec As ImageCodecInfo
+        For Each codec In codecs
+            If codec.FormatID = format.Guid Then
+                Return codec
+            End If
+        Next codec
+        Return Nothing
+
+    End Function
 
     Shared Function GetScannerEvents() As WIA.DeviceEvents
         Return _scanner.Events
