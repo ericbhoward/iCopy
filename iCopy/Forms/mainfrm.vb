@@ -154,7 +154,7 @@ Class mainFrm
                     chkSaveToFile.Checked = Not chkSaveToFile.Checked
                 Case Keys.I 'Image settings
                     btnImageSettings_Click(btnImageSettings, ea)
-                Case Keys.P 'Scan to pdf
+                Case Keys.P 'Scan to PDF
                     chkPDF.Checked = Not chkPDF.Checked
             End Select
         End If

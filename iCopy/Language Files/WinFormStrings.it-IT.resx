@@ -571,4 +571,35 @@ impostazioni dell'immagine</value>
 impostazioni immagine utilizzate anche al successivo riavvio</value>
     <comment>If selected, iCopy will maintain image settings on next restart.</comment>
   </data>
+  <data name="frmImageSettings_chkCenter" xml:space="preserve">
+    <value>Centra immagine</value>
+    <comment>Center image</comment>
+  </data>
+  <data name="frmImageSettings_chkCenterToolTip" xml:space="preserve">
+    <value>Se selezionato, iCopy stampa l'immagine centrata nella pagina, altrimenti l'immagine verrà stampata a partire dall'angolo in alto a sinistra della pagina.</value>
+    <comment>If checked, iCopy prints the image in the center of the page, otherwise the image will be printed from the upper left corner.</comment>
+  </data>
+  <data name="mainFrm_chkDuplex" xml:space="preserve">
+    <value>Acquisizione fronte/retro</value>
+    <comment>Duplex acquisition</comment>
+  </data>
+  <data name="mainFrm_chkDuplexToolTip" xml:space="preserve">
+    <value>Utilizza l'acquisizione fronte/retro dello scanner</value>
+    <comment>Used with ADF, tells the scanner to use duplex acquisition</comment>
+  </data>
+  <data name="mainFrm_chkMultipageToolTip" xml:space="preserve">
+    <value>ACQUSISCI PAGINE MULTIPLE (CTRL + M)
+iCopy attenderà che venga cambiata pagina sullo scanner per avviare una nuova acquisizione. 
+Potrai acqusire molte pagine in un colpo e stamparle tutte assieme, oppure salvarle in un unico file PDF.</value>
+    <comment>iCopy will wait for the user to change the page on the flatbed (or ADF) to start another acquisition.
+You can scan several page at a time and print them all together or save them in a single PDF file.</comment>
+  </data>
+  <data name="mainFrm_chkPDFToolTip" xml:space="preserve">
+    <value>Salva su PDF (CTRL + P)</value>
+    <comment>Save the output to PDF</comment>
+  </data>
+  <data name="mainFrm_chkSaveToFileToolTip" xml:space="preserve">
+    <value>Salva immagine su file (CTRL + F)</value>
+    <comment>Save the image to a file</comment>
+  </data>
 </root>

@@ -653,4 +653,24 @@ ADVANCED PARAMETERS
     <value>If checked, iCopy prints the image in the center of the page, otherwise the image will be printed from the upper left corner.</value>
     <comment>If checked, iCopy prints the image in the center of the page, otherwise the image will be printed from the upper left corner.</comment>
   </data>
+  <data name="mainFrm_chkDuplexToolTip" xml:space="preserve">
+    <value>Used with ADF, tells the scanner to use duplex acquisition</value>
+    <comment>Used with ADF, tells the scanner to use duplex acquisition</comment>
+  </data>
+  <data name="mainFrm_chkMultipageToolTip" xml:space="preserve">
+    <value>MULTIPAGE ACQUISITION (CTRL + M)
+iCopy will wait for the user to change the page on the flatbed (or ADF) to start another acquisition.
+You can scan several page at a time and print them all together or save them in a single PDF file.</value>
+    <comment>MULTIPAGE ACQUISITION (CTRL + M)
+iCopy will wait for the user to change the page on the flatbed (or ADF) to start another acquisition.
+You can scan several page at a time and print them all together or save them in a single PDF file.</comment>
+  </data>
+  <data name="mainFrm_chkPDFToolTip" xml:space="preserve">
+    <value>Save the output to PDF (CTRL +P)</value>
+    <comment>Save the output to PDF (CTRL +P)</comment>
+  </data>
+  <data name="mainFrm_chkSaveToFileToolTip" xml:space="preserve">
+    <value>Save the image to a file (CTRL + F)</value>
+    <comment>Save the image to a file (CTRL + F)</comment>
+  </data>
 </root>

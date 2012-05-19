@@ -741,6 +741,35 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized string similar to Used with ADF, tells the scanner to use duplex acquisition.
+        '''</summary>
+        Friend Shared ReadOnly Property mainFrm_chkDuplexToolTip() As String
+            Get
+                Return ResourceManager.GetString("mainFrm_chkDuplexToolTip", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to MULTIPAGE ACQUISITION (CTRL + M)
+        '''iCopy will wait for the user to change the page on the flatbed (or ADF) to start another acquisition.
+        '''You can scan several page at a time and print them all together or save them in a single PDF file..
+        '''</summary>
+        Friend Shared ReadOnly Property mainFrm_chkMultipageToolTip() As String
+            Get
+                Return ResourceManager.GetString("mainFrm_chkMultipageToolTip", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to Save the output to PDF (CTRL +P).
+        '''</summary>
+        Friend Shared ReadOnly Property mainFrm_chkPDFToolTip() As String
+            Get
+                Return ResourceManager.GetString("mainFrm_chkPDFToolTip", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized string similar to Preview.
         '''</summary>
         Friend Shared ReadOnly Property mainFrm_chkPreview() As String
@@ -755,6 +784,15 @@ Namespace My.Resources
         Friend Shared ReadOnly Property mainFrm_chkPreviewToolTip() As String
             Get
                 Return ResourceManager.GetString("mainFrm_chkPreviewToolTip", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
+        '''  Looks up a localized string similar to Save the image to a file (CTRL + F).
+        '''</summary>
+        Friend Shared ReadOnly Property mainFrm_chkSaveToFileToolTip() As String
+            Get
+                Return ResourceManager.GetString("mainFrm_chkSaveToFileToolTip", resourceCulture)
             End Get
         End Property
         
