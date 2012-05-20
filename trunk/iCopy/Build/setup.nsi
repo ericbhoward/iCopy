@@ -115,7 +115,7 @@ Section -Main SEC0000
     SetOverwrite on
 	
 	File /r ..\bin\Release\*-*
-	File /r ..\bin\Release\*.exe
+	File /r ..\bin\Release\iCopy.exe
 	File /r ..\bin\Release\*.dll
 	File /r ..\bin\Release\*.txt
     File ..\bin\Release\iCopy.exe.config

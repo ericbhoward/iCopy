@@ -25,4 +25,4 @@ $Version = $FullVersion.Substring(0,5)
 ."$NSISPath\makensis.exe" "/DVERSION=$Version" /X"VIProductVersion $FullVersion" "$NSISOutScript" 
 
 #Now creates the zip archive
-."$ProjDir\Build\7za.exe" a -tzip -mx9 -r "$ProjDir\bin\iCopy$Version.zip" -x!*log -x!*settings -x!*vshost* "$ProjDir\bin\Release\*"
+."$ProjDir\Build\7za.exe" a -tzip -mx9 -r "$ProjDir\bin\iCopy$Version.zip" -x!*log -x!*settings -x!*vshost* -x!*pdb "$ProjDir\bin\Release\*"
