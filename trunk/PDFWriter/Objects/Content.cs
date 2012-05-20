@@ -19,7 +19,7 @@ namespace PDFWriter
             set { _commands = value; }
         }
 
-        public void WriteToStream(PDFFileStream stream, XRefTable table)
+        new public void WriteToStream(PDFFileStream stream, XRefTable table)
         {
             PDFStreamObject _stream = new PDFStreamObject(_commands);
             Content = _stream;
