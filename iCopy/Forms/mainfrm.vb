@@ -129,19 +129,21 @@ Class mainFrm
 
         'Populates paper sizes combo box
         cboPaperSize.DisplayMember = "PaperName" 'Links 
-        For Each pkSize As PaperSize In appControl.Printer.PrinterSettings.PaperSizes
-            cboPaperSize.Items.Add(pkSize)
+        For Each pSize As PaperSize In appControl.Printer.PrinterSettings.PaperSizes
+            If pSize.Kind <> PaperKind.Custom Then
+                cboPaperSize.Items.Add(pSize)
+            End If
         Next
 
         cboPaperSize.Text = My.Settings.PrinterSize 'Sets default paper size as stored in settings
         chkADF.Enabled = appControl.CanUseADF()
-        chkDuplex.Enabled = appControl.CanDoDuplex()
+        chkDuplex.Enabled = chkADF.Checked And appControl.CanDoDuplex()
 
         chkADF.Checked = My.Settings.LastScanSettings.UseADF
-        chkDuplex.Checked = my.settings.LastScanSettings.Duplex
+        chkDuplex.Checked = My.Settings.LastScanSettings.Duplex
     End Sub
 
-    Private Sub mainFrm_KeyUp(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles MyBase.KeyUp
+    Private Sub Hotkeys(ByVal sender As Object, ByVal e As System.Windows.Forms.KeyEventArgs) Handles MyBase.KeyUp
         'Shortcuts
         If e.Control Then 'If CTRL is pressed
             Dim ea As New EventArgs()
@@ -340,7 +342,7 @@ Class mainFrm
 
     Private Sub chkADF_CheckedChanged(sender As System.Object, e As System.EventArgs) Handles chkADF.CheckedChanged
         chkPreview.Enabled = Not chkADF.Checked
-        chkDuplex.Enabled = chkADF.Checked
+        chkDuplex.Enabled = chkADF.Checked And appControl.CanDoDuplex()
         If Not chkADF.Checked Then
             chkDuplex.Checked = False
         End If

@@ -122,7 +122,7 @@ Partial Class mainFrm
         'nudNCopie
         '
         Me.nudNCopie.Font = New System.Drawing.Font("Microsoft Sans Serif", 12.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.nudNCopie.Location = New System.Drawing.Point(322, 96)
+        Me.nudNCopie.Location = New System.Drawing.Point(322, 99)
         Me.nudNCopie.Minimum = New Decimal(New Integer() {1, 0, 0, 0})
         Me.nudNCopie.Name = "nudNCopie"
         Me.nudNCopie.Size = New System.Drawing.Size(55, 26)
@@ -134,7 +134,7 @@ Partial Class mainFrm
         '
         Me.lblCopies.Cursor = System.Windows.Forms.Cursors.Default
         Me.lblCopies.Font = New System.Drawing.Font("Microsoft Sans Serif", 10.0!, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.lblCopies.Location = New System.Drawing.Point(166, 100)
+        Me.lblCopies.Location = New System.Drawing.Point(166, 103)
         Me.lblCopies.Name = "lblCopies"
         Me.lblCopies.Size = New System.Drawing.Size(150, 19)
         Me.lblCopies.TabIndex = 12
@@ -202,7 +202,7 @@ Partial Class mainFrm
         '
         'btnImageSettings
         '
-        Me.btnImageSettings.Location = New System.Drawing.Point(383, 96)
+        Me.btnImageSettings.Location = New System.Drawing.Point(383, 91)
         Me.btnImageSettings.Name = "btnImageSettings"
         Me.btnImageSettings.Size = New System.Drawing.Size(137, 42)
         Me.btnImageSettings.TabIndex = 5
@@ -236,6 +236,7 @@ Partial Class mainFrm
         Me.cboPaperSize.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.Append
         Me.cboPaperSize.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems
         Me.cboPaperSize.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
+        Me.cboPaperSize.DropDownWidth = 150
         Me.cboPaperSize.FormattingEnabled = True
         Me.cboPaperSize.Location = New System.Drawing.Point(270, 66)
         Me.cboPaperSize.Name = "cboPaperSize"
@@ -303,7 +304,7 @@ Partial Class mainFrm
         'chkPreview
         '
         Me.chkPreview.AutoSize = True
-        Me.chkPreview.Location = New System.Drawing.Point(166, 135)
+        Me.chkPreview.Location = New System.Drawing.Point(166, 133)
         Me.chkPreview.Name = "chkPreview"
         Me.chkPreview.Size = New System.Drawing.Size(82, 17)
         Me.chkPreview.TabIndex = 4
@@ -326,8 +327,8 @@ Partial Class mainFrm
         Me.Controls.Add(Me.lblScanner)
         Me.Controls.Add(Me.StatusStrip1)
         Me.Controls.Add(Me.btnCopy)
-        Me.Controls.Add(Me.btnImageSettings)
         Me.Controls.Add(Me.chkDuplex)
+        Me.Controls.Add(Me.btnImageSettings)
         Me.Controls.Add(Me.btnSelScanner)
         Me.Controls.Add(Me.llblSettings)
         Me.Controls.Add(Me.lblCopies)

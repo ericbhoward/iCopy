@@ -12,7 +12,6 @@ namespace PDFWriter
         private bool _center;
         PDFDictionary _dict = new PDFDictionary();
         ImageObject _image;
-        PDFRectangle _CropBox = null;
         PageTreeNode _parent;
         PDFRectangle _MediaBox = null;
         ContentStream _cont = null;

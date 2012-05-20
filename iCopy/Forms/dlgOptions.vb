@@ -133,7 +133,7 @@ retry:
         chkRememberScanSettings.Checked = My.Settings.RememberSettings
         chkRememberWindowPos.Checked = My.Settings.StoreLocation
         chkUpdates.Checked = My.Settings.CheckForUpdates
-        My.Settings.LastScanSettings = My.Settings.Default.LastScanSettings
+        My.Settings.LastScanSettings = My.MySettings.Default.LastScanSettings
     End Sub
 
     Private Sub btnRegister_Click(sender As System.Object, e As System.EventArgs) Handles btnRegister.Click

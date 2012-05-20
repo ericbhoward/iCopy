@@ -51,6 +51,7 @@ Class appControl
         LocRM = New System.Resources.ResourceManager("iCopy.WinFormStrings", GetType(mainFrm).Assembly)
         'Deletes log file if it is more than 50 KB long
         Dim logPath As String = Path.Combine(GetWritablePath(), "iCopy.log")
+
         Try
             Dim MyFile As New FileInfo(logPath)
             Dim FileSize As Long = MyFile.Length
