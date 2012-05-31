@@ -993,6 +993,19 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized string similar to iCopy can&apos;t write to file
+        '''
+        '''{0}
+        '''
+        '''Check that iCopy has write access to the path or that the file is not open..
+        '''</summary>
+        Friend Shared ReadOnly Property Msg_FileError() As String
+            Get
+                Return ResourceManager.GetString("Msg_FileError", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized string similar to Please insert a number between {0} and {1}..
         '''</summary>
         Friend Shared ReadOnly Property Msg_InsertNumber() As String
