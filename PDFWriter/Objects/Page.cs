@@ -51,40 +51,6 @@ namespace PDFWriter
             _scaling = scaling;
             _center = center;
 
-            /*
-             * if (landscape)
-            switch (size)
-                {
-                    case PaperSize.A4:
-                        _MediaBox = new PDFRectangle(0, 0, 842, 595.22);
-                        break;
-                    case PaperSize.A3:
-                        _MediaBox = new PDFRectangle(0, 0, 1190, 842);
-                        break;
-                    case PaperSize.Legal:
-                        break;
-                    case PaperSize.Letter:
-                        break;
-                    default:
-                        break;
-                }
-            else
-                switch (size)
-                {
-                    case PaperSize.A4:
-                        _MediaBox = new PDFRectangle(0, 0, 595.22, 842);
-                        break;
-                    case PaperSize.A3:
-                        _MediaBox = new PDFRectangle(0, 0, 842, 1190);
-                        break;
-                    case PaperSize.Legal:
-                        break;
-                    case PaperSize.Letter:
-                        break;
-                    default:
-                        break;
-                }
-             */
         }
 
         public PDFRectangle MediaBox
