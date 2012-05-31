@@ -714,4 +714,16 @@ You can scan several page at a time and print them all together or save them in 
     <value>Save the image to a file (CTRL + F)</value>
     <comment>Save the image to a file (CTRL + F)</comment>
   </data>
+  <data name="Msg_FileError" xml:space="preserve">
+    <value>iCopy can't write to file
+
+{0}
+
+Check that iCopy has write access to the path or that the file is not open.</value>
+    <comment>iCopy can't write to file
+
+{0}
+
+Check that iCopy has write access to the path or that the file is not open.</comment>
+  </data>
 </root>
