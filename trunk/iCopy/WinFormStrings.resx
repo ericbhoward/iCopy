@@ -726,4 +726,10 @@ Check that iCopy has write access to the path or that the file is not open.</val
 
 Check that iCopy has write access to the path or that the file is not open.</comment>
   </data>
+  <data name="Msg_FileAlreadyExists" xml:space="preserve">
+    <value>The file {0}
+already exists. Would you like to replace it?</value>
+    <comment>The file {0}
+already exists. Would you like to replace it?</comment>
+  </data>
 </root>

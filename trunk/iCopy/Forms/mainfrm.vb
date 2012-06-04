@@ -207,7 +207,9 @@ Class mainFrm
         Me.Enabled = False
         'Starts copy process
         Dim settings As ScanSettings = getScanSettings()
+
         appControl.Copy(settings)
+
         Me.Enabled = True
     End Sub
 

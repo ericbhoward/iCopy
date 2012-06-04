@@ -117,6 +117,7 @@ Class appControl
                 End If
 
                 My.Settings.Save()
+                Application.Exit()
 
             Else    'Handle Command line arguments
                 CommandLine = True 'To inform the program that it is running in command line mode
@@ -268,7 +269,6 @@ Class appControl
                             settings.ScanOutput = ScanOutput.File
                             Try
                                 Copy(settings)
-                                Application.Exit()
                                 Exit Sub
                             Catch ex As ArgumentException
                                 MsgBoxWrap(ex.Message, vbExclamation, "iCopy")
@@ -276,13 +276,11 @@ Class appControl
                         Case "/copymultiplepages"
                             settings.Multipage = True
                             Copy(settings)
-                            Application.Exit()
                             Exit Sub
                         Case "/pdf"
                             settings.ScanOutput = ScanOutput.PDF
                             Try
                                 Copy(settings)
-                                Application.Exit()
                                 Exit Sub
                             Catch ex As ArgumentException
                                 MsgBoxWrap(ex.Message, vbExclamation, "iCopy")
@@ -313,8 +311,6 @@ Class appControl
 #End If
         End Try
         Trace.WriteLine(vbCrLf)
-        Application.Exit()
-
     End Sub
 
     Private Shared Sub HandleException(ByVal ex As Exception)
@@ -557,6 +553,20 @@ retry:
                     options.Path = dialog.FileName
                 Else : Exit Sub
                 End If
+            Else
+                If File.Exists(options.Path) Then
+                    Dim msgboxres As MsgBoxResult = MsgBox(String.Format(LocRM.GetString("Msg_FileAlreadyExists"), options.Path), MsgBoxStyle.OkCancel + MsgBoxStyle.Question, "iCopy")
+                    If msgboxres = MsgBoxResult.Ok Then
+                        Try
+                            File.Delete(options.Path)
+                        Catch ex As Exception
+                            MsgBoxWrap(String.Format(LocRM.GetString("Msg_FileError"), options.Path), MsgBoxStyle.OkOnly + MsgBoxStyle.Information, "iCopy")
+                            Exit Sub
+                        End Try
+                    Else
+                        Exit Sub
+                    End If
+                End If
             End If
 
             'Check if the provided path is valid (AUTHORIZATION, SYNTAX, ecc)
@@ -564,9 +574,20 @@ retry:
                 Dim a As FileStream = IO.File.Create(options.Path)
                 a.Close()
             Catch ex As Exception
-                Throw New ArgumentException("Invalid file path")
+                MsgBoxWrap(String.Format(LocRM.GetString("Msg_FileError"), options.Path), MsgBoxStyle.OkOnly + MsgBoxStyle.Information, "iCopy")
+                Try
+                    IO.File.Delete(options.Path)
+                Catch e As Exception
+
+                End Try
+                Exit Sub
             End Try
-            IO.File.Delete(options.Path)
+
+            Try 'Delete the temporary file created.
+                IO.File.Delete(options.Path)
+            Catch e As Exception
+
+            End Try
 
             If options.ScanOutput = ScanOutput.File Then
                 'Determines the extension of the file in order to use the correct format
@@ -637,6 +658,8 @@ retry:
                 End If
             End If
         Loop While morePages = DialogResult.Yes
+
+        If images.Count = 0 Then Exit Sub 'The user canceled the acquisition
 
         'Process the images to the desired output
         Select Case options.ScanOutput

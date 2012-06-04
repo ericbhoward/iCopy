@@ -993,6 +993,16 @@ Namespace My.Resources
         End Property
         
         '''<summary>
+        '''  Looks up a localized string similar to The file {0}
+        '''already exists. Would you like to replace it?.
+        '''</summary>
+        Friend Shared ReadOnly Property Msg_FileAlreadyExists() As String
+            Get
+                Return ResourceManager.GetString("Msg_FileAlreadyExists", resourceCulture)
+            End Get
+        End Property
+        
+        '''<summary>
         '''  Looks up a localized string similar to iCopy can&apos;t write to file
         '''
         '''{0}
